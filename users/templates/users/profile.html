@@ -1,5 +1,16 @@
 {% extends "blog/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-	<h1>{{ user.username}}</h1>
+<section class="about-generic-area section-gap">
+	<div class="container border-top-generic">
+	    <div class="content-section">
+	      <div class="media">
+	        <div class="media-body">
+	          <h2 class="account-heading">{{ user.username }}</h2>
+	          <p class="text-secondary">{{ user.email }}</p>
+	        </div>
+	      </div>
+	    </div>
+	 </div>
+	</section>
 {% endblock content %}
