@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path, include
 from users import views as user_view
+from blog import views as blog_view
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -29,11 +30,11 @@ urlpatterns = [
     path('', include('blog.urls')),
     path('changePassword/', user_view.changePassword, name='changePassword'),
     path('changeEmail/', user_view.changeEmail, name='changeEmail'),
+    path('search/',blog_view.search,name='search-page')
 
    
 ]
 
 
 if settings.DEBUG:
-
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

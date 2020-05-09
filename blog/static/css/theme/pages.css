@@ -487,7 +487,10 @@
 .contact-page-contact .form-area .primary-btn:hover {
   color: #222 !important;
 }
-
+.img-fluid {
+  width: 100px;
+  height: 100px;
+}
 /*
 ################
                Start Contact us  Page style
