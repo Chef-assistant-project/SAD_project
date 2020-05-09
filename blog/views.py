@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .models import Post, Food
+from .forms import chooseIngredientsForm
 
 # ingredients = models.ManyToManyField(Ingredient)
 
@@ -13,9 +14,9 @@ food = [
         'url': 'https://www.marthastewart.com/318363/soft-boiled-eggs',
         'score': 0,
         'isFavorite': False,
-        'date' : '10 Jan 2018',
-        'image' : 'b2.jpg',
-        'detail' : 'Cooking Perfect Boiled Eggs in minutes'
+        'date': '10 Jan 2018',
+        'image': 'b2.jpg',
+        'detail': 'Cooking Perfect Boiled Eggs in minutes'
     },
     {
         'name': 'Creamy Scrambled Eggs',
@@ -26,7 +27,7 @@ food = [
         'score': 0,
         'isFavorite': False,
         'date': '10 Jan 2018',
-        'image' : 'b5.jpg',
+        'image': 'b5.jpg',
         'detail': 'Cooking Perfect Creamy Scrambled Eggs in minutes'
 
     },
@@ -39,7 +40,7 @@ food = [
         'score': 0,
         'isFavorite': False,
         'date': '10 Jan 2018',
-        'image' : 'b7.jpg',
+        'image': 'b7.jpg',
         'detail': 'Cooking Perfect Thai green curry chicken '
     }
 ]
@@ -57,12 +58,28 @@ def about(request):
 
 
 def search(request):
-    selected_food = str(request.POST.get('title') or "" )
+    ingredients_form = chooseIngredientsForm(request.POST or None)
     match = []
+    context = {
+        'matchFoods': match,
+        'ingredients_form': ingredients_form
+    }
+
+    # direct_search :
+    selected_food = str(request.POST.get('title') or "")
     for i in range(len(food)):
         if len(selected_food) != 0 and selected_food.lower() in list(food[i].values())[0].lower():
             match.append(food[i])
-    context = {
-        'matchFoods': match
-    }
-    return render(request, 'blog/search.html' , context)
+
+    # ingredient search :
+    if request.method == "POST":
+        if ingredients_form.is_valid():
+            for form in ingredients_form:
+                if form.name in request.POST:
+                    print(request.POST.getlist(form.name))
+            return render(request, 'blog/search.html', context)
+
+    return render(request, 'blog/search.html', context)
+
+
+

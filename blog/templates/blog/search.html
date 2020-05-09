@@ -10,9 +10,9 @@
                 <div class="input-group mb-4">
                     <form action='.' method='POST'>{% csrf_token %}
                         <input type="text" name='title' class="form-control" placeholder="Search For Any Dish " aria-label="Recipient's username">
-<!--                        <div class="input-group-append">-->
-<!--                            <span class="input-group-text"><i class="fa fa-search"></i></span>-->
-<!--                        </div>-->
+                        <!--<div class="input-group-append">-->
+                            <!--<span class="input-group-text"><i class="fa fa-search"></i></span>-->
+                        <!--</div>-->
                     </form>
                 </div>
             </div>
@@ -42,10 +42,55 @@
                 </div>
                 {% endfor %}
             </div>
+
+
+
+<h1 align="center">choose ingredients</h1>
+
+<form action="" method="post">
+    {% for item in ingredients_form %}
+    <button class="accordion" type="button">{{ item.label }}</button>
+    <div class="panel">
+        <!--<form action="/action_page.php">-->
+            <div class="container" align="center">
+                {% for item2 in item %}
+                <div class="form-check-inline">
+                    {% csrf_token %}
+                    {{ item2 }}
+                </div>
+                {% endfor %}
+            </div>
+        <!--</form>-->
+    </div>
+    {% endfor %}
+    {% csrf_token %}
+    <input type="submit" class="btn btn-primary btn-block" value="Done">
+</form>
+
+
+
         </div>
       </section>
       <!-- end blog Area -->
 
+<script>
+        var acc = document.getElementsByClassName("accordion");
+        var i;
+
+        for (i = 0; i < acc.length; i++) {
+          acc[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var panel = this.nextElementSibling;
+            if (panel.style.display === "block") {
+              panel.style.display = "none";
+            } else {
+              panel.style.display = "block";
+            }
+          });
+        }
+
+
+
+</script>
+
 {% endblock content %}
-
-
