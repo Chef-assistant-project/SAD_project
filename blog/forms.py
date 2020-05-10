@@ -82,7 +82,7 @@ BEVERAGES = (
     ("green tae", "green tae"),
     ("apple juice", "apple juice"),
 )
-LEGUMS = (
+LEGUMES = (
     ("grean beans", "grean beans"),
     ("peas", "peas"),
     ("lentil", "lentil"),
@@ -106,10 +106,9 @@ OIL = (
 class chooseIngredientsForm(forms.Form):
     dairy = forms.MultipleChoiceField(
         required=False,
-        label="daily",
+        label="dairy",
         choices=DAIRY,
         widget=forms.CheckboxSelectMultiple(),
-
     )
     vegetables = forms.MultipleChoiceField(
         required=False,
@@ -189,10 +188,10 @@ class chooseIngredientsForm(forms.Form):
         widget=forms.CheckboxSelectMultiple(),
 
     )
-    legums = forms.MultipleChoiceField(
+    legumes = forms.MultipleChoiceField(
         required=False,
-        label="legums",
-        choices=LEGUMS,
+        label="legumes",
+        choices=LEGUMES,
         widget=forms.CheckboxSelectMultiple(),
 
     )

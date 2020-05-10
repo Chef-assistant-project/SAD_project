@@ -1,13 +1,17 @@
 {% extends "blog/base.html" %}
 {% block content %}
-	<section class="about-generic-area section-gap">
-		<div class="container border-top-generic">
-			<h2>You have logged out successfully</h2>
-			<div class="border-top pt-3">
-				<small class="text-muted">
-					<a  href="{% url 'login' %}">Log In Again</a>
-				</small>
-			</div>
-		</div>
-	</section>
+<section class="banner-area relative" id="logout-header">
+    <div class="header9">
+    </div>
+</section>
+<section class="about-generic-area section-gap">
+    <div class="container border-top-generic">
+        <h2>You have logged out successfully</h2>
+        <div class="border-top pt-3">
+            <small class="text-muted">
+                <a href="{% url 'login' %}">Log In Again</a>
+            </small>
+        </div>
+    </div>
+</section>
 {% endblock content %}

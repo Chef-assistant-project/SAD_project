@@ -9,53 +9,49 @@ class Post(models.Model):
     date_posted = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    def __str__(self):
+    def _str_(self):
         return self.title
 
 
-class Diet(models.Model):
-    name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.name
+DIET = (
+    ("vegetarian", "vegetarian"),
+    ("gluten free", "gluten free"),
+    ("pescatarian", "pescatarian"),
+    ("none", "")
+)
+CUISINE = (
+    ("asian", "asian"),
+    ("italian", "italian"),
+    ("chinese", "chinese"),
+    ("none", "")
+)
+MEAL_TYPE = (
+    ("breakfast", "breakfast"),
+    ("desserts", "desserts"),
+    ("dinner", "dinner"),
+    ("salads", "salads"),
+    ("cakes", "cakes"),
+    ("none", "")
+)
 
 
 class Ingredient(models.Model):
     name = models.CharField(max_length=100)
 
-    def __str__(self):
+    def _str_(self):
         return self.name
 
-
-class Cuisine(models.Model):
-    name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.name
-
-
-class MealType(models.Model):
-    name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.name
-#
 
 class Food(models.Model):
     name = models.CharField(max_length=100)
-    mealType = models.ForeignKey(MealType, on_delete=models.CASCADE)
-    cuisine = models.ForeignKey(Cuisine, on_delete=models.CASCADE)
+    mealType = models.CharField(choices=MEAL_TYPE, default="", max_length=100)
+    cuisine = models.CharField(choices=CUISINE, default="", max_length=100)
+    diet = models.CharField(choices=DIET, default="", max_length=100)
+
     ingredients = models.ManyToManyField(Ingredient)
     date_added = models.DateTimeField(default=timezone.now)
-    diet = models.ForeignKey(Diet, on_delete=models.CASCADE)
-    url = models.URLField(max_length=200 , default = "https://www.google.com/")
+    url = models.URLField(max_length=200, default="https://www.google.com/")
     score = models.IntegerField(default=0)
 
-    def __str__(self):
+    def _str_(self):
         return self.name
-
-
-
-
-
-
