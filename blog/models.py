@@ -34,11 +34,27 @@ MEAL_TYPE = (
     ("none", "")
 )
 
+CATEGORY = (("dairy", "dairy"),
+            ("vegetables", "vegetables"),
+            ("fruits", "fruits"),
+            ("backing_and_grains", "backing_and_grains"),
+            ("sweeteners", "sweeteners"),
+            ("spices", "spices"),
+            ("meats", "meats"),
+            ("fish_and_seafood", "fish_and_seafood"),
+            ("condiments", "condiments"),
+            ("beverages", "beverages"),
+            ("nuts", "nuts"),
+            ("oil", "oil"),
+            ("legumes", "legumes")
+            )
+
 
 class Ingredient(models.Model):
     name = models.CharField(max_length=100)
+    category = models.CharField(choices=CATEGORY, default="", max_length=100)
 
-    def _str_(self):
+    def __str__(self):
         return self.name
 
 
@@ -52,6 +68,8 @@ class Food(models.Model):
     date_added = models.DateTimeField(default=timezone.now)
     url = models.URLField(max_length=200, default="https://www.google.com/")
     score = models.IntegerField(default=0)
+    detail = models.CharField(max_length=1000)
+    image = models.CharField(max_length=1000)
 
-    def _str_(self):
+    def __str__(self):
         return self.name

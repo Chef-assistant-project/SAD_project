@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Post, Food
+from .models import  Food
 from .forms import chooseIngredientsForm
 
 # ingredients = models.ManyToManyField(Ingredient)
@@ -47,10 +47,8 @@ food = [
 
 
 def home(request):
-    context = {
-        'posts': Post.objects.all()
-    }
-    return render(request, 'blog/home.html', context)
+
+    return render(request, 'blog/home.html')
 
 
 def about(request):

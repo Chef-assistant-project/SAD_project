@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import Post, Ingredient, Food
+from .models import Ingredient, Food
 
-admin.site.register(Post)
 admin.site.register(Ingredient)
 admin.site.register(Food)
