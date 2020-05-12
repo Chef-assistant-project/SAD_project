@@ -63,14 +63,14 @@
                         <div class="col-lg-12 text-center mt-4">
                             <h1>Already Have A Dish In Mind?</h1>
                         </div>
-                        <div class="col-md-6 rounded offset-md-3 mt-5 border border-danger pt-4">
+                        <div class="col-md-6 rounded offset-md-3 mt-5 border border-danger pt-3">
                             <div class="input-group mb-2">
                                 <form action='' method='POST'>{% csrf_token %}
                                     <div class="row">
                                         <div class="col-md-8">
-                                            <input  type="text" name='title' class="form-control"
-                                           placeholder="Search For Any Dish "
-                                           aria-label="Recipient's username">
+                                            <input  type="text" id="autocomplete" name='title' class="form-control"
+                                            placeholder="Search For Any Dish "
+                                            aria-label="Recipient's username">
                                         </div>
                                         <div class="col-md-4">
                                             <input type="submit" class="genric-btn primary radius" value="Find">
@@ -106,5 +106,6 @@
         </div>
     </div>
 </section>
+
 
 {% endblock content %}
