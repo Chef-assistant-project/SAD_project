@@ -28,6 +28,11 @@
     <link rel="stylesheet" href="{% static 'css/magnific-popup.css'%}">
     <link rel="stylesheet" href="{% static 'css/bootstrap.css'%}">
     <link rel="stylesheet" href="{% static 'css/main.css'%}">
+    <link rel="stylesheet" href="{% static 'css/temp.css'%}">
+
+<style>
+#autocomplete { margin: 0 auto; }
+</style>
 </head>
 <body>
 <header id="header" id="home">
@@ -97,5 +102,13 @@
 <script src="{% static 'js/jquery.counterup.min.js'%}"></script>
 <script src="{% static 'js/mail-script.js'%}"></script>
 <script src="{% static 'js/main.js'%}"></script>
+<script src="{% static 'js/jquery-2.1.4.js'%}"></script>
+<script src="{% static 'js/jquery.autocomplete.min.js'%}"></script>
+<script>
+var foods_name = ["Soft-Boiled Eggs" , "Creamy Scrambled Eggs" , "Thai green curry chicken"]
+$('#autocomplete').autocomplete({
+	lookup: foods_name
+});
+</script>
 </body>
 </html>
