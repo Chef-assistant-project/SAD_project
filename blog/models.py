@@ -69,7 +69,8 @@ class Food(models.Model):
     url = models.URLField(max_length=200, default="https://www.google.com/")
     score = models.IntegerField(default=0)
     detail = models.CharField(max_length=1000)
-    image = models.CharField(max_length=1000)
+    image = models.ImageField()
 
     def __str__(self):
         return self.name
+

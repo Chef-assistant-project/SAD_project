@@ -19,8 +19,8 @@ def search(request):
     if request.method == "POST":
         selected_food = str(request.POST.get('title') or "").strip()
         for food in Food.objects.all():
-            if len(selected_food) != 0 :
-                match = Food.objects.filter(name__icontains = selected_food)
+            if len(selected_food) != 0:
+                match = Food.objects.filter(name__icontains=selected_food)
             else:
                 match = []
 
@@ -36,5 +36,4 @@ def search(request):
         'ingredients_form': ingredients_form
     }
     return render(request, 'blog/search.html', context)
-
 

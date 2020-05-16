@@ -32,16 +32,16 @@ class CheckDirectSearch(TestCase):
         client = Client()
         # test 1 search
         response1 = client.post('/search/', {'title': 'egg'})
-        result = (response1.context["matchFoods"] , len(response1.context["matchFoods"]))
+        result = (response1.context["matchFoods"], len(response1.context["matchFoods"]))
         print(result)
-        self.assertEqual(str(response1.context["matchFoods"] ) ,  "<QuerySet [<Food: Soft-Boiled Eggs>, <Food: fried egg>]>")
-        self.assertEqual(len(response1.context["matchFoods"] ) ,  2)
+        self.assertEqual(str(response1.context["matchFoods"]),
+                         "<QuerySet [<Food: Soft-Boiled Eggs>, <Food: fried egg>]>")
+        self.assertEqual(len(response1.context["matchFoods"]), 2)
 
         # test 2 search
         response1 = client.post('/search/', {'title': 'chicken'})
-        result = (response1.context["matchFoods"] , len(response1.context["matchFoods"]))
+        result = (response1.context["matchFoods"], len(response1.context["matchFoods"]))
         print(result)
-        self.assertEqual(str(response1.context["matchFoods"] ) ,  "<QuerySet []>")
-        self.assertEqual(len(response1.context["matchFoods"] ) ,  0)
-
+        self.assertEqual(str(response1.context["matchFoods"]), "<QuerySet []>")
+        self.assertEqual(len(response1.context["matchFoods"]), 0)
 

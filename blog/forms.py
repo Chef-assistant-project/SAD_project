@@ -1,212 +1,128 @@
 from django import forms
 from .models import Ingredient
-# DAIRY = (
-#     ("butter", "butter"),
-#     ("egg", "egg"),
-#     ("milk", "milk")
-# )
-# VEGETABLES = (
-#     ("onion", "onion"),
-#     ("garlic", "garlic"),
-#     ("tomato", "tomato"),
-#     ("potato", "potato"),
-#     ("carrot", "carrot"),
-#     ("bell pepper", "bell pepper"),
-#     ("basil", "basil"),
-#     ("corn", "corn")
-# )
-# FRUITS = (
-#     ("apple", "apple"),
-#     ("banana", "banana"),
-#     ("lime", "lime"),
-#     ("lemon", "lemon"),
-#     ("strawberry", "strawberry"),
-#     ("orange", "orange"),
-#     ("pinapple", "pinapple"),
-#     ("bluberry", "bluberry"),
-#     ("raisin", "raisin"),
-#     ("coconut", "coconut"),
-#     ("grape", "grape"),
-#     ("peach", "peach"),
-#     ("mango", "mango"),
-#     ("pear", "pear"),
-#     ("cherry", "cherry"),
-#     ("kiwi", "kiwi"),
-#     ("date", "date"),
-#     ("watermelon", "watermelon"),
-#     ("grapefruit", "grapefruit"),
-#     ("mandarin", "mandarin"),
-#     ("plum", "plum"),
-#     ("raspberry", "raspberry"),
-#     ("blackberry", "blackberry"),
-#     ("cranberry", "cranberry"),
-# )
-# BACKING_AND_GRAINS = (
-#     ("rice", "rice"),
-#     ("pasta", "pasta"),
-#     ("flour", "flour")
-# )
-# SWEETENERS = (
-#     ("sugar", "sugar"),
-#     ("honey", "honey"),
-#     ("brown sugar", "brown sugar")
-# )
-# SPICES = (
-#     ("vanilla", "vanilla"),
-#     ("cinnamon", "cinnamon"),
-#     ("garlic powder", "garlic powder"),
-#     ("paprika", "paprika")
-#
-# )
-# MEATS = (
-#     ("ckicken breast", "ckicken breast"),
-#     ("ground beaf", "ground beaf"),
-#     ("sausage", "sausage")
-# )
-# FISH_AND_SEAFOOD = (
-#     ("salmon", "salmon"),
-#     ("canned tuna", "canned tuna"),
-#     ("tilapia", "tilapia")
-# )
-# CONDIMENTS = (
-#     ("ketchup", "ketchup"),
-#     ("mayonnaise", "mayonnaise"),
-#     ("mustard", "mustard"),
-#     ("soy sause", "soy sause"),
-#     ("balsamic", "balsamic"),
-# )
-# BEVERAGES = (
-#     ("coffee", "coffee"),
-#     ("orange juice", "orange juice"),
-#     ("tae", "tae"),
-#     ("green tae", "green tae"),
-#     ("apple juice", "apple juice"),
-# )
-# LEGUMES = (
-#     ("grean beans", "grean beans"),
-#     ("peas", "peas"),
-#     ("lentil", "lentil"),
-#     ("chickpea", "chickpea"),
-# )
-# NUTS = (
-#     ("peanut butter", "peanut butter"),
-#     ("almond", "almond"),
-#     ("pecan", "pecan"),
-#     ("walnut", "walnut"),
-#     ("peanut", "peanut"),
-# )
-# OIL = (
-#     ("olive oil", "olive oil"),
-#     ("vegetable oil", "vegetable oil"),
-#     ("sunflower oil", "sunflower oil"),
-#     ("peanut oil", "peanut oil"),
-# )
-#
 
 class chooseIngredientsForm(forms.Form):
-    DAIRY =()
-    try:
-        mchoices = Ingredient.objects.filter(category="dairy")
-        for item in mchoices :
-            DAIRY = DAIRY+((item.name,item.name),)
-    except Ingredient.DoesNotExist:
-        mchoices = ()
 
+    def __init__(self, *args, **kwargs):
+        super(chooseIngredientsForm, self).__init__(*args, **kwargs)
+
+        try:
+            mchoices = Ingredient.objects.filter(category="dairy")
+            for item in mchoices:
+                self.DAIRY = self.DAIRY + ((item.name, item.name),)
+        except:
+            pass
+
+        try:
+            mchoices = Ingredient.objects.filter(category="vegetables")
+            for item in mchoices:
+                self.VEGETABLES = self.VEGETABLES + ((item.name, item.name),)
+        except:
+            pass
+
+        try:
+            mchoices = Ingredient.objects.filter(category="fruits")
+            for item in mchoices:
+                self.FRUITS = self.FRUITS + ((item.name, item.name),)
+        except:
+            pass
+
+        try:
+            mchoices = Ingredient.objects.filter(category="backing and rains")
+            for item in mchoices:
+                self.BACKING_AND_GRAINS = self.BACKING_AND_GRAINS + ((item.name, item.name),)
+        except:
+            pass
+
+        try:
+            mchoices = Ingredient.objects.filter(category="sweeteners")
+            for item in mchoices:
+                self.SWEETENERS = self.SWEETENERS + ((item.name, item.name),)
+        except:
+            pass
+
+        try:
+            mchoices = Ingredient.objects.filter(category="spices")
+            for item in mchoices:
+                self.SPICES = self.SPICES + ((item.name, item.name),)
+        except:
+            pass
+
+        try:
+            mchoices = Ingredient.objects.filter(category="meats")
+            for item in mchoices:
+                self.MEATS = self.MEATS + ((item.name, item.name),)
+        except:
+            pass
+
+        try:
+            mchoices = Ingredient.objects.filter(category="fish and seafood")
+            for item in mchoices:
+                self.FISH_AND_SEAFOOD = self.FISH_AND_SEAFOOD + ((item.name, item.name),)
+        except:
+            pass
+
+        try:
+            mchoices = Ingredient.objects.filter(category="condiments")
+            for item in mchoices:
+                self.CONDIMENTS = self.CONDIMENTS + ((item.name, item.name),)
+        except:
+            pass
+
+        try:
+            mchoices = Ingredient.objects.filter(category="beverages")
+            for item in mchoices:
+                self.BEVERAGES = self.BEVERAGES + ((item.name, item.name),)
+        except:
+            pass
+
+        try:
+            mchoices = Ingredient.objects.filter(category="nuts")
+            for item in mchoices:
+                self.NUTS = self.NUTS + ((item.name, item.name),)
+        except:
+            pass
+
+        try:
+            mchoices = Ingredient.objects.filter(category="oil")
+            for item in mchoices:
+                self.OIL = self.OIL + ((item.name, item.name),)
+        except:
+            pass
+
+        try:
+            mchoices = Ingredient.objects.filter(category="legumes")
+            for item in mchoices:
+                self.LEGUMES = self.LEGUMES + ((item.name, item.name),)
+        except:
+            pass
+
+        self.fields['dairy'].choices = self.DAIRY
+        self.fields['vegetables'].choices = self.VEGETABLES
+        self.fields['fruits'].choices = self.FRUITS
+        self.fields['backing_and_grains'].choices = self.BACKING_AND_GRAINS
+        self.fields['sweeteners'].choices = self.SWEETENERS
+        self.fields['spices'].choices = self.SPICES
+        self.fields['meats'].choices = self.MEATS
+        self.fields['fish_and_seafood'].choices = self.FISH_AND_SEAFOOD
+        self.fields['condiments'].choices = self.CONDIMENTS
+        self.fields['beverages'].choices = self.BEVERAGES
+        self.fields['legumes'].choices = self.LEGUMES
+        self.fields['nuts'].choices = self.NUTS
+
+    DAIRY = ()
     VEGETABLES = ()
-    try:
-        mchoices = Ingredient.objects.filter(category="vegetables")
-        for item in mchoices:
-            VEGETABLES = VEGETABLES + ((item.name, item.name),)
-    except Ingredient.DoesNotExist:
-        mchoices = ()
-
     FRUITS = ()
-    try:
-        mchoices = Ingredient.objects.filter(category="fruits")
-        for item in mchoices:
-            FRUITS = FRUITS + ((item.name, item.name),)
-    except Ingredient.DoesNotExist:
-        mchoices = ()
-
     BACKING_AND_GRAINS = ()
-    try:
-        mchoices = Ingredient.objects.filter(category="backing and rains")
-        for item in mchoices:
-            BACKING_AND_GRAINS = BACKING_AND_GRAINS + ((item.name, item.name),)
-    except Ingredient.DoesNotExist:
-        mchoices = ()
-
     SWEETENERS = ()
-    try:
-        mchoices = Ingredient.objects.filter(category="sweeteners")
-        for item in mchoices:
-            SWEETENERS = SWEETENERS + ((item.name, item.name),)
-    except Ingredient.DoesNotExist:
-        mchoices = ()
-
     SPICES = ()
-    try:
-        mchoices = Ingredient.objects.filter(category="spices")
-        for item in mchoices:
-            SPICES = SPICES + ((item.name, item.name),)
-    except Ingredient.DoesNotExist:
-        mchoices = ()
-
     MEATS = ()
-    try:
-        mchoices = Ingredient.objects.filter(category="meats")
-        for item in mchoices:
-            MEATS = MEATS + ((item.name, item.name),)
-    except Ingredient.DoesNotExist:
-        mchoices = ()
-
     FISH_AND_SEAFOOD = ()
-    try:
-        mchoices = Ingredient.objects.filter(category="fish and seafood")
-        for item in mchoices:
-            FISH_AND_SEAFOOD = FISH_AND_SEAFOOD + ((item.name, item.name),)
-    except Ingredient.DoesNotExist:
-        mchoices = ()
-
     CONDIMENTS = ()
-    try:
-        mchoices = Ingredient.objects.filter(category="condiments")
-        for item in mchoices:
-            CONDIMENTS = CONDIMENTS + ((item.name, item.name),)
-    except Ingredient.DoesNotExist:
-        mchoices = ()
-
     BEVERAGES = ()
-    try:
-        mchoices = Ingredient.objects.filter(category="beverages")
-        for item in mchoices:
-            BEVERAGES = BEVERAGES + ((item.name, item.name),)
-    except Ingredient.DoesNotExist:
-        mchoices = ()
-
-    NUTS = ()
-    try:
-        mchoices = Ingredient.objects.filter(category="nuts")
-        for item in mchoices:
-            NUTS = NUTS + ((item.name, item.name),)
-    except Ingredient.DoesNotExist:
-        mchoices = ()
-
-    OIL = ()
-    try:
-        mchoices = Ingredient.objects.filter(category="oil")
-        for item in mchoices:
-            OIL = OIL + ((item.name, item.name),)
-    except Ingredient.DoesNotExist:
-        mchoices = ()
-
     LEGUMES = ()
-    try:
-        mchoices = Ingredient.objects.filter(category="legumes")
-        for item in mchoices:
-            LEGUMES = LEGUMES + ((item.name, item.name),)
-    except Ingredient.DoesNotExist:
-        mchoices = ()
+    NUTS = ()
+    OIL = ()
 
     dairy = forms.MultipleChoiceField(
         required=False,
@@ -299,5 +215,3 @@ class chooseIngredientsForm(forms.Form):
         widget=forms.CheckboxSelectMultiple(),
 
     )
-
-
