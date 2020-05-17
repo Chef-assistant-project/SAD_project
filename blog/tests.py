@@ -44,4 +44,3 @@ class CheckDirectSearch(TestCase):
         print(result)
         self.assertEqual(str(response1.context["matchFoods"]), "<QuerySet []>")
         self.assertEqual(len(response1.context["matchFoods"]), 0)
-

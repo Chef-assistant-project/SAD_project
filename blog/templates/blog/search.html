@@ -1,10 +1,18 @@
 {% extends "blog/base.html" %}
 {% load static %}
 {% block content %}
-<section class="banner-area relative" id="search-header">
-    <div class="header5">
-	</div>
+<!-- start banner Area -->
+<section class="banner-area">
+    <section class="banner-area search pt-5 pb-5 mt-5">
+        <div class="container">
+            <div class="feature-wrapper pt-5 pb-5 mt-5">
+                <div class="feature-wrapper pt-5 pb-5 mt-5"></div>
+                <div class="feature-wrapper pt-5 pb-5 mt-3"></div>
+            </div>
+        </div>
+    </section>
 </section>
+<!-- End banner Area -->
 <section class="about-generic-area section-gap">
     <div class="container">
         <h3 class="mb-30">Choose ingredients</h3>
@@ -38,23 +46,6 @@
                         {% csrf_token %}
                         <input type="submit" class="genric-btn primary circle" value="Search">
                     </form>
-
-                    <script>
-                            var acc = document.getElementsByClassName("accordion");
-                            var i;
-
-                            for (i = 0; i < acc.length; i++) {
-                              acc[i].addEventListener("click", function() {
-                                this.classList.toggle("active");
-                                var panel = this.nextElementSibling;
-                                if (panel.style.maxHeight) {
-                                  panel.style.maxHeight = null;
-                                } else {
-                                  panel.style.maxHeight = panel.scrollHeight + "px";
-                                }
-                              });
-                            }
-                    </script>
                 </div>
             </div>
             <div class="col-md-8">
@@ -68,9 +59,9 @@
                                 <form action='' method='POST'>{% csrf_token %}
                                     <div class="row">
                                         <div class="col-md-8">
-                                            <input  type="text" id="autocomplete" name='title' class="form-control"
-                                            placeholder="Search For Any Dish "
-                                            aria-label="Recipient's username">
+                                            <input type="text" id="autocomplete" name='title' class="form-control"
+                                                   placeholder="Search For Any Dish "
+                                                   aria-label="Recipient's username">
                                         </div>
                                         <div class="col-md-4">
                                             <input type="submit" class="genric-btn primary radius" value="Find">
@@ -87,11 +78,12 @@
                             <div class="col-lg-3 col-md-6 single-blog">
                                 <div class="thumb">
                                     <a href={{food.url}}>
-                                        <img class="img-fluid" src="/media/{{food.image}}" alt="">
+                                        <img class="img-fluid" src="/static/img/{{food.image}}" alt="">
                                     </a>
                                 </div>
-                                <p class="date">{{food.date}}</p>
-                                <a href="#"><h4>{{food.detail}}</h4></a>
+                                <p class="date">{{food.date_added|date}}</p>
+                                <a href={{food.url}}><h4>{{food.name}}</h4></a>
+                                <a href={{food.url}}>{{food.detail}}</a>
                                 <div class="meta-bottom d-flex justify-content-between">
                                     <p><span class="lnr lnr-heart"></span> {{food.score}} Likes</p>
                                 </div>
@@ -106,6 +98,14 @@
         </div>
     </div>
 </section>
-
-
 {% endblock content %}
+
+{% block scripts %}
+<script>
+data =  {{foodNames|safe}}
+$('#autocomplete').autocomplete({
+	lookup: data
+});
+
+</script>
+{% endblock %}

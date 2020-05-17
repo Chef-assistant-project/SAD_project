@@ -1,6 +1,7 @@
 from django import forms
 from .models import Ingredient
 
+
 class chooseIngredientsForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
