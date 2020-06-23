@@ -1,103 +1,10 @@
 from django import forms
-from .models import Ingredient
 
 
-class chooseIngredientsForm(forms.Form):
+class ChooseIngredientsForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
-        super(chooseIngredientsForm, self).__init__(*args, **kwargs)
-
-        try:
-            mchoices = Ingredient.objects.filter(category="dairy")
-            for item in mchoices:
-                self.DAIRY = self.DAIRY + ((item.name, item.name),)
-        except:
-            pass
-
-        try:
-            mchoices = Ingredient.objects.filter(category="vegetables")
-            for item in mchoices:
-                self.VEGETABLES = self.VEGETABLES + ((item.name, item.name),)
-        except:
-            pass
-
-        try:
-            mchoices = Ingredient.objects.filter(category="fruits")
-            for item in mchoices:
-                self.FRUITS = self.FRUITS + ((item.name, item.name),)
-        except:
-            pass
-
-        try:
-            mchoices = Ingredient.objects.filter(category="backing and rains")
-            for item in mchoices:
-                self.BACKING_AND_GRAINS = self.BACKING_AND_GRAINS + ((item.name, item.name),)
-        except:
-            pass
-
-        try:
-            mchoices = Ingredient.objects.filter(category="sweeteners")
-            for item in mchoices:
-                self.SWEETENERS = self.SWEETENERS + ((item.name, item.name),)
-        except:
-            pass
-
-        try:
-            mchoices = Ingredient.objects.filter(category="spices")
-            for item in mchoices:
-                self.SPICES = self.SPICES + ((item.name, item.name),)
-        except:
-            pass
-
-        try:
-            mchoices = Ingredient.objects.filter(category="meats")
-            for item in mchoices:
-                self.MEATS = self.MEATS + ((item.name, item.name),)
-        except:
-            pass
-
-        try:
-            mchoices = Ingredient.objects.filter(category="fish and seafood")
-            for item in mchoices:
-                self.FISH_AND_SEAFOOD = self.FISH_AND_SEAFOOD + ((item.name, item.name),)
-        except:
-            pass
-
-        try:
-            mchoices = Ingredient.objects.filter(category="condiments")
-            for item in mchoices:
-                self.CONDIMENTS = self.CONDIMENTS + ((item.name, item.name),)
-        except:
-            pass
-
-        try:
-            mchoices = Ingredient.objects.filter(category="beverages")
-            for item in mchoices:
-                self.BEVERAGES = self.BEVERAGES + ((item.name, item.name),)
-        except:
-            pass
-
-        try:
-            mchoices = Ingredient.objects.filter(category="nuts")
-            for item in mchoices:
-                self.NUTS = self.NUTS + ((item.name, item.name),)
-        except:
-            pass
-
-        try:
-            mchoices = Ingredient.objects.filter(category="oil")
-            for item in mchoices:
-                self.OIL = self.OIL + ((item.name, item.name),)
-        except:
-            pass
-
-        try:
-            mchoices = Ingredient.objects.filter(category="legumes")
-            for item in mchoices:
-                self.LEGUMES = self.LEGUMES + ((item.name, item.name),)
-        except:
-            pass
-
+        super(ChooseIngredientsForm, self).__init__(*args, **kwargs)
         self.fields['dairy'].choices = self.DAIRY
         self.fields['vegetables'].choices = self.VEGETABLES
         self.fields['fruits'].choices = self.FRUITS
@@ -110,6 +17,7 @@ class chooseIngredientsForm(forms.Form):
         self.fields['beverages'].choices = self.BEVERAGES
         self.fields['legumes'].choices = self.LEGUMES
         self.fields['nuts'].choices = self.NUTS
+        self.fields['oil'].choices = self.OIL
 
     DAIRY = ()
     VEGETABLES = ()
@@ -216,3 +124,4 @@ class chooseIngredientsForm(forms.Form):
         widget=forms.CheckboxSelectMultiple(),
 
     )
+

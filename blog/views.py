@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .models import Food
-from .forms import chooseIngredientsForm
+from .forms import ChooseIngredientsForm
 
 
 def home(request):
@@ -12,7 +12,7 @@ def about(request):
 
 
 def search(request):
-    ingredients_form = chooseIngredientsForm(request.POST or None)
+    ingredients_form = ChooseIngredientsForm(request.POST or None)
     match = []
     # direct_search :
     if request.method == "POST":
@@ -29,9 +29,7 @@ def search(request):
                 if form.name in request.POST:
                     print(request.POST.getlist(form.name))
             # return render(request, 'blog/search.html', context)
-    allFoods = []
-    for i in range(len(Food.objects.all())):
-        allFoods.append(Food.objects.get(id=i + 1).name)
+    allFoods = [food.name for food in list(Food.objects.all())]
     context = {
         'matchFoods': match,
         'ingredients_form': ingredients_form,

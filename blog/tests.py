@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.test import Client
-from blog.models import Food
+from .models import Food
 
 
 class CheckDirectSearch(TestCase):
