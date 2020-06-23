@@ -1,10 +1,33 @@
 from django import forms
-
+from .models import Ingredient
 
 class ChooseIngredientsForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super(ChooseIngredientsForm, self).__init__(*args, **kwargs)
+
+        ChooseIngredientsForm.DAIRY = ((item.name, item.name) for item in Ingredient.objects.filter(category="dairy"))
+        ChooseIngredientsForm.BACKING_AND_GRAINS = ((item.name, item.name) for item in
+                                                    Ingredient.objects.filter(category="backing_and_rains"))
+        ChooseIngredientsForm.SWEETENERS = ((item.name, item.name) for item in
+                                            Ingredient.objects.filter(category="sweeteners"))
+        ChooseIngredientsForm.VEGETABLES = ((item.name, item.name) for item in
+                                            Ingredient.objects.filter(category="vegetables"))
+        ChooseIngredientsForm.FRUITS = ((item.name, item.name) for item in Ingredient.objects.filter(category="fruits"))
+        ChooseIngredientsForm.SPICES = ((item.name, item.name) for item in Ingredient.objects.filter(category="spices"))
+        ChooseIngredientsForm.MEATS = ((item.name, item.name) for item in Ingredient.objects.filter(category="meats"))
+        ChooseIngredientsForm.FISH_AND_SEAFOOD = ((item.name, item.name) for item in
+                                                  Ingredient.objects.filter(category="fish_and_seafood"))
+        ChooseIngredientsForm.CONDIMENTS = ((item.name, item.name) for item in
+                                            Ingredient.objects.filter(category="condiments"))
+        ChooseIngredientsForm.BEVERAGES = ((item.name, item.name) for item in
+                                           Ingredient.objects.filter(category="beverages"))
+        ChooseIngredientsForm.NUTS = ((item.name, item.name) for item in Ingredient.objects.filter(category="nuts"))
+        ChooseIngredientsForm.OIL = ((item.name, item.name) for item in Ingredient.objects.filter(category="oil"))
+        ChooseIngredientsForm.LEGUMES = ((item.name, item.name) for item in
+                                         Ingredient.objects.filter(category="legumes"))
+
+
         self.fields['dairy'].choices = self.DAIRY
         self.fields['vegetables'].choices = self.VEGETABLES
         self.fields['fruits'].choices = self.FRUITS

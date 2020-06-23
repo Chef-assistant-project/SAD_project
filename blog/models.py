@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-from .forms import ChooseIngredientsForm
+# from .forms import ChooseIngredientsForm
 
 
 DIET = (
@@ -47,23 +47,23 @@ class Ingredient(models.Model):
     def __str__(self):
         return self.name
 
-    def save(self, force_insert=False, force_update=False, using=None,
-             update_fields=None):
-        super(Ingredient,self).save(force_insert=False, force_update=False, using=None,update_fields=None)
-        ChooseIngredientsForm.DAIRY = ((item.name, item.name) for item in Ingredient.objects.filter(category="dairy"))
-        ChooseIngredientsForm.BACKING_AND_GRAINS = ((item.name, item.name) for item in
-                                   Ingredient.objects.filter(category="backing_and_rains"))
-        ChooseIngredientsForm.SWEETENERS = ((item.name, item.name) for item in Ingredient.objects.filter(category="sweeteners"))
-        ChooseIngredientsForm.VEGETABLES = ((item.name, item.name) for item in Ingredient.objects.filter(category="vegetables"))
-        ChooseIngredientsForm.FRUITS = ((item.name, item.name) for item in Ingredient.objects.filter(category="fruits"))
-        ChooseIngredientsForm.SPICES = ((item.name, item.name) for item in Ingredient.objects.filter(category="spices"))
-        ChooseIngredientsForm.MEATS = ((item.name, item.name) for item in Ingredient.objects.filter(category="meats"))
-        ChooseIngredientsForm.FISH_AND_SEAFOOD = ((item.name, item.name) for item in Ingredient.objects.filter(category="fish_and_seafood"))
-        ChooseIngredientsForm.CONDIMENTS = ((item.name, item.name) for item in Ingredient.objects.filter(category="condiments"))
-        ChooseIngredientsForm.BEVERAGES = ((item.name, item.name) for item in Ingredient.objects.filter(category="beverages"))
-        ChooseIngredientsForm.NUTS = ((item.name, item.name) for item in Ingredient.objects.filter(category="nuts"))
-        ChooseIngredientsForm.OIL = ((item.name, item.name) for item in Ingredient.objects.filter(category="oil"))
-        ChooseIngredientsForm.LEGUMES = ((item.name, item.name) for item in Ingredient.objects.filter(category="legumes"))
+    # def save(self, force_insert=False, force_update=False, using=None,
+    #          update_fields=None):
+    #     super(Ingredient,self).save(force_insert=False, force_update=False, using=None,update_fields=None)
+    #     ChooseIngredientsForm.DAIRY = ((item.name, item.name) for item in Ingredient.objects.filter(category="dairy"))
+    #     ChooseIngredientsForm.BACKING_AND_GRAINS = ((item.name, item.name) for item in
+    #                                Ingredient.objects.filter(category="backing_and_rains"))
+    #     ChooseIngredientsForm.SWEETENERS = ((item.name, item.name) for item in Ingredient.objects.filter(category="sweeteners"))
+    #     ChooseIngredientsForm.VEGETABLES = ((item.name, item.name) for item in Ingredient.objects.filter(category="vegetables"))
+    #     ChooseIngredientsForm.FRUITS = ((item.name, item.name) for item in Ingredient.objects.filter(category="fruits"))
+    #     ChooseIngredientsForm.SPICES = ((item.name, item.name) for item in Ingredient.objects.filter(category="spices"))
+    #     ChooseIngredientsForm.MEATS = ((item.name, item.name) for item in Ingredient.objects.filter(category="meats"))
+    #     ChooseIngredientsForm.FISH_AND_SEAFOOD = ((item.name, item.name) for item in Ingredient.objects.filter(category="fish_and_seafood"))
+    #     ChooseIngredientsForm.CONDIMENTS = ((item.name, item.name) for item in Ingredient.objects.filter(category="condiments"))
+    #     ChooseIngredientsForm.BEVERAGES = ((item.name, item.name) for item in Ingredient.objects.filter(category="beverages"))
+    #     ChooseIngredientsForm.NUTS = ((item.name, item.name) for item in Ingredient.objects.filter(category="nuts"))
+    #     ChooseIngredientsForm.OIL = ((item.name, item.name) for item in Ingredient.objects.filter(category="oil"))
+    #     ChooseIngredientsForm.LEGUMES = ((item.name, item.name) for item in Ingredient.objects.filter(category="legumes"))
 
 class Food(models.Model):
     name = models.CharField(max_length=100)
