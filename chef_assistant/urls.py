@@ -24,15 +24,15 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('register/', user_view.register, name='register'),
-    path('profile/', user_view.profile, name='profile'),
+    path('profile/(?P<typeOfRequest>\s+)/$', user_view.UpdateUser, name='profile'),
     path('login/', auth_views.LoginView.as_view(template_name='users/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='users/logout.html'), name='logout'),
     path('', include('blog.urls')),
-    path('changePassword/', user_view.changePassword, name='changePassword'),
-    path('changeEmail/', user_view.changeEmail, name='changeEmail'),
+    path('changePassword/(?P<typeOfRequest>\s+)/$', user_view.UpdateUser, name='changePassword'),
+    path('changeEmail/(?P<typeOfRequest>\s+)/$', user_view.UpdateUser , name='changeEmail'),
     path('search/',blog_view.search,name='search-page')
 
-   
+
 ]
 
 

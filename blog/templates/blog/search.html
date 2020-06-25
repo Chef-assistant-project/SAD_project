@@ -90,6 +90,29 @@
                             </div>
                             {% endfor %}
                         </div>
+                        <div class="row justify-content-center">
+                            {% for food,UnavailableIngridientsStr in finalSortedFoodChoose.items %}
+                            <div class="col-lg-3 col-md-6 single-blog">
+                                <div class="thumb">
+                                    <a href={{food.url}}>
+                                        <img class="img-fluid" src="/media/{{food.image}}" alt="">
+                                    </a>
+                                </div>
+                                <p class="date">{{food.date_added|date}}</p>
+                                <a href={{food.url}}><h4>{{food.name}}</h4></a>
+                                <a href={{food.url}}>{{food.detail}}</a>
+                                <br>
+                                {% if UnavailableIngridientsStr == 'You\'ve got all the ingredients!' %}
+                                    <b><a href={{food.url}}><span style="color: green;">{{UnavailableIngridientsStr}}</span></a></b>
+                                {% else %}
+                                    <b><a href={{food.url}}><span style="color: red;">{{UnavailableIngridientsStr}}</span></a></b>
+                                {% endif %}
+                                <div class="meta-bottom d-flex justify-content-between">
+                                    <p><span class="lnr lnr-heart"></span> {{food.score}} Likes</p>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
 
                     </div>
 
