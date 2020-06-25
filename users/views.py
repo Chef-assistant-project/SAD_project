@@ -19,45 +19,33 @@ def register(request):
         form = UserRegisterForm()
     return render(request, 'users/register.html', {'form': form})
 
-
 @login_required
-def profile(request):
-    return render(request, 'users/profile.html')
-
-
-@login_required
-def changeEmail(request):
-    if request.method == 'POST':
-        u_form = UserUpdateForm(request.POST, instance=request.user)
-        if u_form.is_valid():
-            u_form.save()
-            messages.success(request, f'Your email was successfully updated!')
-            return redirect('profile')
-
-    else:
-        u_form = UserUpdateForm(instance=request.user)
-
-    context = {
-        'u_form': u_form
-    }
-
-    return render(request, 'users/changeEmail.html', context)
-
-
-@login_required
-def changePassword(request):
-    if request.method == 'POST':
-        form = PasswordChangeForm(data=request.POST, user=request.user)
+def UpdateUser(request, typeOfRequest):
+    methodIsPost = False
+    if typeOfRequest == "profile":
+        return render(request, 'users/profile.html')
+    elif typeOfRequest == "changeEmail":
+        if request.method == 'POST':
+            methodIsPost = True
+            form = UserUpdateForm(request.POST, instance=request.user)
+    elif typeOfRequest == "changePassword":
+        if request.method == 'POST':
+            methodIsPost = True
+            form = PasswordChangeForm(data=request.POST, user=request.user)
+    if methodIsPost:
         if form.is_valid():
             form.save()
-            update_session_auth_hash(request, form.user)
+            if typeOfRequest == "changePassword":
+                update_session_auth_hash(request, form.user)
             messages.success(request, 'Your password was successfully updated!')
-            return redirect('profile')
+            return redirect('profile' ,typeOfRequest = "profile")
         else:
             messages.error(request, 'Please correct the error below.')
-
     else:
-        form = PasswordChangeForm(request.user)
-    return render(request, 'users/changePassword.html', {
-        'form': form
-    })
+        if typeOfRequest == "changeEmail":
+            form = UserUpdateForm(instance=request.user)
+        else:
+            form = PasswordChangeForm(request.user)
+    if typeOfRequest == "changeEmail":
+        return render(request, 'users/changeEmail.html', {'form': form})
+    return render(request, 'users/changePassword.html', {'form': form})
