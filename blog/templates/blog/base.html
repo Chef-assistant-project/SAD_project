@@ -41,16 +41,16 @@
             <nav id="nav-menu-container">
                 <ul class="nav-menu">
                     <li class="menu-active"><a href="/">Home</a></li>
-<!--                    <li><a href="/about">About</a></li>-->
+                    <li><a href="/about">About</a></li>
                     {% if user.is_authenticated %}
                     {% if request.user.is_superuser %}
                     <li><a href="{% url 'admin:index' %}">Admin Page</a></li>
                     {% endif%}
                     <li class="menu-has-children"><a href="">Profile settings</a>
                         <ul>
-                            <li><a href="{% url 'profile' typeOfRequest='profile'  %}">See Profile</a></li>
-                            <li><a href="{% url 'changePassword' typeOfRequest='changePassword'  %}">Change Password</a></li>
-                            <li><a href="{% url 'changeEmail' typeOfRequest='changeEmail'  %}">Change Email</a></li>
+                            <li><a href="/profile">See Profile</a></li>
+                            <li><a href="/changePassword">Change Password</a></li>
+                            <li><a href="/changeEmail">Change Email</a></li>
                         </ul>
                     </li>
                     <li><a href="{% url 'logout' %}">Logout</a></li>
