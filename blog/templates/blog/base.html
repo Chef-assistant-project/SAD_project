@@ -48,9 +48,9 @@
                     {% endif%}
                     <li class="menu-has-children"><a href="">Profile settings</a>
                         <ul>
-                            <li><a href="{% url 'profile' typeOfRequest='profile'  %}">See Profile</a></li>
-                            <li><a href="{% url 'changePassword' typeOfRequest='changePassword'  %}">Change Password</a></li>
-                            <li><a href="{% url 'changeEmail' typeOfRequest='changeEmail'  %}">Change Email</a></li>
+                            <li><a href="/profile">See Profile</a></li>
+                            <li><a href="/changePassword">Change Password</a></li>
+                            <li><a href="/changeEmail">Change Email</a></li>
                         </ul>
                     </li>
                     <li><a href="{% url 'logout' %}">Logout</a></li>

@@ -1857,31 +1857,31 @@ body.mobile-nav-active #mobile-nav-toggle{
 	background-size:cover
 }
 .banner-area .login{
-	background:url(../img/login.png) right;
+	background:url(../img/login.jpg) right;
 	background-size:cover
 }
 .banner-area .change-password{
-	background:url(../img/change-password.png) right;
+	background:url(../img/change-password.jpg) right;
 	background-size:cover
 }
 .banner-area .search{
-	background:url(../img/header-search.png) right;
+	background:url(../img/header-search.jpg) right;
 	background-size:cover
 }
 .banner-area .change-email{
-	background:url(../img/change-email.png) right;
+	background:url(../img/change-email.jpg) right;
 	background-size:cover
 }
 .banner-area .profile{
-	background:url(../img/profile.png) right;
+	background:url(../img/profile.jpg) right;
 	background-size:cover
 }
 .banner-area .register{
-	background:url(../img/register.png) right;
+	background:url(../img/register.jpg) right;
 	background-size:cover
 }
 .banner-area .logout{
-	background:url(../img/logout.png) right;
+	background:url(../img/logout.jpg) right;
 	background-size:cover
 }
 @media (max-width: 767.98px){
