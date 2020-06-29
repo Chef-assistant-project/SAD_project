@@ -1,28 +1,6 @@
 from django.db import models
 from django.utils import timezone
-# from .forms import ChooseIngredientsForm
-
-
-DIET = (
-    ("vegetarian", "vegetarian"),
-    ("gluten free", "gluten free"),
-    ("pescatarian", "pescatarian"),
-    ("none", "")
-)
-CUISINE = (
-    ("asian", "asian"),
-    ("italian", "italian"),
-    ("chinese", "chinese"),
-    ("none", "")
-)
-MEAL_TYPE = (
-    ("breakfast", "breakfast"),
-    ("desserts", "desserts"),
-    ("dinner", "dinner"),
-    ("salads", "salads"),
-    ("cakes", "cakes"),
-    ("none", "")
-)
+from .forms import ChooseIngredientsForm, DIET, MEAL_TYPE, CUISINE
 
 CATEGORY = (("dairy", "dairy"),
             ("vegetables", "vegetables"),
@@ -36,37 +14,53 @@ CATEGORY = (("dairy", "dairy"),
             ("beverages", "beverages"),
             ("nuts", "nuts"),
             ("oil", "oil"),
+            ("sauces", "sauces"),
             ("legumes", "legumes")
             )
 
 
 class Ingredient(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     category = models.CharField(choices=CATEGORY, default="", max_length=100)
 
     def __str__(self):
         return self.name
 
-    # def save(self, force_insert=False, force_update=False, using=None,
-    #          update_fields=None):
-    #     super(Ingredient,self).save(force_insert=False, force_update=False, using=None,update_fields=None)
-    #     ChooseIngredientsForm.DAIRY = ((item.name, item.name) for item in Ingredient.objects.filter(category="dairy"))
-    #     ChooseIngredientsForm.BACKING_AND_GRAINS = ((item.name, item.name) for item in
-    #                                Ingredient.objects.filter(category="backing_and_rains"))
-    #     ChooseIngredientsForm.SWEETENERS = ((item.name, item.name) for item in Ingredient.objects.filter(category="sweeteners"))
-    #     ChooseIngredientsForm.VEGETABLES = ((item.name, item.name) for item in Ingredient.objects.filter(category="vegetables"))
-    #     ChooseIngredientsForm.FRUITS = ((item.name, item.name) for item in Ingredient.objects.filter(category="fruits"))
-    #     ChooseIngredientsForm.SPICES = ((item.name, item.name) for item in Ingredient.objects.filter(category="spices"))
-    #     ChooseIngredientsForm.MEATS = ((item.name, item.name) for item in Ingredient.objects.filter(category="meats"))
-    #     ChooseIngredientsForm.FISH_AND_SEAFOOD = ((item.name, item.name) for item in Ingredient.objects.filter(category="fish_and_seafood"))
-    #     ChooseIngredientsForm.CONDIMENTS = ((item.name, item.name) for item in Ingredient.objects.filter(category="condiments"))
-    #     ChooseIngredientsForm.BEVERAGES = ((item.name, item.name) for item in Ingredient.objects.filter(category="beverages"))
-    #     ChooseIngredientsForm.NUTS = ((item.name, item.name) for item in Ingredient.objects.filter(category="nuts"))
-    #     ChooseIngredientsForm.OIL = ((item.name, item.name) for item in Ingredient.objects.filter(category="oil"))
-    #     ChooseIngredientsForm.LEGUMES = ((item.name, item.name) for item in Ingredient.objects.filter(category="legumes"))
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        super(Ingredient, self).save(force_insert=False, force_update=False, using=None, update_fields=None)
+        ChooseIngredientsForm.DAIRY = tuple(
+            ((item.name, item.name) for item in Ingredient.objects.filter(category="dairy")))
+        ChooseIngredientsForm.BACKING_AND_GRAINS = tuple(
+            ((item.name, item.name) for item in Ingredient.objects.filter(category="backing_and_rains")))
+        ChooseIngredientsForm.SWEETENERS = tuple(
+            ((item.name, item.name) for item in Ingredient.objects.filter(category="sweeteners")))
+        ChooseIngredientsForm.VEGETABLES = tuple(
+            ((item.name, item.name) for item in Ingredient.objects.filter(category="vegetables")))
+        ChooseIngredientsForm.FRUITS = tuple(
+            ((item.name, item.name) for item in Ingredient.objects.filter(category="fruits")))
+        ChooseIngredientsForm.SPICES = tuple(
+            ((item.name, item.name) for item in Ingredient.objects.filter(category="spices")))
+        ChooseIngredientsForm.MEATS = tuple(
+            ((item.name, item.name) for item in Ingredient.objects.filter(category="meats")))
+        ChooseIngredientsForm.FISH_AND_SEAFOOD = tuple(
+            ((item.name, item.name) for item in Ingredient.objects.filter(category="fish_and_seafood")))
+        ChooseIngredientsForm.CONDIMENTS = tuple(
+            ((item.name, item.name) for item in Ingredient.objects.filter(category="condiments")))
+        ChooseIngredientsForm.BEVERAGES = tuple(
+            ((item.name, item.name) for item in Ingredient.objects.filter(category="beverages")))
+        ChooseIngredientsForm.NUTS = tuple(
+            ((item.name, item.name) for item in Ingredient.objects.filter(category="nuts")))
+        ChooseIngredientsForm.OIL = tuple(
+            ((item.name, item.name) for item in Ingredient.objects.filter(category="oil")))
+        ChooseIngredientsForm.LEGUMES = tuple(
+            ((item.name, item.name) for item in Ingredient.objects.filter(category="legumes")))
+        ChooseIngredientsForm.SAUCES = tuple(
+            (item.name, item.name) for item in Ingredient.objects.filter(category="sauces"))
+
 
 class Food(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     mealType = models.CharField(choices=MEAL_TYPE, default="", max_length=100)
     cuisine = models.CharField(choices=CUISINE, default="", max_length=100)
     diet = models.CharField(choices=DIET, default="", max_length=100)
@@ -79,3 +73,5 @@ class Food(models.Model):
 
     def __str__(self):
         return self.name
+
+

@@ -2,7 +2,7 @@ from _operator import getitem
 
 from django.shortcuts import render
 from .models import Food, Ingredient
-from .forms import ChooseIngredientsForm
+from .forms import ChooseIngredientsForm, FilterTypesForm
 
 
 def home(request):
@@ -14,6 +14,7 @@ def about(request):
 
 
 def search(request):
+    filterTypes_form = FilterTypesForm(request.POST or None)
     ingredients_form = ChooseIngredientsForm(request.POST or None)
     match = []
     # direct_search :
@@ -24,24 +25,42 @@ def search(request):
                 match = Food.objects.filter(name__icontains=selected_food)
             else:
                 match = []
-    food_selected_with_selected_ingredient = []
-    chosenIngridient = []
+
+    cuisine = "all"
+    diet = "all"
+    mealType = "all"
+    if request.method == "POST" and filterTypes_form.is_valid():
+        if "diet" in request.POST:
+            diet = request.POST.get("diet")
+
+        if "cuisine" in request.POST:
+            cuisine = request.POST.get("cuisine")
+
+        if "mealType" in request.POST:
+            mealType = request.POST.get("mealType")
 
     # ingredient search :
-    if request.method == "POST":
-        if ingredients_form.is_valid():
-            for form in ingredients_form:
-                if form.name in request.POST:
-                    for selected_ingredient in request.POST.getlist(form.name):
-                        food_with_selected_ingredient = Food.objects.filter(
-                            ingredients__name__startswith=selected_ingredient)
-                        food_selected_with_selected_ingredient.append(food_with_selected_ingredient)
-                        chosenIngridient.append(selected_ingredient)
+    food_selected_with_selected_ingredient = []
+    chosenIngridient = []
+    if request.method == "POST" and ingredients_form.is_valid():
+        for form in ingredients_form:
+            if form.name in request.POST:
+                for selected_ingredient in request.POST.getlist(form.name):
+                    food_with_selected_ingredient = Food.objects.filter(
+                        ingredients__name__startswith=selected_ingredient)
+                    if diet != "all":
+                        food_with_selected_ingredient = food_with_selected_ingredient.filter(diet=diet)
+                    if cuisine != "all":
+                        food_with_selected_ingredient = food_with_selected_ingredient.filter(cuisine=cuisine)
+                    if mealType != "all":
+                        food_with_selected_ingredient = food_with_selected_ingredient.filter(mealType=mealType)
+                    food_selected_with_selected_ingredient.append(food_with_selected_ingredient)
+                    chosenIngridient.append(selected_ingredient)
 
     chosenFood = {}
     for queryFood in food_selected_with_selected_ingredient:
         for food in queryFood:
-            a = Ingredient.objects.filter(food__name__startswith = food.name)
+            a = Ingredient.objects.filter(food__name__startswith=food.name)
             chosenFood.update({food: {"Ingridient": a, "list of unavailable ingridients": list(a)}})
 
     for x in chosenFood:
@@ -55,7 +74,7 @@ def search(request):
                     chosenFood[x] = {"Ingridient": chosenFood.get(x).get("Ingridient"),
                                      "list of unavailable ingridients": list(tempListOfUnavailableIngridients)}
 
-    sortedChosenFood = dict(sorted(chosenFood.items(), key=lambda x: getitem(x[1], "list of unavailable ingridients")))
+    sortedChosenFood = dict(sorted(chosenFood.items(), key=lambda x: len(x[1])))
     finalSortedFoodChoose = {}
     for x in sortedChosenFood:
         if len(sortedChosenFood[x]["list of unavailable ingridients"]) == 0:
@@ -67,9 +86,14 @@ def search(request):
             finalSortedFoodChoose[x] = UnavailableIngridientsStr
     allFoods = [food.name for food in list(Food.objects.all())]
     context = {
+        'previousFilter': {"cuisine": cuisine, "mealType": mealType, "diet": diet},
+        'filterTypes_form': filterTypes_form,
         'matchFoods': match,
         'ingredients_form': ingredients_form,
         'foodNames': allFoods,
         'finalSortedFoodChoose': finalSortedFoodChoose
     }
     return render(request, 'blog/search.html', context)
+
+
+

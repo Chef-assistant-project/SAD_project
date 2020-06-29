@@ -1,32 +1,41 @@
 from django import forms
-from .models import Ingredient
+
+DIET = (
+    ("all", "none"),
+    ("vegetarian", "vegetarian"),
+    ("gluten_free", "gluten free"),
+    ("lactose_free", "lactose_free"),
+    ("pescatarian", "pescatarian")
+)
+CUISINE = (
+    ("all", "none"),
+    ("Asian", "Asian"),
+    ("Italian", "Italian"),
+    ("Chinese", "Chinese"),
+    ("French", "French"),
+    ("German", "German"),
+    ("mexican", "mexican"),
+    ("chinese", "chinese")
+)
+MEAL_TYPE = (
+    ("all", "none"),
+    ("breakfast", "breakfast"),
+    ("desserts", "desserts"),
+    ("dinner", "dinner"),
+    ("salads", "salads"),
+    ("cakes", "cakes"),
+    ("breads", "breads"),
+    ("soups", "soups"),
+    ("sandwiches", "sandwiches"),
+    ("drinks", "drinks"),
+    ("seafood", "seafood")
+)
+
 
 class ChooseIngredientsForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super(ChooseIngredientsForm, self).__init__(*args, **kwargs)
-
-        ChooseIngredientsForm.DAIRY = ((item.name, item.name) for item in Ingredient.objects.filter(category="dairy"))
-        ChooseIngredientsForm.BACKING_AND_GRAINS = ((item.name, item.name) for item in
-                                                    Ingredient.objects.filter(category="backing_and_rains"))
-        ChooseIngredientsForm.SWEETENERS = ((item.name, item.name) for item in
-                                            Ingredient.objects.filter(category="sweeteners"))
-        ChooseIngredientsForm.VEGETABLES = ((item.name, item.name) for item in
-                                            Ingredient.objects.filter(category="vegetables"))
-        ChooseIngredientsForm.FRUITS = ((item.name, item.name) for item in Ingredient.objects.filter(category="fruits"))
-        ChooseIngredientsForm.SPICES = ((item.name, item.name) for item in Ingredient.objects.filter(category="spices"))
-        ChooseIngredientsForm.MEATS = ((item.name, item.name) for item in Ingredient.objects.filter(category="meats"))
-        ChooseIngredientsForm.FISH_AND_SEAFOOD = ((item.name, item.name) for item in
-                                                  Ingredient.objects.filter(category="fish_and_seafood"))
-        ChooseIngredientsForm.CONDIMENTS = ((item.name, item.name) for item in
-                                            Ingredient.objects.filter(category="condiments"))
-        ChooseIngredientsForm.BEVERAGES = ((item.name, item.name) for item in
-                                           Ingredient.objects.filter(category="beverages"))
-        ChooseIngredientsForm.NUTS = ((item.name, item.name) for item in Ingredient.objects.filter(category="nuts"))
-        ChooseIngredientsForm.OIL = ((item.name, item.name) for item in Ingredient.objects.filter(category="oil"))
-        ChooseIngredientsForm.LEGUMES = ((item.name, item.name) for item in
-                                         Ingredient.objects.filter(category="legumes"))
-
 
         self.fields['dairy'].choices = self.DAIRY
         self.fields['vegetables'].choices = self.VEGETABLES
@@ -41,6 +50,7 @@ class ChooseIngredientsForm(forms.Form):
         self.fields['legumes'].choices = self.LEGUMES
         self.fields['nuts'].choices = self.NUTS
         self.fields['oil'].choices = self.OIL
+        self.fields['sauces'].choices = self.SAUCES
 
     DAIRY = ()
     VEGETABLES = ()
@@ -55,7 +65,7 @@ class ChooseIngredientsForm(forms.Form):
     LEGUMES = ()
     NUTS = ()
     OIL = ()
-
+    SAUCES = ()
     dairy = forms.MultipleChoiceField(
         required=False,
         label="dairy",
@@ -140,6 +150,13 @@ class ChooseIngredientsForm(forms.Form):
         widget=forms.CheckboxSelectMultiple(),
 
     )
+    sauces = forms.MultipleChoiceField(
+        required=False,
+        label="sauces",
+        choices=SAUCES,
+        widget=forms.CheckboxSelectMultiple(),
+
+    )
     legumes = forms.MultipleChoiceField(
         required=False,
         label="legumes",
@@ -147,4 +164,11 @@ class ChooseIngredientsForm(forms.Form):
         widget=forms.CheckboxSelectMultiple(),
 
     )
+
+
+class FilterTypesForm(forms.Form):
+    diet = forms.ChoiceField(choices=DIET, label="Diet", required=False)
+    cuisine = forms.ChoiceField(choices=CUISINE, label="Cuisine", required=False)
+    mealType = forms.ChoiceField(choices=MEAL_TYPE, label="Meal Type", required=False)
+
 
