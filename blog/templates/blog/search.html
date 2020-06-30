@@ -28,7 +28,6 @@
             <div class="col-md-4">
                 <form action="" method="post">
                     <div class="single-defination">
-
                         <div class="ScrollStyle">
                             {% for item in ingredients_form %}
                             <button class="accordion" type="button">
@@ -77,6 +76,73 @@
                     <!--{% endfor %}-->
                     <!--<input type="submit" class="genric-btn primary small" value="Filter">-->
                     <!--</form>-->
+                    <div class="row mt-4 mb-4">
+                        <div class="col-md-7">
+                            <h4 class="mb-10">Select DIET </h4>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="default-select" id="default-select">
+
+                                {% csrf_token %}
+                                <select class="form-control" style="display: none;" name="diet">
+                                    {% for a,b in filterTypes_form.diet.field.choices %}
+                                    {% if previousFilter.diet == a %}
+                                    <option selected value="{{ a }}">{{ b }}</option>
+                                    {% else %}
+                                    <option value="{{ a }}">{{ b }}</option>
+                                    {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-4 mb-4">
+                        <div class="col-md-7">
+                            <h4 class="mb-10 mt-10">Select Cuisine </h4>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="default-select" id="default-select ">
+
+                                {% csrf_token %}
+                                <select class="form-control" style="display: none;" name="cuisine">
+                                    {% for a,b in filterTypes_form.cuisine.field.choices %}
+                                    {% if previousFilter.cuisine == a %}
+                                    <option selected value="{{ a }}">{{ b }}</option>
+                                    {% else %}
+                                    <option value="{{ a }}">{{ b }}</option>
+                                    {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-4 mb-4">
+                        <div class="col-md-7">
+                            <h4 class="mb-10 mt-10">Select mealType </h4>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="default-select" id="default-select  ">
+
+                                {% csrf_token %}
+                                <select class="form-control" style="display: none;" name="mealType">
+                                    {% for a,b in filterTypes_form.mealType.field.choices %}
+                                    {% if previousFilter.mealType == a %}
+                                    <option selected value="{{ a }}">{{ b }}</option>
+                                    {% else %}
+                                    <option value="{{ a }}">{{ b }}</option>
+                                    {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <br>
+                        <br>
+                        <input type="submit" class="genric-btn primary circle" value="Search">
+                    </div>
+
+
                 </form>
             </div>
 
@@ -84,70 +150,10 @@
             <div class="col-md-8">
                 <div class="row">
                     <div class="container">
-                        <form action="" method="post">
-                            <div class="row">
-                                <div class="col-md-3 mt-10">
-                                    <h4 class="mb-10">Select DIET </h4>
-                                    <div class="default-select" id="default-select">
-
-                                        {% csrf_token %}
-                                        <select class="form-control" style="display: none;" name="diet">
-                                            {% for a,b in filterTypes_form.diet.field.choices %}
-                                            {% if previousFilter.diet == a %}
-                                            <option selected value="{{ a }}">{{ b }}</option>
-                                            {% else %}
-                                            <option value="{{ a }}">{{ b }}</option>
-                                            {% endif %}
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <h4 class="mb-10 mt-10">Select Cuisine </h4>
-                                    <div class="default-select" id="default-select ">
-
-                                        {% csrf_token %}
-                                        <select class="form-control" style="display: none;" name="cuisine">
-                                            {% for a,b in filterTypes_form.cuisine.field.choices %}
-                                            {% if previousFilter.cuisine == a %}
-                                            <option selected value="{{ a }}">{{ b }}</option>
-                                            {% else %}
-                                            <option value="{{ a }}">{{ b }}</option>
-                                            {% endif %}
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <h4 class="mb-10 mt-10">Select mealType </h4>
-                                    <div class="default-select" id="default-select  ">
-
-                                        {% csrf_token %}
-                                        <select class="form-control" style="display: none;" name="mealType">
-                                            {% for a,b in filterTypes_form.mealType.field.choices %}
-                                            {% if previousFilter.mealType == a %}
-                                            <option selected value="{{ a }}">{{ b }}</option>
-                                            {% else %}
-                                            <option value="{{ a }}">{{ b }}</option>
-                                            {% endif %}
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <br>
-                                    <br>
-                                    <input type="submit" class="genric-btn primary small" value="Filter">
-                                </div>
-                            </div>
-                        </form>
                         <div class="col-lg-12 text-center mt-4">
-                            <br>
-                            <br>
-                            <br>
                             <h1>Already Have A Dish In Mind?</h1>
                         </div>
-                        <div class="col-md-6 rounded offset-md-3 mt-5 border border-danger pt-3 ">
+                        <div class="col-md-5 rounded offset-md-3 mt-5 border border-danger pt-3 ">
                             <div class="input-group mb-2 ">
                                 <form action='' method='POST'>{% csrf_token %}
 
@@ -223,7 +229,6 @@ data =  {{foodNames|safe}}
 $('#autocomplete').autocomplete({
 	lookup: data
 });
-
 
 
 
