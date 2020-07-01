@@ -153,19 +153,20 @@
                         <div class="col-lg-12 text-center mt-4">
                             <h1>Already Have A Dish In Mind?</h1>
                         </div>
-                        <div class="col-md-5 rounded offset-md-3 mt-5 border border-danger pt-3 ">
+                        <div class="col-md-6 rounded offset-md-3 mt-5 border border-danger pt-3 ">
                             <div class="input-group mb-2 ">
-                                <form action='' method='POST'>{% csrf_token %}
-
-                                    <div class="col-md-12">
-                                        <input type="text" id="autocomplete" name='title' class="form-control"
-                                               placeholder="Search For Any Dish "
-                                               aria-label="Recipient's username">
+                                <form action='' method='POST'>
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-md-8 px-md-3">
+                                            <input type="text" id="autocomplete" name='title' class="form-control"
+                                                   placeholder="Search For Any Dish "
+                                                   aria-label="Recipient's username">
+                                        </div>
+                                        <div class="col-md-3 px-md-3">
+                                            <input type="submit" class="genric-btn primary radius" value="Find">
+                                        </div>
                                     </div>
-                                    <div class="col-md-4 pt-3 px-md-3">
-                                        <input type="submit" class="genric-btn primary radius" value="Find">
-                                    </div>
-
                                 </form>
                             </div>
                         </div>
@@ -183,14 +184,20 @@
                                 <p class="date">{{food.date_added|date}}</p>
                                 <a href={{food.url}}><h4>{{food.name}}</h4></a>
                                 <a href={{food.url}}>{{food.detail}}</a>
-                                <div class="meta-bottom d-flex justify-content-between">
-                                    <p><span class="lnr lnr-heart"></span> {{food.score}} Likes</p>
-                                </div>
+                                {% if food.score >= 1 %}
+                                    <div class="meta-bottom d-flex justify-content-between">
+                                        <a onclick="myFunction(this,'{{food}}')"  class="lnr lnr-heart-pulse" style="color: red;">         {{food.score}} Likes</a>
+                                    </div>
+                                {% else %}
+                                    <div class="meta-bottom d-flex justify-content-between">
+                                        <a onclick="myFunction(this,'{{food}}')"  class="lnr lnr-heart" style="color: red;">         {{food.score}} Likes</a>
+                                    </div>
+                                {% endif %}
                             </div>
                             {% endfor %}
                         </div>
                         <div class="row justify-content-center">
-                            {% for food,UnavailableIngridientsStr in finalSortedFoodChoose.items %}
+                            {% for food,UnavailableIngredientsStr in finalSortedFoodChoose.items %}
                             <div class="col-lg-3 col-md-6 single-blog">
                                 <div class="thumb">
                                     <a href={{food.url}}>
@@ -201,15 +208,25 @@
                                 <a href={{food.url}}><h4>{{food.name}}</h4></a>
                                 <a href={{food.url}}>{{food.detail}}</a>
                                 <br>
-                                {% if UnavailableIngridientsStr == 'You\'ve got all the ingredients!' %}
-                                <b><a href={{food.url}}><span style="color: green;">{{UnavailableIngridientsStr}}</span></a></b>
+                                {% if UnavailableIngredientsStr == 'You\'ve got all the ingredients!' %}
+                                <b><a href={{food.url}}><span style="color: green;">{{UnavailableIngredientsStr}}</span></a></b>
                                 {% else %}
                                 <b><a href={{food.url}}><span
-                                        style="color: red;">{{UnavailableIngridientsStr}}</span></a></b>
+                                        style="color: red;">{{UnavailableIngredientsStr}}</span></a></b>
                                 {% endif %}
-                                <div class="meta-bottom d-flex justify-content-between">
-                                    <p><span class="lnr lnr-heart"></span> {{food.score}} Likes</p>
-                                </div>
+<!--                                <div class="meta-bottom d-flex justify-content-between">-->
+<!--                                    <p><span class="lnr lnr-heart"></span> {{food.score}} Likes</p>-->
+<!--                                </div>-->
+                                {% if food.score == 1 %}
+                                    <div class="meta-bottom d-flex justify-content-between">
+                                        <a onclick="myFunction(this,'{{food}}')"  class="lnr lnr-heart-pulse" style="color: red;">         {{food.score}} Likes</a>
+                                    </div>
+                                {% else %}
+                                    <div class="meta-bottom d-flex justify-content-between">
+                                        <a onclick="myFunction(this,'{{food}}')"  class="lnr lnr-heart" style="color: red;">         {{food.score}} Likes</a>
+                                    </div>
+                                {% endif %}
+
                             </div>
                             {% endfor %}
                         </div>
@@ -225,13 +242,35 @@
 
 {% block scripts %}
 <script>
-data =  {{foodNames|safe}}
+dataFood =  {{foodNames|safe}}
 $('#autocomplete').autocomplete({
-	lookup: data
+	lookup: dataFood
 });
-
-
-
-
 </script>
+<script>
+function myFunction(x , y) {
+    if ( x.classList.contains( "lnr-heart-pulse") ) {
+        x.classList.remove( "lnr-heart-pulse" );
+        x.classList.add( "lnr-heart" );
+        $.getJSON('/search/', {'foods': y , 'action' : 'minus'});
+<!--        $.ajax({-->
+<!--            url: '/search/',-->
+<!--            type: 'POST',-->
+<!--            data: {'foods': y , 'action' : 'minus' },-->
+<!--            });-->
+    }
+    else {
+        x.classList.remove( "lnr-heart" );
+        x.classList.add( "lnr-heart-pulse" );
+        $.getJSON('/search/', {'foods': y , 'action' : 'add'});
+
+<!--        $.ajax({-->
+<!--            url: '/search/',-->
+<!--            type: 'POST',-->
+<!--            data: {'foods':  y, 'action' : 'add' },-->
+<!--            });-->
+    }
+}
+</script>
+
 {% endblock %}

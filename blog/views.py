@@ -4,6 +4,9 @@ from django.shortcuts import render
 from .models import Food, Ingredient
 from .forms import ChooseIngredientsForm, FilterTypesForm
 
+FoodChoose = []
+
+
 
 def home(request):
     return render(request, 'blog/home.html')
@@ -41,7 +44,7 @@ def search(request):
 
     # ingredient search :
     food_selected_with_selected_ingredient = []
-    chosenIngridient = []
+    chosenIngredient = []
     if request.method == "POST" and ingredients_form.is_valid():
         for form in ingredients_form:
             if form.name in request.POST:
@@ -55,36 +58,39 @@ def search(request):
                     if mealType != "all":
                         food_with_selected_ingredient = food_with_selected_ingredient.filter(mealType=mealType)
                     food_selected_with_selected_ingredient.append(food_with_selected_ingredient)
-                    chosenIngridient.append(selected_ingredient)
+                    chosenIngredient.append(selected_ingredient)
 
     chosenFood = {}
     for queryFood in food_selected_with_selected_ingredient:
         for food in queryFood:
             a = Ingredient.objects.filter(food__name__startswith=food.name)
-            chosenFood.update({food: {"Ingridient": a, "list of unavailable ingridients": list(a)}})
-
+            chosenFood.update({food: {"Ingredients": a, "list of unavailable ingredients": list(a)}})
     for x in chosenFood:
-        tempListOfUnavailableIngridients = chosenFood[x]["list of unavailable ingridients"].copy()
-        for ingredient in chosenIngridient:
-            for chosenfood in chosenFood.get(x).get("Ingridient"):
+        tempListOfUnavailableIngredients = chosenFood[x]["list of unavailable ingredients"].copy()
+        for ingredient in chosenIngredient:
+            for chosenfood in chosenFood.get(x).get("Ingredients"):
                 if ingredient == chosenfood.name:
-                    for unavailableIngridients in chosenFood[x]["list of unavailable ingridients"]:
-                        if ingredient == unavailableIngridients.name:
-                            tempListOfUnavailableIngridients.remove(unavailableIngridients)
-                    chosenFood[x] = {"Ingridient": chosenFood.get(x).get("Ingridient"),
-                                     "list of unavailable ingridients": list(tempListOfUnavailableIngridients)}
+                    for unavailableIngredients in chosenFood[x]["list of unavailable ingredients"]:
+                        if ingredient == unavailableIngredients.name:
+                            tempListOfUnavailableIngredients.remove(unavailableIngredients)
+                    chosenFood[x] = {"Ingredients": chosenFood.get(x).get("Ingredients"),
+                                     "list of unavailable ingredients": list(tempListOfUnavailableIngredients)}
 
     sortedChosenFood = dict(sorted(chosenFood.items(), key=lambda x: len(x[1])))
     finalSortedFoodChoose = {}
     for x in sortedChosenFood:
-        if len(sortedChosenFood[x]["list of unavailable ingridients"]) == 0:
+        if len(sortedChosenFood[x]["list of unavailable ingredients"]) == 0:
             finalSortedFoodChoose[x] = "You've got all the ingredients!"
         else:
-            UnavailableIngridientsStr = "YOU MISS : "
-            for nameFood in sortedChosenFood[x]["list of unavailable ingridients"]:
-                UnavailableIngridientsStr += nameFood.name
-            finalSortedFoodChoose[x] = UnavailableIngridientsStr
+            UnavailableIngredientsStr = "YOU MISS : "
+            for nameFood in sortedChosenFood[x]["list of unavailable ingredients"]:
+                UnavailableIngredientsStr += nameFood.name
+            finalSortedFoodChoose[x] = UnavailableIngredientsStr
     allFoods = [food.name for food in list(Food.objects.all())]
+    if match:
+        match = score(request, match)
+    else:
+        finalSortedFoodChoose = score(request, finalSortedFoodChoose)
     context = {
         'previousFilter': {"cuisine": cuisine, "mealType": mealType, "diet": diet},
         'filterTypes_form': filterTypes_form,
@@ -96,4 +102,23 @@ def search(request):
     return render(request, 'blog/search.html', context)
 
 
+def score(request, FoodLists):
+    global FoodChoose
+    name = str(request.GET.get('foods'))
+    action = str(request.GET.get('action'))
+    if list(FoodLists):
+        FoodChoose = FoodLists
+    if name != "":
+        if action == 'add':
+            for food in FoodChoose:
+                if food.name == name:
+                    food.score += 1
+                    food.save()
 
+        elif action == 'minus':
+            for food in FoodChoose:
+                if food.name == name:
+                    food.score -= 1
+                    food.save()
+
+    return FoodChoose
