@@ -1,13 +1,13 @@
-from _operator import getitem
-
 from django.http import JsonResponse
 from django.shortcuts import render
 from .models import Food, Ingredient
 from users.models import Profile
 from .forms import ChooseIngredientsForm, FilterTypesForm
-from django.contrib.auth.models import User
 
 FoodChosenForLike = []
+FavoriteUser = []
+FoodLiked = ""
+firstTimeToProfile = True
 
 
 def home(request):
@@ -19,8 +19,19 @@ def about(request):
 
 
 def search(request):
-    global FoodChosenForLike
+    global FoodChosenForLike, FoodLiked, FavoriteUser, firstTimeToProfile
     likeMessage = str(request.GET.get('isLike') or "")
+    isProfile = str(request.GET.get('isProfile') or "")
+    selectProfile = list(Profile.objects.filter(user__username__startswith=request.user))
+    if isProfile == "True":
+        if firstTimeToProfile:
+            firstTimeToProfile = False
+            FavoriteUser = list(selectProfile[0].favorites.all())
+        FoodChosenForLike = []
+    else:
+        firstTimeToProfile = True
+        FavoriteUser = []
+
     if likeMessage == "True":
         return score(request)
 
@@ -96,57 +107,51 @@ def search(request):
     allFoods = [food.name for food in list(Food.objects.all())]
     if match:
         FoodChosenForLike = list(match)
-        # score(request)
     elif finalSortedFoodChoose:
         FoodChosenForLike = list(finalSortedFoodChoose)
-        # score(request)
     context = {
         'previousFilter': {"cuisine": cuisine, "mealType": mealType, "diet": diet},
         'filterTypes_form': filterTypes_form,
         'matchFoods': match,
         'ingredients_form': ingredients_form,
         'foodNames': allFoods,
-        'finalSortedFoodChoose': finalSortedFoodChoose
+        'finalSortedFoodChoose': finalSortedFoodChoose,
+        'favorites': list(selectProfile[0].favorites.all()),
+        'FoodLiked': FoodLiked
     }
     return render(request, 'blog/search.html', context)
 
 
 def score(request):
-    global FoodChosenForLike
+    global FoodChosenForLike, FoodLiked, FavoriteUser
     name = str(request.GET.get('foods'))
     action = str(request.GET.get('action'))
     User = request.user
-    print("***** ", name, action,User)
-    # if list(FoodLists):
-    print(">>>>>>>><<<<<<<<<>>>>>>>>" , FoodChosenForLike)
-    selectedFood = ""
+    selectProfile = list(Profile.objects.filter(user__username__startswith=User))
     if name != "":
-        for food in FoodChosenForLike:
-            print(">>>>>>>><<<<<<<<<>>>>>>>>>>>>>>>><<<<<<<<<>>>>>>>>", food, food.name , food.score)
-            if food.name == name:
-                print("AC " , action)
-                if action == 'add':
-                    food.score += 1
-                    print("^^",Profile.objects.filter(user__username__startswith=User))
-                    selectProfile = Profile.objects.filter(user__username__startswith=User)
-                    for x in selectProfile:
-                        print("sss", x)
-                        x.favorites.add(food)
-                        x.save()
-                        print("xx", x.favorites.all())
-                elif action == 'minus':
-                    food.score -= 1
-                    print("^^",Profile.objects.filter(user__username__startswith=User))
-                    selectProfile = Profile.objects.filter(user__username__startswith=User)
-                    for x in selectProfile:
-                        print("sss",x)
-                        x.favorites.remove(food)
-                        x.save()
-                        print("xx", x.favorites.all())
-                food.save()
-                print(">>>>>>>>>><<<<<<<" , food.score)
-                selectedFood = food.score
-    # return FoodChoose
-    print(">>>>>>>>>>>>>>>>>>" , selectedFood)
-    return JsonResponse({'likes': selectedFood})
+        if FoodChosenForLike:
+            FoodLiked, newScore = calScore(name, action, FoodChosenForLike, selectProfile)
+        else:
+            FoodLiked, newScore = calScore(name, action, FavoriteUser, selectProfile)
+    return JsonResponse({'likes': newScore, 'FoodLiked': FoodLiked})
 
+
+def calScore(name, action, listOfFood, selectProfile):
+    selectedFood = ''
+    Score = ''
+    for food in listOfFood:
+        if food.name == name:
+            if action == 'add':
+                food.score += 1
+                for x in selectProfile:
+                    x.favorites.add(food)
+                    x.save()
+            elif action == 'minus':
+                food.score -= 1
+                for x in selectProfile:
+                    x.favorites.remove(food)
+                    x.save()
+            food.save()
+            selectedFood = food.name
+            Score = food.score
+    return selectedFood, Score

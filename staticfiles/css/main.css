@@ -2412,6 +2412,6 @@ body.mobile-nav-active #mobile-nav-toggle{
 	max-height: 500px;
 	overflow-y: scroll;
 }
-.fa-heart:before, .fa-heart-o:before {
-  content: "\f164";
+.deleteWhiteSpace {
+    white-space: "";
 }

@@ -20,8 +20,6 @@
 <!-- End banner Area -->
 
 <section class="about-generic-area section-gap">
-
-
     <div class="container">
         <h3 class="mb-30">Choose ingredients</h3>
         <div class="row">
@@ -34,7 +32,6 @@
                                 <img src="/static/img/icons/{{item.label}}.png" width="50" height="50">
                                 {{ item.label }}
                             </button>
-
                             <div class="panel">
                                 <div class="container">
                                     {% for item2 in item %}
@@ -50,8 +47,6 @@
                         <br>
                         <br>
                     </div>
-
-
                     <!--<form action="" method="POST">-->
                     <!--{% for item in filterTypes_form %}-->
                     <!--<div class="row">-->
@@ -82,7 +77,6 @@
                         </div>
                         <div class="col-md-5">
                             <div class="default-select" id="default-select">
-
                                 {% csrf_token %}
                                 <select class="form-control" style="display: none;" name="diet">
                                     {% for a,b in filterTypes_form.diet.field.choices %}
@@ -102,7 +96,6 @@
                         </div>
                         <div class="col-md-5">
                             <div class="default-select" id="default-select ">
-
                                 {% csrf_token %}
                                 <select class="form-control" style="display: none;" name="cuisine">
                                     {% for a,b in filterTypes_form.cuisine.field.choices %}
@@ -141,12 +134,8 @@
                         <br>
                         <input type="submit" class="genric-btn primary circle" value="Search">
                     </div>
-
-
                 </form>
             </div>
-
-
             <div class="col-md-8">
                 <div class="row">
                     <div class="container">
@@ -184,20 +173,20 @@
                                 <p class="date">{{food.date_added|date}}</p>
                                 <a href={{food.url}}><h4>{{food.name}}</h4></a>
                                 <a href={{food.url}}>{{food.detail}}</a>
-                                {% if food.score >= 1 %}
+                                {% if food in favorites %}
                                     <div class="meta-bottom d-flex justify-content-between">
-                                        <a id = "myvar1" onclick="myFunction(this,'{{food}}')"  class="lnr lnr-heart-pulse" style="color: red;">
+                                        <a  onclick="myFunction(this,'{{food}}')"  class="lnr lnr-heart-pulse" style="color: red;" id = "{{food|cut:' ' }}1">
                                             <span class='txt'>{{food.score}} Likes</span>
                                         </a>
                                     </div>
                                 {% else %}
                                     <div class="meta-bottom d-flex justify-content-between">
-                                        <a id = "myvar2" onclick="myFunction(this,'{{food}}')"  class="lnr lnr-heart" style="color: red;">
+                                        <a  onclick="myFunction(this,'{{food}}')"  class="lnr lnr-heart" style="color: red;" id = "{{food|cut:' ' }}2">
                                             <span class='txt'>{{food.score}} Likes</span>
                                         </a>
                                     </div>
-
                                 {% endif %}
+
                             </div>
                             {% endfor %}
                         </div>
@@ -216,27 +205,21 @@
                                 {% if UnavailableIngredientsStr == 'You\'ve got all the ingredients!' %}
                                 <b><a href={{food.url}}><span style="color: green;">{{UnavailableIngredientsStr}}</span></a></b>
                                 {% else %}
-                                <b><a href={{food.url}}><span
-                                        style="color: red;">{{UnavailableIngredientsStr}}</span></a></b>
+                                <b><a href={{food.url}}><span style="color: red;">{{UnavailableIngredientsStr}}</span></a></b>
                                 {% endif %}
-<!--                                <div class="meta-bottom d-flex justify-content-between">-->
-<!--                                    <p><span class="lnr lnr-heart"></span> {{food.score}} Likes</p>-->
-<!--                                </div>-->
-                                {% if food.score == 1 %}
+                                   {% if food in favorites %}
                                     <div class="meta-bottom d-flex justify-content-between">
-<!--                                        <a onclick="myFunction(this,'{{food}}')"  class="lnr lnr-heart-pulse" style="color: red;">         {{food.score}} Likes</a>-->
-                                          <a id = "myvar3" onclick="myFunction(this,'{{food}}')"  class="lnr lnr-heart-pulse" style="color: red;">
+                                        <a  onclick="myFunction(this,'{{food}}')"  class="lnr lnr-heart-pulse" style="color: red;" id = "{{food|cut:' ' }}3">
                                             <span class='txt'>{{food.score}} Likes</span>
                                         </a>
                                     </div>
                                 {% else %}
                                     <div class="meta-bottom d-flex justify-content-between">
-                                         <a id = "myvar4" onclick="myFunction(this,'{{food}}')"  class="lnr lnr-heart-pulse" style="color: red;">
+                                        <a  onclick="myFunction(this,'{{food}}')"  class="lnr lnr-heart" style="color: red;" id = "{{food|cut:' ' }}4">
                                             <span class='txt'>{{food.score}} Likes</span>
                                         </a>
                                     </div>
                                 {% endif %}
-
                             </div>
                             {% endfor %}
                         </div>
@@ -259,20 +242,17 @@ $('#autocomplete').autocomplete({
 </script>
 <script>
 function myFunction(x , y) {
-    console.log(">>>>>>>>");
+    var id = x['id'];
+    var idtext1 ='#' + id
     if ( x.classList.contains( "lnr-heart-pulse") ) {
         x.classList.remove( "lnr-heart-pulse" );
         x.classList.add( "lnr-heart" );
         $.ajax({
             url: '/search/',
-                data: {'foods':  y, 'action' : 'minus' , 'isLike' : 'True' },
+                data: {'foods':  y, 'action' : 'minus' , 'isLike' : 'True' , 'isProfile' : 'False'},
                 success: function (data) {
-                    var addtext = data["likes"] + '   Likes'
-                    console.log(">>>>>>>>1" , data);
-                    $('#myvar1').text(addtext);
-                    $('#myvar2').text(addtext);
-                    $('#myvar3').text(addtext);
-                    $('#myvar4').text(addtext);
+                    var addtext = '  '+data["likes"] + '   Likes'
+                    $(idtext1).text(addtext);
 
                 },
         });
@@ -282,18 +262,13 @@ function myFunction(x , y) {
         x.classList.add( "lnr-heart-pulse" );
         $.ajax({
             url: '/search/',
-            data: {'foods':  y, 'action' : 'add' , 'isLike' : 'True' },
+            data: {'foods':  y, 'action' : 'add' , 'isLike' : 'True', 'isProfile' : 'False'  },
             success: function (data) {
-                                console.log(">>>>>>>>2" , data);
-                var addtext = data["likes"] + '   Likes'
-                $('#myvar1').text(addtext);
-                $('#myvar2').text(addtext);
-                $('#myvar3').text(addtext);
-                $('#myvar4').text(addtext);
+                var addtext = '  '+data["likes"] + '   Likes'
+                $( idtext1).text(addtext);
             },
         });
     }
 }
 </script>
-
 {% endblock %}
