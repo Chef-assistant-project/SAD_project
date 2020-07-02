@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.views import generic
-from .models import User
+from .models import User,Profile
 from .forms import UserRegisterForm, UserUpdateForm, UpdatePasswordForm
 
 
@@ -23,6 +23,11 @@ def register(request):
 
 @login_required
 def profile(request):
+    User = request.user
+    selectProfile = Profile.objects.filter(user__username__startswith=User)
+    for x in selectProfile:
+        favorites=x.favorites.all()
+    print(favorites)
     return render(request, 'users/profile.html')
 
 

@@ -186,12 +186,17 @@
                                 <a href={{food.url}}>{{food.detail}}</a>
                                 {% if food.score >= 1 %}
                                     <div class="meta-bottom d-flex justify-content-between">
-                                        <a onclick="myFunction(this,'{{food}}')"  class="lnr lnr-heart-pulse" style="color: red;">         {{food.score}} Likes</a>
+                                        <a id = "myvar1" onclick="myFunction(this,'{{food}}')"  class="lnr lnr-heart-pulse" style="color: red;">
+                                            <span class='txt'>{{food.score}} Likes</span>
+                                        </a>
                                     </div>
                                 {% else %}
                                     <div class="meta-bottom d-flex justify-content-between">
-                                        <a onclick="myFunction(this,'{{food}}')"  class="lnr lnr-heart" style="color: red;">         {{food.score}} Likes</a>
+                                        <a id = "myvar2" onclick="myFunction(this,'{{food}}')"  class="lnr lnr-heart" style="color: red;">
+                                            <span class='txt'>{{food.score}} Likes</span>
+                                        </a>
                                     </div>
+
                                 {% endif %}
                             </div>
                             {% endfor %}
@@ -219,11 +224,16 @@
 <!--                                </div>-->
                                 {% if food.score == 1 %}
                                     <div class="meta-bottom d-flex justify-content-between">
-                                        <a onclick="myFunction(this,'{{food}}')"  class="lnr lnr-heart-pulse" style="color: red;">         {{food.score}} Likes</a>
+<!--                                        <a onclick="myFunction(this,'{{food}}')"  class="lnr lnr-heart-pulse" style="color: red;">         {{food.score}} Likes</a>-->
+                                          <a id = "myvar3" onclick="myFunction(this,'{{food}}')"  class="lnr lnr-heart-pulse" style="color: red;">
+                                            <span class='txt'>{{food.score}} Likes</span>
+                                        </a>
                                     </div>
                                 {% else %}
                                     <div class="meta-bottom d-flex justify-content-between">
-                                        <a onclick="myFunction(this,'{{food}}')"  class="lnr lnr-heart" style="color: red;">         {{food.score}} Likes</a>
+                                         <a id = "myvar4" onclick="myFunction(this,'{{food}}')"  class="lnr lnr-heart-pulse" style="color: red;">
+                                            <span class='txt'>{{food.score}} Likes</span>
+                                        </a>
                                     </div>
                                 {% endif %}
 
@@ -249,26 +259,39 @@ $('#autocomplete').autocomplete({
 </script>
 <script>
 function myFunction(x , y) {
+    console.log(">>>>>>>>");
     if ( x.classList.contains( "lnr-heart-pulse") ) {
         x.classList.remove( "lnr-heart-pulse" );
         x.classList.add( "lnr-heart" );
-        $.getJSON('/search/', {'foods': y , 'action' : 'minus'});
-<!--        $.ajax({-->
-<!--            url: '/search/',-->
-<!--            type: 'POST',-->
-<!--            data: {'foods': y , 'action' : 'minus' },-->
-<!--            });-->
+        $.ajax({
+            url: '/search/',
+                data: {'foods':  y, 'action' : 'minus' , 'isLike' : 'True' },
+                success: function (data) {
+                    var addtext = data["likes"] + '   Likes'
+                    console.log(">>>>>>>>1" , data);
+                    $('#myvar1').text(addtext);
+                    $('#myvar2').text(addtext);
+                    $('#myvar3').text(addtext);
+                    $('#myvar4').text(addtext);
+
+                },
+        });
     }
     else {
         x.classList.remove( "lnr-heart" );
         x.classList.add( "lnr-heart-pulse" );
-        $.getJSON('/search/', {'foods': y , 'action' : 'add'});
-
-<!--        $.ajax({-->
-<!--            url: '/search/',-->
-<!--            type: 'POST',-->
-<!--            data: {'foods':  y, 'action' : 'add' },-->
-<!--            });-->
+        $.ajax({
+            url: '/search/',
+            data: {'foods':  y, 'action' : 'add' , 'isLike' : 'True' },
+            success: function (data) {
+                                console.log(">>>>>>>>2" , data);
+                var addtext = data["likes"] + '   Likes'
+                $('#myvar1').text(addtext);
+                $('#myvar2').text(addtext);
+                $('#myvar3').text(addtext);
+                $('#myvar4').text(addtext);
+            },
+        });
     }
 }
 </script>

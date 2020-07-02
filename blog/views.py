@@ -1,11 +1,13 @@
 from _operator import getitem
 
+from django.http import JsonResponse
 from django.shortcuts import render
 from .models import Food, Ingredient
+from users.models import Profile
 from .forms import ChooseIngredientsForm, FilterTypesForm
+from django.contrib.auth.models import User
 
-FoodChoose = []
-
+FoodChosenForLike = []
 
 
 def home(request):
@@ -17,6 +19,11 @@ def about(request):
 
 
 def search(request):
+    global FoodChosenForLike
+    likeMessage = str(request.GET.get('isLike') or "")
+    if likeMessage == "True":
+        return score(request)
+
     filterTypes_form = FilterTypesForm(request.POST or None)
     ingredients_form = ChooseIngredientsForm(request.POST or None)
     match = []
@@ -88,9 +95,11 @@ def search(request):
             finalSortedFoodChoose[x] = UnavailableIngredientsStr
     allFoods = [food.name for food in list(Food.objects.all())]
     if match:
-        match = score(request, match)
-    else:
-        finalSortedFoodChoose = score(request, finalSortedFoodChoose)
+        FoodChosenForLike = list(match)
+        # score(request)
+    elif finalSortedFoodChoose:
+        FoodChosenForLike = list(finalSortedFoodChoose)
+        # score(request)
     context = {
         'previousFilter': {"cuisine": cuisine, "mealType": mealType, "diet": diet},
         'filterTypes_form': filterTypes_form,
@@ -102,23 +111,42 @@ def search(request):
     return render(request, 'blog/search.html', context)
 
 
-def score(request, FoodLists):
-    global FoodChoose
+def score(request):
+    global FoodChosenForLike
     name = str(request.GET.get('foods'))
     action = str(request.GET.get('action'))
-    if list(FoodLists):
-        FoodChoose = FoodLists
+    User = request.user
+    print("***** ", name, action,User)
+    # if list(FoodLists):
+    print(">>>>>>>><<<<<<<<<>>>>>>>>" , FoodChosenForLike)
+    selectedFood = ""
     if name != "":
-        if action == 'add':
-            for food in FoodChoose:
-                if food.name == name:
+        for food in FoodChosenForLike:
+            print(">>>>>>>><<<<<<<<<>>>>>>>>>>>>>>>><<<<<<<<<>>>>>>>>", food, food.name , food.score)
+            if food.name == name:
+                print("AC " , action)
+                if action == 'add':
                     food.score += 1
-                    food.save()
-
-        elif action == 'minus':
-            for food in FoodChoose:
-                if food.name == name:
+                    print("^^",Profile.objects.filter(user__username__startswith=User))
+                    selectProfile = Profile.objects.filter(user__username__startswith=User)
+                    for x in selectProfile:
+                        print("sss", x)
+                        x.favorites.add(food)
+                        x.save()
+                        print("xx", x.favorites.all())
+                elif action == 'minus':
                     food.score -= 1
-                    food.save()
+                    print("^^",Profile.objects.filter(user__username__startswith=User))
+                    selectProfile = Profile.objects.filter(user__username__startswith=User)
+                    for x in selectProfile:
+                        print("sss",x)
+                        x.favorites.remove(food)
+                        x.save()
+                        print("xx", x.favorites.all())
+                food.save()
+                print(">>>>>>>>>><<<<<<<" , food.score)
+                selectedFood = food.score
+    # return FoodChoose
+    print(">>>>>>>>>>>>>>>>>>" , selectedFood)
+    return JsonResponse({'likes': selectedFood})
 
-    return FoodChoose
