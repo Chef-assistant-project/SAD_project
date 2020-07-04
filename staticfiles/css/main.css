@@ -2412,3 +2412,6 @@ body.mobile-nav-active #mobile-nav-toggle{
 	max-height: 500px;
 	overflow-y: scroll;
 }
+.deleteWhiteSpace {
+    white-space: "";
+}

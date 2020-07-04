@@ -30,7 +30,8 @@ urlpatterns = [
     path('', include('blog.urls')),
     path('changePassword/', user_view.ChangePassword.as_view(), name='changePassword'),
     path('changeEmail/', user_view.ChangeEmail.as_view(), name='changeEmail'),
-    path('search/', blog_view.search, name='search-page')
+    # path('search/', blog_view.search, name='search-page')
+    path('search/',include('blog.urls'))
 
 ]
 

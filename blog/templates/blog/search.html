@@ -20,8 +20,6 @@
 <!-- End banner Area -->
 
 <section class="about-generic-area section-gap">
-
-
     <div class="container">
         <h3 class="mb-30">Choose ingredients</h3>
         <div class="row">
@@ -34,7 +32,6 @@
                                 <img src="/static/img/icons/{{item.label}}.png" width="50" height="50">
                                 {{ item.label }}
                             </button>
-
                             <div class="panel">
                                 <div class="container">
                                     {% for item2 in item %}
@@ -50,8 +47,6 @@
                         <br>
                         <br>
                     </div>
-
-
                     <!--<form action="" method="POST">-->
                     <!--{% for item in filterTypes_form %}-->
                     <!--<div class="row">-->
@@ -82,7 +77,6 @@
                         </div>
                         <div class="col-md-5">
                             <div class="default-select" id="default-select">
-
                                 {% csrf_token %}
                                 <select class="form-control" style="display: none;" name="diet">
                                     {% for a,b in filterTypes_form.diet.field.choices %}
@@ -102,7 +96,6 @@
                         </div>
                         <div class="col-md-5">
                             <div class="default-select" id="default-select ">
-
                                 {% csrf_token %}
                                 <select class="form-control" style="display: none;" name="cuisine">
                                     {% for a,b in filterTypes_form.cuisine.field.choices %}
@@ -141,31 +134,28 @@
                         <br>
                         <input type="submit" class="genric-btn primary circle" value="Search">
                     </div>
-
-
                 </form>
             </div>
-
-
             <div class="col-md-8">
                 <div class="row">
                     <div class="container">
                         <div class="col-lg-12 text-center mt-4">
                             <h1>Already Have A Dish In Mind?</h1>
                         </div>
-                        <div class="col-md-5 rounded offset-md-3 mt-5 border border-danger pt-3 ">
+                        <div class="col-md-6 rounded offset-md-3 mt-5 border border-danger pt-3 ">
                             <div class="input-group mb-2 ">
-                                <form action='' method='POST'>{% csrf_token %}
-
-                                    <div class="col-md-12">
-                                        <input type="text" id="autocomplete" name='title' class="form-control"
-                                               placeholder="Search For Any Dish "
-                                               aria-label="Recipient's username">
+                                <form action='' method='POST'>
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-md-8 px-md-3">
+                                            <input type="text" id="autocomplete" name='title' class="form-control"
+                                                   placeholder="Search For Any Dish "
+                                                   aria-label="Recipient's username">
+                                        </div>
+                                        <div class="col-md-3 px-md-3">
+                                            <input type="submit" class="genric-btn primary radius" value="Find">
+                                        </div>
                                     </div>
-                                    <div class="col-md-4 pt-3 px-md-3">
-                                        <input type="submit" class="genric-btn primary radius" value="Find">
-                                    </div>
-
                                 </form>
                             </div>
                         </div>
@@ -183,14 +173,25 @@
                                 <p class="date">{{food.date_added|date}}</p>
                                 <a href={{food.url}}><h4>{{food.name}}</h4></a>
                                 <a href={{food.url}}>{{food.detail}}</a>
-                                <div class="meta-bottom d-flex justify-content-between">
-                                    <p><span class="lnr lnr-heart"></span> {{food.score}} Likes</p>
-                                </div>
+                                {% if food in favorites %}
+                                    <div class="meta-bottom d-flex justify-content-between">
+                                        <a  onclick="myFunction(this,'{{food}}')"  class="lnr lnr-heart-pulse" style="color: red;" id = "{{food|cut:' ' }}1">
+                                            <span class='txt'>{{food.score}} Likes</span>
+                                        </a>
+                                    </div>
+                                {% else %}
+                                    <div class="meta-bottom d-flex justify-content-between">
+                                        <a  onclick="myFunction(this,'{{food}}')"  class="lnr lnr-heart" style="color: red;" id = "{{food|cut:' ' }}2">
+                                            <span class='txt'>{{food.score}} Likes</span>
+                                        </a>
+                                    </div>
+                                {% endif %}
+
                             </div>
                             {% endfor %}
                         </div>
                         <div class="row justify-content-center">
-                            {% for food,UnavailableIngridientsStr in finalSortedFoodChoose.items %}
+                            {% for food,UnavailableIngredientsStr in finalSortedFoodChoose.items %}
                             <div class="col-lg-3 col-md-6 single-blog">
                                 <div class="thumb">
                                     <a href={{food.url}}>
@@ -201,15 +202,24 @@
                                 <a href={{food.url}}><h4>{{food.name}}</h4></a>
                                 <a href={{food.url}}>{{food.detail}}</a>
                                 <br>
-                                {% if UnavailableIngridientsStr == 'You\'ve got all the ingredients!' %}
-                                <b><a href={{food.url}}><span style="color: green;">{{UnavailableIngridientsStr}}</span></a></b>
+                                {% if UnavailableIngredientsStr == 'You\'ve got all the ingredients!' %}
+                                <b><a href={{food.url}}><span style="color: green;">{{UnavailableIngredientsStr}}</span></a></b>
                                 {% else %}
-                                <b><a href={{food.url}}><span
-                                        style="color: red;">{{UnavailableIngridientsStr}}</span></a></b>
+                                <b><a href={{food.url}}><span style="color: red;">{{UnavailableIngredientsStr}}</span></a></b>
                                 {% endif %}
-                                <div class="meta-bottom d-flex justify-content-between">
-                                    <p><span class="lnr lnr-heart"></span> {{food.score}} Likes</p>
-                                </div>
+                                   {% if food in favorites %}
+                                    <div class="meta-bottom d-flex justify-content-between">
+                                        <a  onclick="myFunction(this,'{{food}}')"  class="lnr lnr-heart-pulse" style="color: red;" id = "{{food|cut:' ' }}3">
+                                            <span class='txt'>{{food.score}} Likes</span>
+                                        </a>
+                                    </div>
+                                {% else %}
+                                    <div class="meta-bottom d-flex justify-content-between">
+                                        <a  onclick="myFunction(this,'{{food}}')"  class="lnr lnr-heart" style="color: red;" id = "{{food|cut:' ' }}4">
+                                            <span class='txt'>{{food.score}} Likes</span>
+                                        </a>
+                                    </div>
+                                {% endif %}
                             </div>
                             {% endfor %}
                         </div>
@@ -225,13 +235,40 @@
 
 {% block scripts %}
 <script>
-data =  {{foodNames|safe}}
+dataFood =  {{foodNames|safe}}
 $('#autocomplete').autocomplete({
-	lookup: data
+	lookup: dataFood
 });
+</script>
+<script>
+function myFunction(x , y) {
+    var id = x['id'];
+    var idtext1 ='#' + id
+    if ( x.classList.contains( "lnr-heart-pulse") ) {
+        x.classList.remove( "lnr-heart-pulse" );
+        x.classList.add( "lnr-heart" );
+        $.ajax({
+            url: '/search/',
+                data: {'foods':  y, 'action' : 'minus' , 'isLike' : 'True' , 'isProfile' : 'False'},
+                success: function (data) {
+                    var addtext = '  '+data["likes"] + '   Likes'
+                    $(idtext1).text(addtext);
 
-
-
-
+                },
+        });
+    }
+    else {
+        x.classList.remove( "lnr-heart" );
+        x.classList.add( "lnr-heart-pulse" );
+        $.ajax({
+            url: '/search/',
+            data: {'foods':  y, 'action' : 'add' , 'isLike' : 'True', 'isProfile' : 'False'  },
+            success: function (data) {
+                var addtext = '  '+data["likes"] + '   Likes'
+                $( idtext1).text(addtext);
+            },
+        });
+    }
+}
 </script>
 {% endblock %}

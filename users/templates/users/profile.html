@@ -30,5 +30,73 @@
             </div>
         </div>
     </div>
+    <div class="container">
+        <h3 class="mb-30" >Favorites</h3>
+    <div class="row justify-content-left">
+        {% for food in favorites %}
+        <div class="col-lg-3 col-md-6 single-blog">
+            <div class="thumb">
+                <a href={{food.url}}>
+                    <img class="img-fluid" src="/media/{{food.image}}" alt="">
+                </a>
+            </div>
+            <p class="date">{{food.date_added|date}}</p>
+            <a href={{food.url}}><h4>{{food.name}}</h4></a>
+            <a href={{food.url}}>{{food.detail}}</a>
+            <div class="meta-bottom d-flex justify-content-between">
+                {% if food in favorites %}
+                <div class="meta-bottom d-flex justify-content-between">
+                    <a  onclick="myFunction(this,'{{food}}')"  class="lnr lnr-heart-pulse" style="color: red;" id = "{{food|cut:' ' }}1">
+                        <span class='txt'>{{food.score}} Likes</span>
+                    </a>
+                </div>
+                {% else %}
+                <div class="meta-bottom d-flex justify-content-between">
+                    <a  onclick="myFunction(this,'{{food}}')"  class="lnr lnr-heart" style="color: red;" id = "{{food|cut:' ' }}2">
+                        <span class='txt'>{{food.score}} Likes</span>
+                    </a>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    </div>
 </section>
 {% endblock content %}
+
+{% block scripts %}
+<script>
+function myFunction(x , y) {
+    var id = x['id'];
+    var idtext1 ='#' + id
+    if ( x.classList.contains( "lnr-heart-pulse") ) {
+        x.classList.remove( "lnr-heart-pulse" );
+        x.classList.add( "lnr-heart" );
+        $.ajax({
+            url: '/search/',
+                data: {'foods':  y, 'action' : 'minus' , 'isLike' : 'True' , 'isProfile' : 'True' },
+                success: function (data) {
+                    var addtext = '  '+data["likes"] + '   Likes'
+                    $(idtext1).text(addtext);
+
+                },
+        });
+    }
+    else {
+        x.classList.remove( "lnr-heart" );
+        x.classList.add( "lnr-heart-pulse" );
+        $.ajax({
+            url: '/search/',
+            data: {'foods':  y, 'action' : 'add' , 'isLike' : 'True', 'isProfile' : 'True' },
+            success: function (data) {
+                var addtext = '  '+data["likes"] + '   Likes'
+                $( idtext1).text(addtext);
+            },
+        });
+    }
+}
+</script>
+
+{% endblock %}

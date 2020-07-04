@@ -1,8 +1,13 @@
-from _operator import getitem
-
+from django.http import JsonResponse
 from django.shortcuts import render
 from .models import Food, Ingredient
+from users.models import Profile
 from .forms import ChooseIngredientsForm, FilterTypesForm
+
+FoodChosenForLike = []
+FavoriteUser = []
+FoodLiked = ""
+firstTimeToProfile = True
 
 
 def home(request):
@@ -14,6 +19,22 @@ def about(request):
 
 
 def search(request):
+    global FoodChosenForLike, FoodLiked, FavoriteUser, firstTimeToProfile
+    likeMessage = str(request.GET.get('isLike') or "")
+    isProfile = str(request.GET.get('isProfile') or "")
+    selectProfile = list(Profile.objects.filter(user__username=request.user))
+    if isProfile == "True":
+        if firstTimeToProfile:
+            firstTimeToProfile = False
+            FavoriteUser = list(selectProfile[0].favorites.all())
+        FoodChosenForLike = []
+    else:
+        firstTimeToProfile = True
+        FavoriteUser = []
+
+    if likeMessage == "True":
+        return score(request)
+
     filterTypes_form = FilterTypesForm(request.POST or None)
     ingredients_form = ChooseIngredientsForm(request.POST or None)
     match = []
@@ -41,7 +62,7 @@ def search(request):
 
     # ingredient search :
     food_selected_with_selected_ingredient = []
-    chosenIngridient = []
+    chosenIngredient = []
     if request.method == "POST" and ingredients_form.is_valid():
         for form in ingredients_form:
             if form.name in request.POST:
@@ -55,45 +76,85 @@ def search(request):
                     if mealType != "all":
                         food_with_selected_ingredient = food_with_selected_ingredient.filter(mealType=mealType)
                     food_selected_with_selected_ingredient.append(food_with_selected_ingredient)
-                    chosenIngridient.append(selected_ingredient)
+                    chosenIngredient.append(selected_ingredient)
 
     chosenFood = {}
     for queryFood in food_selected_with_selected_ingredient:
         for food in queryFood:
             a = Ingredient.objects.filter(food__name__startswith=food.name)
-            chosenFood.update({food: {"Ingridient": a, "list of unavailable ingridients": list(a)}})
-
+            chosenFood.update({food: {"Ingredients": a, "list of unavailable ingredients": list(a)}})
     for x in chosenFood:
-        tempListOfUnavailableIngridients = chosenFood[x]["list of unavailable ingridients"].copy()
-        for ingredient in chosenIngridient:
-            for chosenfood in chosenFood.get(x).get("Ingridient"):
+        tempListOfUnavailableIngredients = chosenFood[x]["list of unavailable ingredients"].copy()
+        for ingredient in chosenIngredient:
+            for chosenfood in chosenFood.get(x).get("Ingredients"):
                 if ingredient == chosenfood.name:
-                    for unavailableIngridients in chosenFood[x]["list of unavailable ingridients"]:
-                        if ingredient == unavailableIngridients.name:
-                            tempListOfUnavailableIngridients.remove(unavailableIngridients)
-                    chosenFood[x] = {"Ingridient": chosenFood.get(x).get("Ingridient"),
-                                     "list of unavailable ingridients": list(tempListOfUnavailableIngridients)}
+                    for unavailableIngredients in chosenFood[x]["list of unavailable ingredients"]:
+                        if ingredient == unavailableIngredients.name:
+                            tempListOfUnavailableIngredients.remove(unavailableIngredients)
+                    chosenFood[x] = {"Ingredients": chosenFood.get(x).get("Ingredients"),
+                                     "list of unavailable ingredients": list(tempListOfUnavailableIngredients)}
 
     sortedChosenFood = dict(sorted(chosenFood.items(), key=lambda x: len(x[1])))
     finalSortedFoodChoose = {}
     for x in sortedChosenFood:
-        if len(sortedChosenFood[x]["list of unavailable ingridients"]) == 0:
+        if len(sortedChosenFood[x]["list of unavailable ingredients"]) == 0:
             finalSortedFoodChoose[x] = "You've got all the ingredients!"
         else:
-            UnavailableIngridientsStr = "YOU MISS : "
-            for nameFood in sortedChosenFood[x]["list of unavailable ingridients"]:
-                UnavailableIngridientsStr += nameFood.name
-            finalSortedFoodChoose[x] = UnavailableIngridientsStr
+            UnavailableIngredientsStr = "YOU MISS : "
+            for nameFood in sortedChosenFood[x]["list of unavailable ingredients"]:
+                UnavailableIngredientsStr += ' ' + nameFood.name
+            finalSortedFoodChoose[x] = UnavailableIngredientsStr
     allFoods = [food.name for food in list(Food.objects.all())]
+    if match:
+        FoodChosenForLike = list(match)
+    elif finalSortedFoodChoose:
+        FoodChosenForLike = list(finalSortedFoodChoose)
+    if len(selectProfile) != 0:
+        Favorites = list(selectProfile[0].favorites.all())
+
     context = {
         'previousFilter': {"cuisine": cuisine, "mealType": mealType, "diet": diet},
         'filterTypes_form': filterTypes_form,
         'matchFoods': match,
         'ingredients_form': ingredients_form,
         'foodNames': allFoods,
-        'finalSortedFoodChoose': finalSortedFoodChoose
+        'finalSortedFoodChoose': finalSortedFoodChoose,
+        # 'favorites': list(selectProfile[0].favorites.all()),
     }
+    if len(selectProfile) != 0:
+        context['favorites'] = list(selectProfile[0].favorites.all())
     return render(request, 'blog/search.html', context)
 
 
+def score(request):
+    global FoodChosenForLike, FoodLiked, FavoriteUser
+    name = str(request.GET.get('foods'))
+    action = str(request.GET.get('action'))
+    User = request.user
+    selectProfile = list(Profile.objects.filter(user__username=User))
+    if name != "":
+        if FoodChosenForLike:
+            newScore = calScore(name, action, FoodChosenForLike, selectProfile)
+        else:
+            newScore = calScore(name, action, FavoriteUser, selectProfile)
+    return JsonResponse({'likes': newScore})
 
+
+def calScore(name, action, listOfFood, selectProfile):
+    selectedFood = ''
+    Score = ''
+    for food in listOfFood:
+        if food.name == name:
+            if action == 'add':
+                food.score += 1
+                for x in selectProfile:
+                    x.favorites.add(food)
+                    x.save()
+            elif action == 'minus':
+                food.score -= 1
+                for x in selectProfile:
+                    x.favorites.remove(food)
+                    x.save()
+            food.save()
+            Score = food.score
+    return  Score
