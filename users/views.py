@@ -30,7 +30,7 @@ def profile(request):
     context = {
         'favorites': list(favorites)
     }
-    return render(request, 'users/profile.html' , context)
+    return render(request, 'users/profile.html', context)
 
 
 class ChangeEmail(generic.UpdateView):

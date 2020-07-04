@@ -22,7 +22,7 @@ def search(request):
     global FoodChosenForLike, FoodLiked, FavoriteUser, firstTimeToProfile
     likeMessage = str(request.GET.get('isLike') or "")
     isProfile = str(request.GET.get('isProfile') or "")
-    selectProfile = list(Profile.objects.filter(user__username__startswith=request.user))
+    selectProfile = list(Profile.objects.filter(user__username=request.user))
     if isProfile == "True":
         if firstTimeToProfile:
             firstTimeToProfile = False
@@ -102,13 +102,16 @@ def search(request):
         else:
             UnavailableIngredientsStr = "YOU MISS : "
             for nameFood in sortedChosenFood[x]["list of unavailable ingredients"]:
-                UnavailableIngredientsStr += nameFood.name
+                UnavailableIngredientsStr += ' ' + nameFood.name
             finalSortedFoodChoose[x] = UnavailableIngredientsStr
     allFoods = [food.name for food in list(Food.objects.all())]
     if match:
         FoodChosenForLike = list(match)
     elif finalSortedFoodChoose:
         FoodChosenForLike = list(finalSortedFoodChoose)
+    if len(selectProfile) != 0:
+        Favorites = list(selectProfile[0].favorites.all())
+
     context = {
         'previousFilter': {"cuisine": cuisine, "mealType": mealType, "diet": diet},
         'filterTypes_form': filterTypes_form,
@@ -116,9 +119,10 @@ def search(request):
         'ingredients_form': ingredients_form,
         'foodNames': allFoods,
         'finalSortedFoodChoose': finalSortedFoodChoose,
-        'favorites': list(selectProfile[0].favorites.all()),
-        'FoodLiked': FoodLiked
+        # 'favorites': list(selectProfile[0].favorites.all()),
     }
+    if len(selectProfile) != 0:
+        context['favorites'] = list(selectProfile[0].favorites.all())
     return render(request, 'blog/search.html', context)
 
 
@@ -127,13 +131,13 @@ def score(request):
     name = str(request.GET.get('foods'))
     action = str(request.GET.get('action'))
     User = request.user
-    selectProfile = list(Profile.objects.filter(user__username__startswith=User))
+    selectProfile = list(Profile.objects.filter(user__username=User))
     if name != "":
         if FoodChosenForLike:
-            FoodLiked, newScore = calScore(name, action, FoodChosenForLike, selectProfile)
+            newScore = calScore(name, action, FoodChosenForLike, selectProfile)
         else:
-            FoodLiked, newScore = calScore(name, action, FavoriteUser, selectProfile)
-    return JsonResponse({'likes': newScore, 'FoodLiked': FoodLiked})
+            newScore = calScore(name, action, FavoriteUser, selectProfile)
+    return JsonResponse({'likes': newScore})
 
 
 def calScore(name, action, listOfFood, selectProfile):
@@ -152,6 +156,5 @@ def calScore(name, action, listOfFood, selectProfile):
                     x.favorites.remove(food)
                     x.save()
             food.save()
-            selectedFood = food.name
             Score = food.score
-    return selectedFood, Score
+    return  Score
