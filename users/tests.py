@@ -53,8 +53,8 @@ class ChangePasswordTest(TestCase):
         client.login(username='user2', password='yuio1234')
 
         # change password
-        response2 = client.post('/changePassword/', {'old_password': 'yuio1234', 'new_password1': 'yuioo12345',
-                                                     'new_password2': 'yuioo12345'})
+        response2 = client.post('/changePassword/', {'current': 'yuio1234', 'password1': 'yuioo12345',
+                                                     'password2': 'yuioo12345'})
         self.assertEqual(response2.status_code, 302)
 
         # test login with old password
