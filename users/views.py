@@ -51,3 +51,10 @@ class ChangePassword(generic.UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
+
+def login(request):
+    return render(request, 'users/login.html')
+
+
+def logout(request):
+    return render(request, 'users/logout.html')
