@@ -5,6 +5,9 @@ from .models import Food
 from users.models import Profile
 from .views import FoodLiked
 from blog import views
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 
 
 class CheckDirectSearch(TestCase):
@@ -195,4 +198,21 @@ class CheckFilterSearch(TestCase):
         self.assertEqual({food.name for food in response1.context["finalSortedFoodChoose"].keys()},
                          {'food1'})
 
-
+#
+# class MySeleniumTests(StaticLiveServerTestCase):
+#
+#     @classmethod
+#     def setUpClass(cls):
+#         super().setUpClass()
+#         cls.driver = webdriver.Chrome('D:/program-download/chromedriver')
+#         cls.selenium.implicitly_wait(10)
+#
+#     @classmethod
+#     def tearDownClass(cls):
+#         cls.driver.close()
+#         super().tearDownClass()
+#
+#     def test_login(self):
+#         driver = self.driver
+#         driver.get("http://127.0.0.1:8000/")
+#         assert 'Dish' in driver.page_source

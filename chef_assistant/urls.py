@@ -25,10 +25,7 @@ urlpatterns = [
     path('', blog_view.home, name='home'),
     path('', include('blog.urls')),
     path('', include('users.urls')),
-    path('changePassword/', user_view.ChangePassword.as_view(), name='changePassword'),
-    path('changeEmail/', user_view.ChangeEmail.as_view(), name='changeEmail'),
-    path('search/', include('blog.urls'))
-
+    path('search/', include('blog.urls')),
 ]
 
 if settings.DEBUG:
