@@ -68,7 +68,7 @@ def search(request):
             if form.name in request.POST:
                 for selected_ingredient in request.POST.getlist(form.name):
                     food_with_selected_ingredient = Food.objects.filter(
-                        ingredients__name__startswith=selected_ingredient)
+                        ingredients__name=selected_ingredient)
                     if diet != "all":
                         food_with_selected_ingredient = food_with_selected_ingredient.filter(diet=diet)
                     if cuisine != "all":
@@ -81,7 +81,7 @@ def search(request):
     chosenFood = {}
     for queryFood in food_selected_with_selected_ingredient:
         for food in queryFood:
-            a = Ingredient.objects.filter(food__name__startswith=food.name)
+            a = Ingredient.objects.filter(food__name=food.name)
             chosenFood.update({food: {"Ingredients": a, "list of unavailable ingredients": list(a)}})
     for x in chosenFood:
         tempListOfUnavailableIngredients = chosenFood[x]["list of unavailable ingredients"].copy()

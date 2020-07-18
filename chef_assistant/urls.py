@@ -22,17 +22,10 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('register/', user_view.register, name='register'),
-    path('profile/', user_view.profile, name='profile'),
-    path('login/', auth_views.LoginView.as_view(template_name='users/login.html'), name='login'),
     path('', blog_view.home, name='home'),
-    path('logout/', auth_views.LogoutView.as_view(template_name='users/logout.html'), name='logout'),
     path('', include('blog.urls')),
-    path('changePassword/', user_view.ChangePassword.as_view(), name='changePassword'),
-    path('changeEmail/', user_view.ChangeEmail.as_view(), name='changeEmail'),
-    # path('search/', blog_view.search, name='search-page')
-    path('search/',include('blog.urls'))
-
+    path('', include('users.urls')),
+    path('search/', include('blog.urls')),
 ]
 
 if settings.DEBUG:

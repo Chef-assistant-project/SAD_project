@@ -24,7 +24,7 @@ def register(request):
 @login_required
 def profile(request):
     User = request.user
-    selectProfile = Profile.objects.filter(user__username__startswith=User)
+    selectProfile = Profile.objects.filter(user__username=User)
     for x in selectProfile:
         favorites = x.favorites.all()
     context = {
@@ -51,3 +51,10 @@ class ChangePassword(generic.UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
+
+def login(request):
+    return render(request, 'users/login.html')
+
+
+def logout(request):
+    return render(request, 'users/logout.html')
