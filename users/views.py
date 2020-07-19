@@ -12,7 +12,7 @@ def register(request):
         form = UserRegisterForm(request.POST)
         if form.is_valid():
             form.save()
-            username = form.cleaned_data.get('username')
+            # username = form.cleaned_data.get('username')
             messages.success(request, f'Your account has been created! You are now able to log in.')
             return redirect('login')
 
@@ -24,9 +24,8 @@ def register(request):
 @login_required
 def profile(request):
     User = request.user
-    selectProfile = Profile.objects.filter(user__username=User)
-    for x in selectProfile:
-        favorites = x.favorites.all()
+    select_profile = Profile.objects.get(user__username=User)
+    favorites = select_profile.favorites.all()
     context = {
         'favorites': list(favorites)
     }
@@ -51,6 +50,7 @@ class ChangePassword(generic.UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
+
 
 def login(request):
     return render(request, 'users/login.html')

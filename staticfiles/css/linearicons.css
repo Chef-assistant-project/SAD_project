@@ -406,7 +406,8 @@
 	content: "\e87e";
 }
 .lnr-checkmark-circle:before {
-	content: "\e87f";
+  	content: "\e87f";
+
 }
 .lnr-cross-circle:before {
 	content: "\e880";
