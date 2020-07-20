@@ -1,6 +1,6 @@
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import JsonResponse
-from users.models import Profile
+from users.models import Profile, Food_likes
 from .models import Food
 
 
@@ -9,10 +9,21 @@ def Score(request):
     food_selected = Food.objects.get(name=name)
     action = str(request.GET.get('action'))
     index_selected = int(request.GET.get('index_selected'))
+    id_current_user = request.user.id
 
-    ## for sogand (bug dare id bezar):
-    # User = request.user
-    # selectProfile = Profile.objects.get(user__username=User)
+    select_profile = list(Profile.objects.filter(user__id=id_current_user))
+    food_like_user = list(select_profile)[0].food_likes.filter(name=name)
+
+    if len(list(food_like_user)) == 0:
+        F = Food_likes(name=name, score=index_selected)
+        F.save()
+        select_profile[0].food_likes.add(F)
+    else:
+        # F = select_profile[0].food_likes.filter(name=name)
+        food_like_user.update(score=index_selected)
+
+    print(list(select_profile[0].food_likes.filter(name="F1"))[0].score)
+    print(select_profile[0].food_likes.all())
 
     if action == 'add':
         food_selected.score += index_selected
