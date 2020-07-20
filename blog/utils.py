@@ -1,34 +1,34 @@
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import JsonResponse
-from users.models import Profile, Food_likes
+from users.models import Profile, FoodLike
 from .models import Food
 
 
 def Score(request):
     name = str(request.GET.get('foods'))
     food_selected = Food.objects.get(name=name)
-    action = str(request.GET.get('action'))
     index_selected = int(request.GET.get('index_selected'))
     id_current_user = request.user.id
-
-    select_profile = list(Profile.objects.filter(user__id=id_current_user))
-    food_like_user = list(select_profile)[0].food_likes.filter(name=name)
-
+    last_score = 0
+    select_profile = list(Profile.objects.filter(user__id=id_current_user))[0]
+    food_like_user = select_profile.food_likes.filter(name=name)
     if len(list(food_like_user)) == 0:
-        F = Food_likes(name=name, score=index_selected)
-        F.save()
-        select_profile[0].food_likes.add(F)
+        food_likes = FoodLike(name=name, score=index_selected)
+        food_likes.save()
+        select_profile.food_likes.add(food_likes)
     else:
-        # F = select_profile[0].food_likes.filter(name=name)
+        last_score = list(food_like_user)[0].score
         food_like_user.update(score=index_selected)
 
-    print(list(select_profile[0].food_likes.filter(name="F1"))[0].score)
-    print(select_profile[0].food_likes.all())
+    print(index_selected, last_score)
 
-    if action == 'add':
-        food_selected.score += index_selected
-    elif action == 'remove':
-        food_selected.score -= index_selected
+    if index_selected == 1 and last_score > index_selected:
+        new_score = -last_score
+        food_like_user.update(score=0)
+    else:
+        new_score = index_selected - last_score
+
+    food_selected.score += new_score
     food_selected.save()
     return JsonResponse({'likes': food_selected.score})
 
@@ -44,15 +44,15 @@ def direct_search(selected_food):
     return match
 
 
-def UpdateProfile(request):
+def update_profile(request):
     name = str(request.GET.get('foods'))
     food_selected = Food.objects.get(name=name)
-    action = str(request.GET.get('action'))
-    User = request.user
-    select_profile = Profile.objects.get(user__username=User)
-    if action == 'add':
+    id_current_user = request.user.id
+    select_profile = Profile.objects.get(user__id=id_current_user)
+    user_favorite = list(select_profile.favorites.all())
+    if food_selected not in user_favorite:
         select_profile.favorites.add(food_selected)
-    elif action == 'remove':
+    else:
         select_profile.favorites.remove(food_selected)
     select_profile.save()
     return JsonResponse({})

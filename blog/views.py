@@ -90,12 +90,19 @@ def search(request):
         'ingredients_form': ingredients_form,
         'finalSortedFoodChoose': final_sorted_food_choose,
         'foodNames': all_foods,
-        'matchFoods': match,
-
+        'match_foods': match,
     }
-    User = request.user
-    select_profile = Profile.objects.get(user__username=User)
-    context['favorites'] = list(select_profile.favorites.all())
+    user = request.user
+    filtered_users = Profile.objects.filter(user__username=user)
+    if len(list(filtered_users)) != 0 :
+        select_profile = filtered_users[0]
+        dict_food_likes = {}
+        for food_liked in list(select_profile.food_likes.all()):
+            food , score = str(food_liked).split()
+            dict_food_likes[food] = int(score)
+        context['food_likes'] = dict_food_likes
+        context['favorites'] = list(select_profile.favorites.all())
+
     return render(request, 'blog/search.html', context)
 
 
