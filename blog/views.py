@@ -11,10 +11,6 @@ def home(request):
     print("best_food_score", best_food_score)
     context = {
         'best_food_score': best_food_score,
-        # 'best_foods1': best_food_score[0],
-        # 'best_foods2': best_food_score[1],
-        # 'best_foods3': best_food_score[2],
-
     }
     return render(request, 'blog/home.html', context)
 
@@ -76,8 +72,6 @@ def search(request):
                     chosen_food[x] = {"Ingredients": chosen_food.get(x).get("Ingredients"),
                                       "list of unavailable ingredients": list(temp_list_of_unavailable_ingredients)}
 
-    ### sogand check it pls :)
-    # sorted_chosen_food = dict(sorted(chosen_food.items(), key=lambda x: len(x[1])))
     sorted_chosen_food = dict(
         sorted(chosen_food.items(), key=lambda x: len(x[1].get("list of unavailable ingredients"))))
     print(sorted_chosen_food)

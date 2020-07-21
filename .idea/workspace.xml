@@ -33,8 +33,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cf787d1a-0c93-49f7-a2e7-61a11149e8e1" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/staticfiles/css/load-more-button.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/SAD_project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/SAD_project.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/templates/blog/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/blog/templates/blog/home.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/templates/blog/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/blog/templates/blog/base.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/blog/templates/blog/search.html" beforeDir="false" afterPath="$PROJECT_DIR$/blog/templates/blog/search.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/blog/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/blog/views.py" afterDir="false" />
     </list>
@@ -77,6 +80,18 @@
       <recent name="C:\Users\Zeinab\Desktop\git8\SAD_project\staticfiles\js" />
       <recent name="C:\Users\Zeinab\Desktop\git8\SAD_project\blog\static\js" />
     </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
   </component>
   <component name="RunManager">
     <configuration name="views" type="PythonConfigurationType" factoryName="Python" temporary="true">
@@ -124,7 +139,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
@@ -143,7 +160,6 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
