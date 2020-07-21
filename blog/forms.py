@@ -1,42 +1,72 @@
 from django import forms
-
 DIET = (
-    ("all", "none"),
-    ("vegetarian", "vegetarian"),
-    ("gluten_free", "gluten free"),
-    ("lactose_free", "lactose_free"),
-    ("pescatarian", "pescatarian")
+    ("all", "None"),
+    ("vegetarian", "Vegetarian"),
+    ("gluten_free", "Gluten free"),
+    ("lactose_free", "Lactose_free"),
+    ("pescatarian", "Pescatarian")
 )
 CUISINE = (
-    ("all", "none"),
+    ("all", "None"),
     ("Asian", "Asian"),
     ("Italian", "Italian"),
     ("Chinese", "Chinese"),
     ("French", "French"),
     ("German", "German"),
-    ("mexican", "mexican"),
-    ("chinese", "chinese")
+    ("mexican", "Mexican"),
+    ("chinese", "Chinese")
 )
 MEAL_TYPE = (
-    ("all", "none"),
-    ("breakfast", "breakfast"),
-    ("desserts", "desserts"),
-    ("dinner", "dinner"),
-    ("salads", "salads"),
-    ("cakes", "cakes"),
-    ("breads", "breads"),
-    ("soups", "soups"),
-    ("sandwiches", "sandwiches"),
-    ("drinks", "drinks"),
-    ("seafood", "seafood")
+    ("all", "None"),
+    ("breakfast", "Breakfast"),
+    ("desserts", "Desserts"),
+    ("dinner", "Dinner"),
+    ("salads", "Salads"),
+    ("cakes", "Cakes"),
+    ("breads", "Breads"),
+    ("soups", "Soups"),
+    ("sandwiches", "Sandwiches"),
+    ("drinks", "Drinks"),
+    ("seafood", "Seafood")
 )
 
 
 class ChooseIngredientsForm(forms.Form):
-
     def __init__(self, *args, **kwargs):
-        super(ChooseIngredientsForm, self).__init__(*args, **kwargs)
 
+        if ChooseIngredientsForm.ever_filled == False:
+            from .models import Ingredient
+            ChooseIngredientsForm.DAIRY = tuple(
+                ((item.name, item.name) for item in Ingredient.objects.filter(category="dairy")))
+            ChooseIngredientsForm.BACKING_AND_GRAINS = tuple(
+                ((item.name, item.name) for item in Ingredient.objects.filter(category="backing_and_grains")))
+            ChooseIngredientsForm.SWEETENERS = tuple(
+                ((item.name, item.name) for item in Ingredient.objects.filter(category="sweeteners")))
+            ChooseIngredientsForm.VEGETABLES = tuple(
+                ((item.name, item.name) for item in Ingredient.objects.filter(category="vegetables")))
+            ChooseIngredientsForm.FRUITS = tuple(
+                ((item.name, item.name) for item in Ingredient.objects.filter(category="fruits")))
+            ChooseIngredientsForm.SPICES = tuple(
+                ((item.name, item.name) for item in Ingredient.objects.filter(category="spices")))
+            ChooseIngredientsForm.MEATS = tuple(
+                ((item.name, item.name) for item in Ingredient.objects.filter(category="meats")))
+            ChooseIngredientsForm.FISH_AND_SEAFOOD = tuple(
+                ((item.name, item.name) for item in Ingredient.objects.filter(category="fish_and_seafood")))
+            ChooseIngredientsForm.CONDIMENTS = tuple(
+                ((item.name, item.name) for item in Ingredient.objects.filter(category="condiments")))
+            ChooseIngredientsForm.BEVERAGES = tuple(
+                ((item.name, item.name) for item in Ingredient.objects.filter(category="beverages")))
+            ChooseIngredientsForm.NUTS = tuple(
+                ((item.name, item.name) for item in Ingredient.objects.filter(category="nuts")))
+            ChooseIngredientsForm.OIL = tuple(
+                ((item.name, item.name) for item in Ingredient.objects.filter(category="oil")))
+            ChooseIngredientsForm.LEGUMES = tuple(
+                ((item.name, item.name) for item in Ingredient.objects.filter(category="legumes")))
+            ChooseIngredientsForm.SAUCES = tuple(
+                (item.name, item.name) for item in Ingredient.objects.filter(category="sauces"))
+            ChooseIngredientsForm.ever_filled = True
+
+        super(ChooseIngredientsForm, self).__init__(*args, **kwargs)
         self.fields['dairy'].choices = self.DAIRY
         self.fields['vegetables'].choices = self.VEGETABLES
         self.fields['fruits'].choices = self.FRUITS
@@ -52,6 +82,7 @@ class ChooseIngredientsForm(forms.Form):
         self.fields['oil'].choices = self.OIL
         self.fields['sauces'].choices = self.SAUCES
 
+    ever_filled = False
     DAIRY = ()
     VEGETABLES = ()
     FRUITS = ()

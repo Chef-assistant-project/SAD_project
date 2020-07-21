@@ -28,11 +28,11 @@ class Ingredient(models.Model):
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
-        super(Ingredient, self).save(force_insert=False, force_update=False, using=None, update_fields=None)
+        super(Ingredient, self).save(force_insert, force_update, using, update_fields)
         ChooseIngredientsForm.DAIRY = tuple(
             ((item.name, item.name) for item in Ingredient.objects.filter(category="dairy")))
         ChooseIngredientsForm.BACKING_AND_GRAINS = tuple(
-            ((item.name, item.name) for item in Ingredient.objects.filter(category="backing_and_rains")))
+            ((item.name, item.name) for item in Ingredient.objects.filter(category="backing_and_grains")))
         ChooseIngredientsForm.SWEETENERS = tuple(
             ((item.name, item.name) for item in Ingredient.objects.filter(category="sweeteners")))
         ChooseIngredientsForm.VEGETABLES = tuple(

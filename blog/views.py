@@ -63,10 +63,12 @@ def search(request):
     # ingredient search :
     food_selected_with_selected_ingredient = []
     chosenIngredient = []
+    previous_ingredients = []
     if request.method == "POST" and ingredients_form.is_valid():
         for form in ingredients_form:
             if form.name in request.POST:
                 for selected_ingredient in request.POST.getlist(form.name):
+                    previous_ingredients.append(selected_ingredient)
                     food_with_selected_ingredient = Food.objects.filter(
                         ingredients__name=selected_ingredient)
                     if diet != "all":
@@ -113,6 +115,7 @@ def search(request):
         Favorites = list(selectProfile[0].favorites.all())
 
     context = {
+        'previousIngredients': previous_ingredients,
         'previousFilter': {"cuisine": cuisine, "mealType": mealType, "diet": diet},
         'filterTypes_form': filterTypes_form,
         'matchFoods': match,

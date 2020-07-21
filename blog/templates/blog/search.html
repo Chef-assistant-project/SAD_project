@@ -20,10 +20,26 @@
 <!-- End banner Area -->
 
 <section class="about-generic-area section-gap">
+
     <div class="container">
+        <p id="demo">ooooooo</p>
         <h3 class="mb-30">Choose ingredients</h3>
         <div class="row">
             <div class="col-md-4">
+                <input type="text" class="form-control" id="typeIngredientTextBox" placeholder="Add an ingredient">
+
+
+                <div class="row">
+                    {% for ingredient in previousIngredients%}
+                    <div class="col-md-7">
+                        {{ ingredient }}
+                    </div>
+                    <div class="col-md-5" onclick="uncheck({{ingredient}})">
+                        <img src="/static/img/icons/recycle_bin.png" width="15" height="20">
+                    </div>
+                    {% endfor %}
+                </div>
+
                 <form action="" method="post">
                     <div class="single-defination">
                         <div class="ScrollStyle">
@@ -34,10 +50,10 @@
                             </button>
                             <div class="panel">
                                 <div class="container">
-                                    {% for item2 in item %}
+                                    {% for temp,item2 in item.field.choices %}
                                     <div class="form-check-inline">
                                         {% csrf_token %}
-                                        {{ item2 }}
+                                        <input type="checkbox" id="{{item2}}" name="{{item.name}}" value="{{item2}}"  {% if item2 in previousIngredients %} checked  {% endif %}>   &nbsp{{ item2 }}
                                     </div>
                                     {% endfor %}
                                 </div>
@@ -47,33 +63,9 @@
                         <br>
                         <br>
                     </div>
-                    <!--<form action="" method="POST">-->
-                    <!--{% for item in filterTypes_form %}-->
-                    <!--<div class="row">-->
-                    <!--<h4 class="mb-10">Select {{ item.label }}</h4>-->
-                    <!--<div class="default-select" id="default-select">-->
-                    <!--{% csrf_token %}-->
-                    <!--<select class="form-control" id="inputState" style="display: none;" name="{{item.name}}">-->
-                    <!--{% for a,b in item.field.choices %}-->
-                    <!--{% with item.label as d %}-->
-                    <!--{% if d == 'pescatarian' %}-->
-                    <!--<option selected value="{{ a }}">{{ b }}&#45;&#45;&#45;&#45;</option>-->
-                    <!--{%debug%}-->
-                    <!--{% else %}-->
-                    <!--<option value="{{ a }}">{{ b }}-</option>-->
-                    <!--{% endif %}-->
-                    <!--{% endwith %}-->
-                    <!--{% endfor %}-->
-                    <!--</select>-->
-
-                    <!--</div>-->
-                    <!--</div>-->
-                    <!--{% endfor %}-->
-                    <!--<input type="submit" class="genric-btn primary small" value="Filter">-->
-                    <!--</form>-->
                     <div class="row mt-4 mb-4">
                         <div class="col-md-7">
-                            <h4 class="mb-10">Select DIET </h4>
+                            <h4 class="mb-10">Select Diet </h4>
                         </div>
                         <div class="col-md-5">
                             <div class="default-select" id="default-select">
@@ -111,7 +103,7 @@
                     </div>
                     <div class="row mt-4 mb-4">
                         <div class="col-md-7">
-                            <h4 class="mb-10 mt-10">Select mealType </h4>
+                            <h4 class="mb-10 mt-10">Select MealType </h4>
                         </div>
                         <div class="col-md-5">
                             <div class="default-select" id="default-select  ">
@@ -132,7 +124,7 @@
                     <div class="row ml-1">
                         <br>
                         <br>
-                        <input type="submit" class="genric-btn primary circle" value="Search">
+                        <input type="submit" class="genric-btn primary circle" value="Search" id="search">
                     </div>
                 </form>
             </div>
@@ -174,17 +166,19 @@
                                 <a href={{food.url}}><h4>{{food.name}}</h4></a>
                                 <a href={{food.url}}>{{food.detail}}</a>
                                 {% if food in favorites %}
-                                    <div class="meta-bottom d-flex justify-content-between">
-                                        <a  onclick="myFunction(this,'{{food}}')"  class="lnr lnr-heart-pulse" style="color: red;" id = "{{food|cut:' ' }}1">
-                                            <span class='txt'>{{food.score}} Likes</span>
-                                        </a>
-                                    </div>
+                                <div class="meta-bottom d-flex justify-content-between">
+                                    <a onclick="myFunction(this,'{{food}}')" class="lnr lnr-heart-pulse"
+                                       style="color: red;" id="{{food|cut:' ' }}1">
+                                        <span class='txt'>{{food.score}} Likes</span>
+                                    </a>
+                                </div>
                                 {% else %}
-                                    <div class="meta-bottom d-flex justify-content-between">
-                                        <a  onclick="myFunction(this,'{{food}}')"  class="lnr lnr-heart" style="color: red;" id = "{{food|cut:' ' }}2">
-                                            <span class='txt'>{{food.score}} Likes</span>
-                                        </a>
-                                    </div>
+                                <div class="meta-bottom d-flex justify-content-between">
+                                    <a onclick="myFunction(this,'{{food}}')" class="lnr lnr-heart" style="color: red;"
+                                       id="{{food|cut:' ' }}2">
+                                        <span class='txt'>{{food.score}} Likes</span>
+                                    </a>
+                                </div>
                                 {% endif %}
 
                             </div>
@@ -205,20 +199,23 @@
                                 {% if UnavailableIngredientsStr == 'You\'ve got all the ingredients!' %}
                                 <b><a href={{food.url}}><span style="color: green;">{{UnavailableIngredientsStr}}</span></a></b>
                                 {% else %}
-                                <b><a href={{food.url}}><span style="color: red;">{{UnavailableIngredientsStr}}</span></a></b>
+                                <b><a href={{food.url}}><span
+                                        style="color: red;">{{UnavailableIngredientsStr}}</span></a></b>
                                 {% endif %}
-                                   {% if food in favorites %}
-                                    <div class="meta-bottom d-flex justify-content-between">
-                                        <a  onclick="myFunction(this,'{{food}}')"  class="lnr lnr-heart-pulse" style="color: red;" id = "{{food|cut:' ' }}3">
-                                            <span class='txt'>{{food.score}} Likes</span>
-                                        </a>
-                                    </div>
+                                {% if food in favorites %}
+                                <div class="meta-bottom d-flex justify-content-between">
+                                    <a onclick="myFunction(this,'{{food}}')" class="lnr lnr-heart-pulse"
+                                       style="color: red;" id="{{food|cut:' ' }}3">
+                                        <span class='txt'>{{food.score}} Likes</span>
+                                    </a>
+                                </div>
                                 {% else %}
-                                    <div class="meta-bottom d-flex justify-content-between">
-                                        <a  onclick="myFunction(this,'{{food}}')"  class="lnr lnr-heart" style="color: red;" id = "{{food|cut:' ' }}4">
-                                            <span class='txt'>{{food.score}} Likes</span>
-                                        </a>
-                                    </div>
+                                <div class="meta-bottom d-flex justify-content-between">
+                                    <a onclick="myFunction(this,'{{food}}')" class="lnr lnr-heart" style="color: red;"
+                                       id="{{food|cut:' ' }}4">
+                                        <span class='txt'>{{food.score}} Likes</span>
+                                    </a>
+                                </div>
                                 {% endif %}
                             </div>
                             {% endfor %}
@@ -239,6 +236,7 @@ dataFood =  {{foodNames|safe}}
 $('#autocomplete').autocomplete({
 	lookup: dataFood
 });
+
 </script>
 <script>
 function myFunction(x , y) {
@@ -270,5 +268,29 @@ function myFunction(x , y) {
         });
     }
 }
+
+</script>
+<script>
+
+function uncheck(id) {
+    ingredient = id;
+    alert(ingredient);
+    document.getElementById("demo").innerHTML = ingredient;
+    document.getElementById(id).checked = false;
+}
+
+
+var typeIngredientTextBox = document.getElementById('typeIngredientTextBox');
+typeIngredientTextBox.addEventListener('keypress', function(e){
+    if(e.keyCode == 13){//keyCode for enter
+        newIngredient = document.getElementById('typeIngredientTextBox').value;
+        if (document.getElementById(newIngredient) != null && document.getElementById(newIngredient).checked == false){
+            document.getElementById(newIngredient).checked = true;
+            document.getElementById('search').click();
+        }
+    }
+});
+
+
 </script>
 {% endblock %}
