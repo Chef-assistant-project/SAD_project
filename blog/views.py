@@ -1,6 +1,5 @@
 from django.http import JsonResponse
 from django.shortcuts import render
-
 from blog import utils
 from .models import Food, Ingredient
 from users.models import Profile
@@ -8,7 +7,12 @@ from .forms import ChooseIngredientsForm, FilterTypesForm
 
 
 def home(request):
-    return render(request, 'blog/home.html')
+    best_food_score = Food.objects.order_by('-score')[:3]
+    print("best_food_score", best_food_score)
+    context = {
+        'best_food_score': best_food_score,
+    }
+    return render(request, 'blog/home.html', context)
 
 
 def about(request):
@@ -66,11 +70,13 @@ def search(request):
                         if ingredient == unavailableIngredients.name:
                             temp_list_of_unavailable_ingredients.remove(unavailableIngredients)
                     chosen_food[x] = {"Ingredients": chosen_food.get(x).get("Ingredients"),
-                                     "list of unavailable ingredients": list(temp_list_of_unavailable_ingredients)}
-
+                                      "list of unavailable ingredients": list(temp_list_of_unavailable_ingredients)}
 
     ### sogand check it pls :)
-    sorted_chosen_food = dict(sorted(chosen_food.items(), key=lambda x: len(x[1])))
+    # sorted_chosen_food = dict(sorted(chosen_food.items(), key=lambda x: len(x[1])))
+    sorted_chosen_food = dict(
+        sorted(chosen_food.items(), key=lambda x: len(x[1].get("list of unavailable ingredients"))))
+    print(sorted_chosen_food)
     print(sorted_chosen_food)
     final_sorted_food_choose = {}
     for x in sorted_chosen_food:
@@ -94,11 +100,11 @@ def search(request):
     }
     user = request.user
     filtered_users = Profile.objects.filter(user__username=user)
-    if len(list(filtered_users)) != 0 :
+    if len(list(filtered_users)) != 0:
         select_profile = filtered_users[0]
         dict_food_likes = {}
         for food_liked in list(select_profile.food_likes.all()):
-            food , score = str(food_liked).split()
+            food, score = str(food_liked).split()
             dict_food_likes[food] = int(score)
         context['food_likes'] = dict_food_likes
         context['favorites'] = list(select_profile.favorites.all())
