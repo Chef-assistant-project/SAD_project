@@ -11,6 +11,10 @@ def home(request):
     print("best_food_score", best_food_score)
     context = {
         'best_food_score': best_food_score,
+        # 'best_foods1': best_food_score[0],
+        # 'best_foods2': best_food_score[1],
+        # 'best_foods3': best_food_score[2],
+
     }
     return render(request, 'blog/home.html', context)
 

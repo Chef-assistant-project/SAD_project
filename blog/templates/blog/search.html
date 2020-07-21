@@ -248,6 +248,7 @@
                                 {% else %}
                                 <b><a href={{food.url}}><span style="color: red;">{{UnavailableIngredientsStr}}</span></a></b>
                                 {% endif %}
+                                <br>
                                  <a style="color: red;" class='txt' id = "{{food|cut:' ' }}">{{food.score}} Likes</a>
                                 <div style="margin: 0; padding: 0; border: 0;"   >
                                     {% if food.name in food_likes %}
