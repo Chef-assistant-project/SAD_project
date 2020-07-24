@@ -2426,6 +2426,6 @@ body.mobile-nav-active #mobile-nav-toggle{
 .lnr-cross-circle:before {
     color: red;
 	content: "\e880";
-	font-size: 20px;
+	font-size: 40px;
 
 }
