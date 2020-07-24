@@ -73,6 +73,25 @@
                     <!--</form>-->
                     <div class="row mt-4 mb-4">
                         <div class="col-md-7">
+                            <h4 class="mb-10">Select Site </h4>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="default-select" id="default-select   ">
+                                {% csrf_token %}
+                                <select class="form-control" style="display: none;" name="site">
+                                    {% for a,b in filterTypes_form.site.field.choices %}
+                                    {% if previousFilter.site == a %}
+                                    <option selected value="{{ a }}">{{ b }}</option>
+                                    {% else %}
+                                    <option value="{{ a }}">{{ b }}</option>
+                                    {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-4 mb-4">
+                        <div class="col-md-7">
                             <h4 class="mb-10">Select DIET </h4>
                         </div>
                         <div class="col-md-5">

@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-from .forms import ChooseIngredientsForm, DIET, MEAL_TYPE, CUISINE
+from .forms import ChooseIngredientsForm, DIET, MEAL_TYPE, CUISINE ,FilterTypesForm
 
 CATEGORY = (("dairy", "dairy"),
             ("vegetables", "vegetables"),
@@ -74,4 +74,11 @@ class Food(models.Model):
     def __str__(self):
         return self.name
 
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        super(Food, self).save(force_insert, force_update, using, update_fields)
+        ChooseIngredientsForm.DAIRY = tuple(
+            ((item.name, item.name) for item in Ingredient.objects.filter(category="dairy")))
+        FilterTypesForm.SITE = {food.url.split('/')[2] for food in Food.objects.all()}
+        FilterTypesForm.SITE = (("all","all"),)+tuple((item, item) for item in FilterTypesForm.SITE)
 
