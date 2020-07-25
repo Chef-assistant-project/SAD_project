@@ -2385,7 +2385,7 @@ body.mobile-nav-active #mobile-nav-toggle{
 	transition: 0.4s;
 }
 .active, .accordion:hover {
-	background-color: rgba(255, 99, 71, 0.5);
+	background-color: #FFFFFF
 }
 .accordion:after {
 	content: '\002B';

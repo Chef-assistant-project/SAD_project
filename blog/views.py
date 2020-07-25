@@ -98,6 +98,7 @@ def search(request):
 
     sortedChosenFood = dict(sorted(chosenFood.items(), key=lambda x: len(x[1])))
     finalSortedFoodChoose = {}
+    suggested_ingredients = []
     for x in sortedChosenFood:
         if len(sortedChosenFood[x]["list of unavailable ingredients"]) == 0:
             finalSortedFoodChoose[x] = "You've got all the ingredients!"
@@ -105,6 +106,8 @@ def search(request):
             UnavailableIngredientsStr = "YOU MISS : "
             for nameFood in sortedChosenFood[x]["list of unavailable ingredients"]:
                 UnavailableIngredientsStr += ' ' + nameFood.name
+                if nameFood.name not in suggested_ingredients:
+                    suggested_ingredients.append(nameFood.name)
             finalSortedFoodChoose[x] = UnavailableIngredientsStr
     allFoods = [food.name for food in list(Food.objects.all())]
     if match:
@@ -113,7 +116,8 @@ def search(request):
         FoodChosenForLike = list(finalSortedFoodChoose)
     if len(selectProfile) != 0:
         Favorites = list(selectProfile[0].favorites.all())
-
+    if len(suggested_ingredients) > 10:
+        suggested_ingredients = suggested_ingredients[:10]
     context = {
         'previousIngredients': previous_ingredients,
         'previousFilter': {"cuisine": cuisine, "mealType": mealType, "diet": diet},
@@ -122,6 +126,7 @@ def search(request):
         'ingredients_form': ingredients_form,
         'foodNames': allFoods,
         'finalSortedFoodChoose': finalSortedFoodChoose,
+        'suggested_ingredients': suggested_ingredients,
         # 'favorites': list(selectProfile[0].favorites.all()),
     }
     if len(selectProfile) != 0:
@@ -160,4 +165,4 @@ def calScore(name, action, listOfFood, selectProfile):
                     x.save()
             food.save()
             Score = food.score
-    return  Score
+    return Score

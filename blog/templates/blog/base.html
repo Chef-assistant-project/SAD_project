@@ -17,7 +17,8 @@
     <meta charset="UTF-8">
     <!-- Site Title -->
     <title>ChiPaz</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet">
 
     <!-- CSS ============================================= -->
@@ -41,7 +42,7 @@
             <nav id="nav-menu-container">
                 <ul class="nav-menu">
                     <li class="menu-active"><a href="/">Home</a></li>
-<!--                    <li><a href="/about">About</a></li>-->
+                    <!--                    <li><a href="/about">About</a></li>-->
                     {% if user.is_authenticated %}
                     {% if request.user.is_superuser %}
                     <li><a href="{% url 'admin:index' %}">Admin Page</a></li>
@@ -78,6 +79,9 @@
     </div>
 </footer>
 <!-- End footer Area -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 <script src="{% static 'js/vendor/jquery-2.2.4.min.js'%}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"

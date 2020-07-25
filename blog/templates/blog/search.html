@@ -22,116 +22,168 @@
 <section class="about-generic-area section-gap">
 
     <div class="container">
-        <p id="demo">ooooooo</p>
         <h3 class="mb-30">Choose ingredients</h3>
         <div class="row">
             <div class="col-md-4">
-                <input type="text" class="form-control" id="typeIngredientTextBox" placeholder="Add an ingredient">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#categories">Categories</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#type">Type</a>
+                    </li>
+                </ul>
 
-
-                <div class="row">
-                    {% for ingredient in previousIngredients%}
-                    <div class="col-md-7">
-                        {{ ingredient }}
-                    </div>
-                    <div class="col-md-5" onclick="uncheck({{ingredient}})">
-                        <img src="/static/img/icons/recycle_bin.png" width="15" height="20">
-                    </div>
-                    {% endfor %}
-                </div>
-
-                <form action="" method="post">
-                    <div class="single-defination">
-                        <div class="ScrollStyle">
-                            {% for item in ingredients_form %}
-                            <button class="accordion" type="button">
-                                <img src="/static/img/icons/{{item.label}}.png" width="50" height="50">
-                                {{ item.label }}
-                            </button>
-                            <div class="panel">
-                                <div class="container">
-                                    {% for temp,item2 in item.field.choices %}
-                                    <div class="form-check-inline">
-                                        {% csrf_token %}
-                                        <input type="checkbox" id="{{item2}}" name="{{item.name}}" value="{{item2}}"  {% if item2 in previousIngredients %} checked  {% endif %}>   &nbsp{{ item2 }}
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div id="categories" class="container tab-pane active"><br>
+                        <form method="post" id="post-form">
+                            <div class="single-defination">
+                                <div class="ScrollStyle">
+                                    {% for item in ingredients_form %}
+                                    <button class="accordion" type="button">
+                                        <img src="/static/img/icons/{{item.label}}.png" width="50" height="50">
+                                        {{ item.label }}
+                                    </button>
+                                    <div class="panel">
+                                        <div class="container">
+                                            {% for temp,item2 in item.field.choices %}
+                                            <div class="form-check-inline">
+                                                {% csrf_token %}
+                                                {% if item2 in previousIngredients %}
+                                                <input type="checkbox" id="{{item2}}"
+                                                       name="{{item.name}}"
+                                                       value="{{item2}}"
+                                                       checked
+                                                       onclick="clickAction('{{item2}}')">
+                                                {% else %}
+                                                <input type="checkbox" id="{{item2 }}" name="{{item.name}}"
+                                                       value="{{item2}}" onclick="clickAction('{{item2}}');">
+                                                {% endif %} &nbsp{{ item2 }}
+                                            </div>
+                                            {% endfor %}
+                                        </div>
                                     </div>
                                     {% endfor %}
                                 </div>
+                                <br>
+                                <br>
+                            </div>
+                            <div class="row mt-4 mb-4">
+                                <div class="col-md-7">
+                                    <h4 class="mb-10">Select Diet </h4>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="default-select" id="default-select">
+                                        {% csrf_token %}
+                                        <select class="form-control" style="display: none;" name="diet">
+                                            {% for a,b in filterTypes_form.diet.field.choices %}
+                                            {% if previousFilter.diet == a %}
+                                            <option selected value="{{ a }}">{{ b }}</option>
+                                            {% else %}
+                                            <option value="{{ a }}">{{ b }}</option>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-4 mb-4">
+                                <div class="col-md-7">
+                                    <h4 class="mb-10 mt-10">Select Cuisine </h4>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="default-select" id="default-select ">
+                                        {% csrf_token %}
+                                        <select class="form-control" style="display: none;" name="cuisine">
+                                            {% for a,b in filterTypes_form.cuisine.field.choices %}
+                                            {% if previousFilter.cuisine == a %}
+                                            <option selected value="{{ a }}">{{ b }}</option>
+                                            {% else %}
+                                            <option value="{{ a }}">{{ b }}</option>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-4 mb-4">
+                                <div class="col-md-7">
+                                    <h4 class="mb-10 mt-10">Select MealType </h4>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="default-select" id="default-select  ">
+
+                                        {% csrf_token %}
+                                        <select class="form-control" style="display: none;" name="mealType">
+                                            {% for a,b in filterTypes_form.mealType.field.choices %}
+                                            {% if previousFilter.mealType == a %}
+                                            <option selected value="{{ a }}">{{ b }}</option>
+                                            {% else %}
+                                            <option value="{{ a }}">{{ b }}</option>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row ml-1">
+                                <br>
+                                <br>
+                                <input type="submit" class="genric-btn primary circle" value="Search" id="search">
+                                <!--                        <button class="btn btn-primary">Submit</button>-->
+                            </div>
+                        </form>
+                    </div>
+                    <div id="type" class="container tab-pane fade"><br>
+                        <input type="text" class="form-control" id="typeIngredientTextBox"
+                               placeholder="Add an ingredient">
+
+                        <div class="row mt-3" id="chosen-ingredients">
+                            {% for ingredient in previousIngredients%}
+                            <div class="col-md-6 " id="{{ingredient}}name">
+                                {{ ingredient }}
+                            </div>
+                            <div class="col-md-6" onclick="uncheck('{{ingredient}}')" id="{{ingredient}}bin">
+                                <button class="btn btn-default btn-sm" align="right">
+                                    <span class="lnr lnr-trash" align="right"></span>
+                                </button>
                             </div>
                             {% endfor %}
                         </div>
-                        <br>
-                        <br>
-                    </div>
-                    <div class="row mt-4 mb-4">
-                        <div class="col-md-7">
-                            <h4 class="mb-10">Select Diet </h4>
-                        </div>
-                        <div class="col-md-5">
-                            <div class="default-select" id="default-select">
-                                {% csrf_token %}
-                                <select class="form-control" style="display: none;" name="diet">
-                                    {% for a,b in filterTypes_form.diet.field.choices %}
-                                    {% if previousFilter.diet == a %}
-                                    <option selected value="{{ a }}">{{ b }}</option>
-                                    {% else %}
-                                    <option value="{{ a }}">{{ b }}</option>
-                                    {% endif %}
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mt-4 mb-4">
-                        <div class="col-md-7">
-                            <h4 class="mb-10 mt-10">Select Cuisine </h4>
-                        </div>
-                        <div class="col-md-5">
-                            <div class="default-select" id="default-select ">
-                                {% csrf_token %}
-                                <select class="form-control" style="display: none;" name="cuisine">
-                                    {% for a,b in filterTypes_form.cuisine.field.choices %}
-                                    {% if previousFilter.cuisine == a %}
-                                    <option selected value="{{ a }}">{{ b }}</option>
-                                    {% else %}
-                                    <option value="{{ a }}">{{ b }}</option>
-                                    {% endif %}
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mt-4 mb-4">
-                        <div class="col-md-7">
-                            <h4 class="mb-10 mt-10">Select MealType </h4>
-                        </div>
-                        <div class="col-md-5">
-                            <div class="default-select" id="default-select  ">
 
-                                {% csrf_token %}
-                                <select class="form-control" style="display: none;" name="mealType">
-                                    {% for a,b in filterTypes_form.mealType.field.choices %}
-                                    {% if previousFilter.mealType == a %}
-                                    <option selected value="{{ a }}">{{ b }}</option>
-                                    {% else %}
-                                    <option value="{{ a }}">{{ b }}</option>
-                                    {% endif %}
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
                     </div>
-                    <div class="row ml-1">
-                        <br>
-                        <br>
-                        <input type="submit" class="genric-btn primary circle" value="Search" id="search">
-                    </div>
-                </form>
+                </div>
+
             </div>
             <div class="col-md-8">
                 <div class="row">
                     <div class="container">
-                        <div class="col-lg-12 text-center mt-4">
+                        <div class="row">
+                            <div class="col-md-1 ml-6">
+                            </div>
+                            <div class="col-md-2 ml-6">
+                                {% if suggested_ingredients|length > 0 %}
+                                <b> Do you have?</b>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 ml-6">
+                                {% for suggestion in suggested_ingredients %}
+                                <input type="checkbox" id="{{suggestion}}s"
+                                       onclick="suggestAdd('{{suggestion}}')">
+                                {{ suggestion }}
+                                {% endfor %}
+                            </div>
+                            <div class="col-md-1">
+                                {% if suggested_ingredients|length > 0 %}
+                                <input type="submit" onclick="clickSearch();" class="genric-btn primary-border small" value="Add">
+                                {% endif %}
+                            </div>
+                        </div>
+                        <br>
+
+                        <div class="col-lg-12 text-center">
+
                             <h1>Already Have A Dish In Mind?</h1>
                         </div>
                         <div class="col-md-6 rounded offset-md-3 mt-5 border border-danger pt-3 ">
@@ -228,6 +280,8 @@
         </div>
     </div>
 </section>
+
+
 {% endblock content %}
 
 {% block scripts %}
@@ -237,6 +291,13 @@ $('#autocomplete').autocomplete({
 	lookup: dataFood
 });
 
+</script>
+<script>
+$(document).ready(function(){
+  $(".nav-tabs a").click(function(){
+    $(this).tab('show');
+  });
+});
 </script>
 <script>
 function myFunction(x , y) {
@@ -268,29 +329,101 @@ function myFunction(x , y) {
         });
     }
 }
-
 </script>
 <script>
-
 function uncheck(id) {
-    ingredient = id;
-    alert(ingredient);
-    document.getElementById("demo").innerHTML = ingredient;
-    document.getElementById(id).checked = false;
+    ingredient = id + '';
+<!--    alert(ingredient)-->
+    document.getElementById(ingredient).checked = false;
+    var elem = document.getElementById(id + 'name');
+    elem.parentNode.removeChild(elem);
+    n_id = '#' + id + 'bin'
+    $(n_id).remove();
 }
 
+function ingAdd(id){
+    newIngredient = id + '';
+<!--    alert(newIngredient);-->
+    var checkBox = document.getElementById(newIngredient);
+    if (checkBox.checked == true){
+        name_id = id +'name'
+        bin_id = id +'bin'
+        $("#chosen-ingredients").prepend(
+        '<div class="col-md-6 " id=' + name_id +'>'+
+        id+
+        '</div>'+
+        '<div class="col-md-6" onclick="uncheck(' + "'" + newIngredient + "'" + ')" id='+ bin_id + '>'+
+                              '<button class="btn btn-default btn-sm" align="right">'+
+                              '<span class="lnr lnr-trash" align="right"></span>'+
+                              '</button>'+
+                        '</div>'
+            )
+  } else {
+    uncheck(newIngredient);
+  }
+}
+
+function clickAction(id){
+    ingredient = id + '';
+    var checkBox = document.getElementById(ingredient);
+    if (checkBox.checked == true){
+        ingAdd(id);
+    }
+    else{
+        uncheck(id);
+    }
+}
 
 var typeIngredientTextBox = document.getElementById('typeIngredientTextBox');
 typeIngredientTextBox.addEventListener('keypress', function(e){
     if(e.keyCode == 13){//keyCode for enter
         newIngredient = document.getElementById('typeIngredientTextBox').value;
+<!--        alert(newIngredient);-->
+        document.getElementById('typeIngredientTextBox').value="";
         if (document.getElementById(newIngredient) != null && document.getElementById(newIngredient).checked == false){
             document.getElementById(newIngredient).checked = true;
-            document.getElementById('search').click();
+            name_id = newIngredient+'name';
+            bin_id = newIngredient+'bin';
+            $("#chosen-ingredients").prepend(
+               '<div class="col-md-6" id=' + name_id +'>'+
+                       newIngredient+
+                    '</div>'+
+                    '<div class="col-md-6" onclick="uncheck(' + "'" + newIngredient + "'" + ')" id='+ bin_id + '>'+
+                          '<button class="btn btn-default btn-sm" align="right">'+
+                          '<span class="lnr lnr-trash" align="right"></span>'+
+                          '</button>'+
+                    '</div>'
+            )
         }
     }
 });
 
+function suggestAdd(suggestion){
+    n_id = suggestion + 's'
+    var checkBox = document.getElementById(n_id);
+    if (checkBox.checked == true){
+        newIngredient = suggestion + '';
+        name_id = suggestion +'name';
+        bin_id = suggestion +'bin';
+        document.getElementById(newIngredient).checked = true;
+        $("#chosen-ingredients").prepend(
+        '<div class="col-md-6 " id=' + name_id +'>'+
+        suggestion +
+        '</div>'+
+        '<div class="col-md-6" onclick="uncheck(' + "'" + newIngredient + "'" + ')" id='+ bin_id + '>'+
+                              '<button class="btn btn-default btn-sm" align="right">'+
+                              '<span class="lnr lnr-trash" align="right"></span>'+
+                              '</button>'+
+                        '</div>'
+            )
 
+  } else {
+    document.getElementById(suggestion).checked = false;
+    uncheck(newIngredient);
+  }
+}
+function clickSearch(){
+    document.getElementById('search').click();
+}
 </script>
 {% endblock %}
