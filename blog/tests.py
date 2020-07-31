@@ -195,6 +195,92 @@ class CheckFilterSearch(TestCase):
         self.assertEqual({food.name for food in response1.context["finalSortedFoodChoose"].keys()},
                          {'food1'})
 
+
+class bestFoods(TestCase):
+    def setUp(self):
+        Food.objects.create(
+            name='F1',
+            mealType='Breakfast',
+            cuisine='all',
+            diet='all',
+            url='https://www.marthastewart.com/318363/soft-boiled-eggs',
+            score=3,
+            image='b2.jpg',
+            detail=' '
+        )
+        Food.objects.create(
+            name='F2',
+            mealType='Breakfast',
+            cuisine='all',
+            diet='all',
+            url='https://cookieandkate.com/favorite-fried-eggs-recipe/',
+            score=1,
+            image='b2.jpg',
+            detail=' '
+        )
+        Food.objects.create(
+            name='F3',
+            mealType='desserts',
+            cuisine='all',
+            diet='all',
+            url='https://www.marthastewart.com/318363/soft-boiled-eggs',
+            score=2,
+            image='b2.jpg',
+            detail=' '
+        )
+        Food.objects.create(
+            name='F4',
+            mealType='Breakfast',
+            cuisine='all',
+            diet='all',
+            url='https://www.marthastewart.com/318363/soft-boiled-eggs',
+            score=0,
+            image='b2.jpg',
+            detail=' '
+        )
+
+    def test(self):
+        client = Client()
+        response1 = client.post('//')
+        self.assertEqual(len(response1.context["best_food_score"]), 3)
+        self.assertEqual(list(response1.context['best_food_score'])[0].name, 'F1')
+        self.assertEqual(list(response1.context['best_food_score'])[1].name, 'F3')
+        self.assertEqual(list(response1.context['best_food_score'])[2].name, 'F2')
+
+
+#
+# class checkScoreFood(TestCase):
+#     def setUp(self):
+#         Food.objects.create(
+#             name='F1',
+#             mealType='Breakfast',
+#             cuisine='all',
+#             diet='all',
+#             url='https://www.marthastewart.com/318363/soft-boiled-eggs',
+#             score=3,
+#             number_of_score=2,
+#             image='b2.jpg',
+#             detail=' '
+#         )
+#         Food.objects.create(
+#             name='F2',
+#             mealType='Breakfast',
+#             cuisine='all',
+#             diet='all',
+#             url='https://cookieandkate.com/favorite-fried-eggs-recipe/',
+#             score=0,
+#             number_of_score=1,
+#             image='b2.jpg',
+#             detail=' '
+#         )
+#
+#
+#     def test(self):
+#         client = Client()
+#         response1 = client.get('/like/', {'name': 'F1', 'index_selected': 3})
+        # print(">>>>>>>>>>>>>>>>>>.", response1.)
+        # self.assertEqual(response1.json()['like'], 0)
+
 #
 # class MySeleniumTests(StaticLiveServerTestCase):
 #

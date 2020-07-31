@@ -1,8 +1,11 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.views import generic
+
+from blog.models import Food
 from .models import User, Profile
 from .forms import UserRegisterForm, UserUpdateForm, UpdatePasswordForm
 
@@ -30,6 +33,22 @@ def profile(request):
         'favorites': list(favorites)
     }
     return render(request, 'users/profile.html', context)
+
+@login_required
+def remove_from_profile(request):
+    print("########")
+    food_id = str(request.GET.get('foods'))
+    food_selected = Food.objects.filter(id=food_id)
+    if len(food_selected) == 0:
+        response = JsonResponse({"error": "there was an error"})
+        response.status_code = 403
+        return response
+    food_selected = food_selected[0]
+    id_current_user = request.user.id
+    select_profile = Profile.objects.get(user__id=id_current_user)
+    select_profile.favorites.remove(food_selected)
+    select_profile.save()
+    return JsonResponse({})
 
 
 class ChangeEmail(generic.UpdateView):

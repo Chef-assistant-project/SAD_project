@@ -4,12 +4,11 @@ from blog.models import Food
 
 
 class FoodLike(models.Model):
-    name = models.CharField(max_length=100)
+    food = models.ForeignKey(Food, on_delete=models.CASCADE)
     score = models.IntegerField(default=0)
 
     def __str__(self):
-        template = '{0.name} {0.score}'
-        return template.format(self)
+        return self.food.name
 
 
 class Profile(models.Model):

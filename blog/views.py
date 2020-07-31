@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from blog import utils
 from .models import Food, Ingredient
@@ -99,42 +100,60 @@ def search(request):
         select_profile = filtered_users[0]
         dict_food_likes = {}
         for food_liked in list(select_profile.food_likes.all()):
-            dict_food_likes[food_liked.name] = food_liked.score
+            dict_food_likes[food_liked.food.name] = food_liked.score
         context['food_likes'] = dict_food_likes
         context['favorites'] = list(select_profile.favorites.all())
 
     return render(request, 'blog/search.html', context)
 
 
+@login_required
 def like(request):
-    name = str(request.GET.get('foods'))
-    food_selected = Food.objects.get(name=name)
+    food_id = str(request.GET.get('foods'))
+    food_selected = Food.objects.filter(id=food_id)
     index_selected = int(request.GET.get('index_selected'))
-    id_current_user = request.user.id
+    if len(food_selected) == 0 or 5 < index_selected < 0:
+        response = JsonResponse({"error": "there was an error"})
+        response.status_code = 403
+        return response
+    food_selected = food_selected[0]
     last_score = 0
+    id_current_user = request.user.id
     select_profile = list(Profile.objects.filter(user__id=id_current_user))[0]
-    food_like_user = select_profile.food_likes.filter(name=name)
-    if len(list(food_like_user)) == 0:
-        food_likes = FoodLike(name=name, score=index_selected)
-        food_likes.save()
-        select_profile.food_likes.add(food_likes)
-    else:
-        last_score = list(food_like_user)[0].score
-        food_like_user.update(score=index_selected)
-    if index_selected == 1 and last_score > index_selected:
-        new_score = -last_score
-        food_like_user.update(score=0)
-    else:
-        new_score = index_selected - last_score
+    food_like_user = select_profile.food_likes.filter(food__id=food_id)
+    sum_score_food = food_selected.number_of_score * food_selected.score
+    if index_selected <= 5:
+        if len(list(food_like_user)) == 0:
+            food_selected.number_of_score += 1
+            food_selected.save()
+            food_like = FoodLike(food=food_selected, score=index_selected)
+            food_like.save()
+            select_profile.food_likes.add(food_like)
+        else:
+            last_score = list(food_like_user)[0].score
+            food_like_user.update(score=index_selected)
+        if index_selected == 1 and last_score > index_selected:
+            new_score = -last_score
+            food_like_user.update(score=0)
+        else:
+            new_score = index_selected - last_score
 
-    food_selected.score += new_score
-    food_selected.save()
+        food_selected.score = (sum_score_food + new_score) / food_selected.number_of_score
+        food_selected.save()
+
     return JsonResponse({'likes': food_selected.score})
 
 
+@login_required
 def update_profile(request):
-    name = str(request.GET.get('foods'))
-    food_selected = Food.objects.get(name=name)
+    food_id = str(request.GET.get('foods'))
+    food_selected = Food.objects.filter(id=food_id)
+    if len(food_selected) == 0:
+        print("****")
+        response = JsonResponse({"error": "there was an error"})
+        response.status_code = 403
+        return response
+    food_selected=food_selected[0]
     id_current_user = request.user.id
     select_profile = Profile.objects.get(user__id=id_current_user)
     user_favorite = list(select_profile.favorites.all())

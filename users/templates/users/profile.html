@@ -35,24 +35,24 @@
     <div class="row justify-content-left">
         {% for food in favorites %}
         <div class="col-lg-3 col-md-6 single-blog">
-            <a  onclick="profileFunction(this,'{{food}}')"  class="lnr lnr-cross-circle"  id = "{{food|cut:' ' }}_button"></a>
+            <a  onclick="profileFunction(this,'{{food.id}}')"  class="lnr lnr-cross-circle"  id = "{{food.id}}_button"></a>
 
             <div class="thumb">
                 <a href={{food.url}}>
-                    <img class="img-fluid" src="/media/{{food.image}}" alt="" id = "{{food|cut:' ' }}_img">
+                    <img class="img-fluid" src="/media/{{food.image}}" alt="" id = "{{food.id }}_img">
                 </a>
             </div>
-            <p class="date" id = "{{food|cut:' ' }}_date">{{food.date_added|date}}</p>
+            <p class="date" id = "{{food.id }}_date">{{food.date_added|date}}</p>
             <div class="row col-md-12">
 
-            <a  href={{food.url}} id = "{{food|cut:' ' }}_name" ><h4>{{food.name}}</h4></a>
+            <a  href={{food.url}} id = "{{food.id }}_name" ><h4>{{food.name}}</h4></a>
 
             </div>
-            <a href={{food.url}} id = "{{food|cut:' ' }}_detail">{{food.detail}}</a>
+            <a href={{food.url}} id = "{{food.id}}_detail">{{food.detail}}</a>
             <div class="meta-bottom d-flex justify-content-between">
                 <div class="meta-bottom d-flex justify-content-between">
                     <a  style="color: red;" id = >
-                        <span class='txt' id = "{{food|cut:' ' }}_score">{{food.score}} Likes</span>
+                        <span class='txt' id = "{{food.id}}_score">{{food.score}} Likes</span>
                     </a>
                 </div>
             </div>
@@ -87,6 +87,12 @@ function profileFunction(x , y) {
             data: {'foods':  y},
     });
 }
+</script>
+
+<script>
+$(document).ajaxError(function(){
+  alert("Invalid Data!");
+});
 </script>
 
 {% endblock %}

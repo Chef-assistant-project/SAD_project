@@ -174,16 +174,16 @@
                                             <h4>{{food.name}}
                                                 {% if user.is_authenticated %}
                                                 {% if food in favorites %}
-                                                <a  onclick="profileFunction(this,'{{food}}')"  style="padding-left:70px;" class="lnr lnr-checkmark-circle"  id = "{{food|cut:' ' }}_checkmark"></a>
+                                                <a  onclick="profileFunction(this,'{{food.id}}')"  style="padding-left:70px;" class="lnr lnr-checkmark-circle"  id = "{{food.id}}_checkmark"></a>
                                                 {% else %}
-                                                <a  onclick="profileFunction(this,'{{food}}')"  style="padding-left:70px;" class="lnr lnr-plus-circle"  id = "{{food|cut:' ' }}_plus"></a>
+                                                <a  onclick="profileFunction(this,'{{food.id}}')"  style="padding-left:70px;" class="lnr lnr-plus-circle"  id = "{{food.id}}_plus"></a>
                                                 {% endif %}
                                                 {% endif %}
                                             </h4>
                                         </a>
                                         <a href={{food.url}}>{{food.detail}}</a>
                                         <br>
-                                        <a style="color: GoldenRod;" class='txt' id = "{{food|cut:' ' }}">{{food.score}} Scores</a>
+                                        <a style="color: GoldenRod;" class='txt' id = "{{food.id}}">scores: {{food.score}} </a>
                                         {% if user.is_authenticated %}
                                         <div style="margin: 0; padding: 0; border: 0;"   >
                                             {% if food.name in food_likes %}
@@ -192,9 +192,9 @@
                                                         {% with ''|center:5 as range %}
                                                         {% for _ in range %}
                                                             {% if forloop.counter <= score %}
-                                                                <a  onclick="myFunction(this,'{{food}}')"  class="lnr lnr-star" style="color: GoldenRod;" id = "{{food|cut:' ' }}_{{ forloop.counter }}"></a>
+                                                                <a  onclick="myFunction(this,'{{food.id}}')"  class="lnr lnr-star" style="color: GoldenRod;" id = "{{food.id }}_{{ forloop.counter }}"></a>
                                                             {% else %}
-                                                                <a  onclick="myFunction(this,'{{food}}')"  class="lnr lnr-star-empty" style="color: GoldenRod;" id = "{{food|cut:' ' }}_{{ forloop.counter }}"></a>
+                                                                <a  onclick="myFunction(this,'{{food.id}}')"  class="lnr lnr-star-empty" style="color: GoldenRod;" id = "{{food.id}}_{{ forloop.counter }}"></a>
                                                             {% endif %}
                                                         {% endfor %}
                                                         {% endwith %}
@@ -203,7 +203,7 @@
                                             {% else %}
                                                 {% with ''|center:5 as range %}
                                                     {% for _ in range %}
-                                                                <a  onclick="myFunction(this,'{{food}}')"  class="lnr lnr-star-empty" style="color: GoldenRod;" id = "{{food|cut:' ' }}_{{ forloop.counter }}">
+                                                                <a  onclick="myFunction(this,'{{food.id}}')"  class="lnr lnr-star-empty" style="color: GoldenRod;" id = "{{food.id}}_{{ forloop.counter }}">
                                                                 </a>
                                                     {% endfor %}
                                                 {% endwith %}
@@ -221,10 +221,10 @@
                                             <h4>{{food.name}}
                                                 {% if user.is_authenticated %}
                                                 {% if food in favorites %}
-                                                <a  onclick="profileFunction(this,'{{food}}')"  style="padding-left:70px;" class="lnr lnr-checkmark-circle"  id = "{{food|cut:' ' }}_checkmark">
+                                                <a  onclick="profileFunction(this,'{{food.id}}')"  style="padding-left:70px;" class="lnr lnr-checkmark-circle"  id = "{{food.id}}_checkmark">
                                                 </a>
                                                 {% else %}
-                                                <a  onclick="profileFunction(this,'{{food}}')"  style="padding-left:70px;" class="lnr lnr-plus-circle"  id = "{{food|cut:' ' }}_plus">
+                                                <a  onclick="profileFunction(this,'{{food.id}}')"  style="padding-left:70px;" class="lnr lnr-plus-circle"  id = "{{food.id}}_plus">
                                                 </a>
                                                 {% endif %}
                                                 {% endif %}
@@ -232,7 +232,7 @@
                                         </a>
                                         <a href={{food.url}}>{{food.detail}}</a>
                                         <br>
-                                        <a style="color: GoldenRod;" class='txt' id = "{{food|cut:' ' }}">{{food.score}} Scores</a>
+                                        <a style="color: GoldenRod;" class='txt' id = "{{food.id}}">score: {{food.score}} </a>
                                         {% if user.is_authenticated %}
                                         <div style="margin: 0; padding: 0; border: 0;"   >
                                             {% if food.name in food_likes %}
@@ -241,10 +241,10 @@
                                                         {% with ''|center:5 as range %}
                                                         {% for _ in range %}
                                                             {% if forloop.counter <= score %}
-                                                                <a  onclick="myFunction(this,'{{food}}')"  class="lnr lnr-star" style="color: GoldenRod;" id = "{{food|cut:' ' }}_{{ forloop.counter }}">
+                                                                <a  onclick="myFunction(this,'{{food.id}}')"  class="lnr lnr-star" style="color: GoldenRod;" id = "{{food.id }}_{{ forloop.counter }}">
                                                                 </a>
                                                             {% else %}
-                                                                <a  onclick="myFunction(this,'{{food}}')"  class="lnr lnr-star-empty" style="color: GoldenRod;" id = "{{food|cut:' ' }}_{{ forloop.counter }}">
+                                                                <a  onclick="myFunction(this,'{{food.id}}')"  class="lnr lnr-star-empty" style="color: GoldenRod;" id = "{{food.id }}_{{ forloop.counter }}">
                                                                 </a>
                                                             {% endif %}
                                                         {% endfor %}
@@ -254,7 +254,7 @@
                                             {% else %}
                                                 {% with ''|center:5 as range %}
                                                     {% for _ in range %}
-                                                                <a  onclick="myFunction(this,'{{food}}')"  class="lnr lnr-star-empty" style="color: GoldenRod;" id = "{{food|cut:' ' }}_{{ forloop.counter }}">
+                                                                <a  onclick="myFunction(this,'{{food.id}}')"  class="lnr lnr-star-empty" style="color: GoldenRod;" id = "{{food.id}}_{{ forloop.counter }}">
                                                                 </a>
                                                     {% endfor %}
                                                 {% endwith %}
@@ -281,10 +281,10 @@
                                             <h4>{{food.name}}
                                                 {% if user.is_authenticated %}
                                                 {% if food in favorites %}
-                                                <a  onclick="profileFunction(this,'{{food}}')"  style="padding-left:70px;" class="lnr lnr-checkmark-circle"  id = "{{food|cut:' ' }}_checkmark">
+                                                <a  onclick="profileFunction(this,'{{food.id}}')"  style="padding-left:70px;" class="lnr lnr-checkmark-circle"  id = "{{food.id}}_checkmark">
                                                 </a>
                                                 {% else %}
-                                                <a  onclick="profileFunction(this,'{{food}}')"  style="padding-left:70px;" class="lnr lnr-plus-circle"  id = "{{food|cut:' ' }}_plus">
+                                                <a  onclick="profileFunction(this,'{{food.id}}')"  style="padding-left:70px;" class="lnr lnr-plus-circle"  id = "{{food.id}}_plus">
                                                 </a>
                                                 {% endif %}
                                                 {% endif %}
@@ -295,10 +295,10 @@
                                         {% if UnavailableIngredientsStr == 'You\'ve got all the ingredients!' %}
                                         <b><a href={{food.url}}><span style="color: green;">{{UnavailableIngredientsStr}}</span></a></b>
                                         {% else %}
-                                        <b><a href={{food.url}}><span style="color: GoldenRod;">{{UnavailableIngredientsStr}}</span></a></b>
+                                        <b><a href={{food.url}}><span style="color: red;">{{UnavailableIngredientsStr}}</span></a></b>
                                         {% endif %}
                                         <br>
-                                         <a style="color: GoldenRod;" class='txt' id = "{{food|cut:' ' }}">{{food.score}} Scores</a>
+                                         <a style="color: GoldenRod;" class='txt' id = "{{food.id}}">score: {{food.score}}</a>
                                         {% if user.is_authenticated %}
                                         <div style="margin: 0; padding: 0; border: 0;"   >
                                             {% if food.name in food_likes %}
@@ -307,10 +307,10 @@
                                                         {% with ''|center:5 as range %}
                                                         {% for _ in range %}
                                                             {% if forloop.counter <= score %}
-                                                                <a  onclick="myFunction(this,'{{food}}')"  class="lnr lnr-star" style="color: GoldenRod;" id = "{{food|cut:' ' }}_{{ forloop.counter }}">
+                                                                <a  onclick="myFunction(this,'{{food.id}}')"  class="lnr lnr-star" style="color: GoldenRod;" id = "{{food.id}}_{{ forloop.counter }}">
                                                                 </a>
                                                             {% else %}
-                                                                <a  onclick="myFunction(this,'{{food}}')"  class="lnr lnr-star-empty" style="color: GoldenRod;" id = "{{food|cut:' ' }}_{{ forloop.counter }}">
+                                                                <a  onclick="myFunction(this,'{{food.id}}')"  class="lnr lnr-star-empty" style="color: GoldenRod;" id = "{{food.id}}_{{ forloop.counter }}">
                                                                 </a>
                                                             {% endif %}
                                                         {% endfor %}
@@ -320,7 +320,7 @@
                                             {% else %}
                                                 {% with ''|center:5 as range %}
                                                     {% for _ in range %}
-                                                        <a  onclick="myFunction(this,'{{food}}')"  class="lnr lnr-star-empty" style="color: GoldenRod;" id = "{{food|cut:' ' }}_{{ forloop.counter }}"></a>
+                                                        <a  onclick="myFunction(this,'{{food.id}}')"  class="lnr lnr-star-empty" style="color: GoldenRod;" id = "{{food.id}}_{{ forloop.counter }}"></a>
                                                     {% endfor %}
                                                 {% endwith %}
                                             {% endif %}
@@ -339,10 +339,10 @@
                                             <h4>{{food.name}}
                                                 {% if user.is_authenticated %}
                                                 {% if food in favorites %}
-                                                <a  onclick="profileFunction(this,'{{food}}')"  style="padding-left:70px;" class="lnr lnr-checkmark-circle"  id = "{{food|cut:' ' }}_checkmark">
+                                                <a  onclick="profileFunction(this,'{{food.id}}')"  style="padding-left:70px;" class="lnr lnr-checkmark-circle"  id = "{{food.id}}_checkmark">
                                                 </a>
                                                 {% else %}
-                                                <a  onclick="profileFunction(this,'{{food}}')"  style="padding-left:70px;" class="lnr lnr-plus-circle"  id = "{{food|cut:' ' }}_plus">
+                                                <a  onclick="profileFunction(this,'{{food.id}}')"  style="padding-left:70px;" class="lnr lnr-plus-circle"  id = "{{food.id}}_plus">
                                                 </a>
                                                 {% endif %}
                                                 {% endif %}
@@ -353,10 +353,10 @@
                                         {% if UnavailableIngredientsStr == 'You\'ve got all the ingredients!' %}
                                         <b><a href={{food.url}}><span style="color: green;">{{UnavailableIngredientsStr}}</span></a></b>
                                         {% else %}
-                                        <b><a href={{food.url}}><span style="color: GoldenRod;">{{UnavailableIngredientsStr}}</span></a></b>
+                                        <b><a href={{food.url}}><span style="color: red;">{{UnavailableIngredientsStr}}</span></a></b>
                                         {% endif %}
                                         <br>
-                                         <a style="color: GoldenRod;" class='txt' id = "{{food|cut:' ' }}">{{food.score}} Scores</a>
+                                         <a style="color: GoldenRod;" class='txt' id = "{{food.id}}">score: {{food.score}} </a>
                                         {% if user.is_authenticated %}
                                         <div style="margin: 0; padding: 0; border: 0;"   >
                                             {% if food.name in food_likes %}
@@ -365,10 +365,10 @@
                                                         {% with ''|center:5 as range %}
                                                         {% for _ in range %}
                                                             {% if forloop.counter <= score %}
-                                                                <a  onclick="myFunction(this,'{{food}}')"  class="lnr lnr-star" style="color: GoldenRod;" id = "{{food|cut:' ' }}_{{ forloop.counter }}">
+                                                                <a  onclick="myFunction(this,'{{food.id}}')"  class="lnr lnr-star" style="color: GoldenRod;" id = "{{food.id}}_{{ forloop.counter }}">
                                                                 </a>
                                                             {% else %}
-                                                                <a  onclick="myFunction(this,'{{food}}')"  class="lnr lnr-star-empty" style="color: GoldenRod;" id = "{{food|cut:' ' }}_{{ forloop.counter }}">
+                                                                <a  onclick="myFunction(this,'{{food.id}}')"  class="lnr lnr-star-empty" style="color: GoldenRod;" id = "{{food.id}}_{{ forloop.counter }}">
                                                                 </a>
                                                             {% endif %}
                                                         {% endfor %}
@@ -378,7 +378,7 @@
                                             {% else %}
                                                 {% with ''|center:5 as range %}
                                                     {% for _ in range %}
-                                                        <a  onclick="myFunction(this,'{{food}}')"  class="lnr lnr-star-empty" style="color: GoldenRod;" id = "{{food|cut:' ' }}_{{ forloop.counter }}"></a>
+                                                        <a  onclick="myFunction(this,'{{food.id}}')"  class="lnr lnr-star-empty" style="color: GoldenRod;" id = "{{food.id}}_{{ forloop.counter }}"></a>
                                                     {% endfor %}
                                                 {% endwith %}
                                             {% endif %}
@@ -422,14 +422,12 @@ $('#autocomplete').autocomplete({
 </script>
 <script>
 function myFunction(x , y) {
-
     var id = x['id'];
     var selected = id.split("_")[1]
     var name = id.split("_")[0]
     console.log("id= " +  selected +"    " + id);
     var idtext1 ='#' + id
     var idtext2 ='#' + id.split("_")[0]
-
 
     if ( x.classList.contains( "lnr-star") ) {
         var temp_x
@@ -448,10 +446,11 @@ function myFunction(x , y) {
             url: '/like/',
             data: {'foods':  y ,'index_selected' : selected  },
             success: function (data) {
-                var addtext = '  '+data["likes"] + '   Scores'
+                var addtext = 'score: '+data["likes"] + '   '
                 $( idtext2).text(addtext);
-            },
+            }
         });
+
     }
     else {
         var temp_x
@@ -468,9 +467,9 @@ function myFunction(x , y) {
             url: '/like/',
             data: {'foods':  y, 'index_selected' : selected },
             success: function (data) {
-                var addtext = '  ' + data["likes"] + '   Scores'
+                var addtext = '  score: ' + data["likes"] + '   '
                 $( idtext2).text(addtext);
-            },
+            }
         });
     }
 }
@@ -518,5 +517,9 @@ function profileFunction(x , y) {
     });
   });
 </script>
-
+<script>
+$(document).ajaxError(function(){
+  alert("Invalid Data!");
+});
+</script>
 {% endblock %}
