@@ -51,13 +51,13 @@
                                             <div class="form-check-inline">
                                                 {% csrf_token %}
                                                 {% if item2 in previousIngredients %}
-                                                <input type="checkbox" id="{{item2}}"
+                                                <input type="checkbox" id="Ing_{{item2}}"
                                                        name="{{item.name}}"
                                                        value="{{item2}}"
                                                        checked
                                                        onclick="clickAction('{{item2}}')">
                                                 {% else %}
-                                                <input type="checkbox" id="{{item2 }}" name="{{item.name}}"
+                                                <input type="checkbox" id="Ing_{{item2 }}" name="{{item.name}}"
                                                        value="{{item2}}" onclick="clickAction('{{item2}}');">
                                                 {% endif %} &nbsp{{ item2 }}
                                             </div>
@@ -334,7 +334,7 @@ function myFunction(x , y) {
 function uncheck(id) {
     ingredient = id + '';
 <!--    alert(ingredient)-->
-    document.getElementById(ingredient).checked = false;
+    document.getElementById('Ing_'+ingredient).checked = false;
     var elem = document.getElementById(id + 'name');
     elem.parentNode.removeChild(elem);
     n_id = '#' + id + 'bin'
@@ -344,7 +344,7 @@ function uncheck(id) {
 function ingAdd(id){
     newIngredient = id + '';
 <!--    alert(newIngredient);-->
-    var checkBox = document.getElementById(newIngredient);
+    var checkBox = document.getElementById('Ing_'+newIngredient);
     if (checkBox.checked == true){
         name_id = id +'name'
         bin_id = id +'bin'
@@ -365,7 +365,7 @@ function ingAdd(id){
 
 function clickAction(id){
     ingredient = id + '';
-    var checkBox = document.getElementById(ingredient);
+    var checkBox = document.getElementById('Ing_'+ingredient);
     if (checkBox.checked == true){
         ingAdd(id);
     }
@@ -380,8 +380,8 @@ typeIngredientTextBox.addEventListener('keypress', function(e){
         newIngredient = document.getElementById('typeIngredientTextBox').value;
 <!--        alert(newIngredient);-->
         document.getElementById('typeIngredientTextBox').value="";
-        if (document.getElementById(newIngredient) != null && document.getElementById(newIngredient).checked == false){
-            document.getElementById(newIngredient).checked = true;
+        if (document.getElementById('Ing_'+newIngredient) != null && document.getElementById('Ing_'+newIngredient).checked == false){
+            document.getElementById('Ing_'+newIngredient).checked = true;
             name_id = newIngredient+'name';
             bin_id = newIngredient+'bin';
             $("#chosen-ingredients").prepend(
@@ -405,7 +405,7 @@ function suggestAdd(suggestion){
         newIngredient = suggestion + '';
         name_id = suggestion +'name';
         bin_id = suggestion +'bin';
-        document.getElementById(newIngredient).checked = true;
+        document.getElementById('Ing_'+newIngredient).checked = true;
         $("#chosen-ingredients").prepend(
         '<div class="col-md-6 " id=' + name_id +'>'+
         suggestion +
