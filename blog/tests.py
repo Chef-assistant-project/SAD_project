@@ -5,8 +5,8 @@ from .models import Food
 from users.models import Profile
 from .views import FoodLiked
 from blog import views
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
+# from selenium import webdriver
+# from selenium.webdriver.common.keys import Keys
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 
 
@@ -197,6 +197,62 @@ class CheckFilterSearch(TestCase):
                                  'mealType': ['breakfast']})
         self.assertEqual({food.name for food in response1.context["finalSortedFoodChoose"].keys()},
                          {'food1'})
+
+class CheckSiteFilter(TestCase):
+
+    def setUp(self):
+        food1 = Food.objects.create(
+            name='food1',
+            mealType='breakfast',
+            cuisine='Asian',
+            diet='pescatarian',
+            url='https://www.marthastewart.com/318363/food1',
+            score=0,
+            image='b2.jpg',
+            detail='detail1'
+        )
+        ingredient1 = food1.ingredients.create(name="ingredient1", category="dairy")
+        ingredient1.save()
+
+        food2 = Food.objects.create(
+            name='food2',
+            mealType='breakfast',
+            cuisine='Italian',
+            diet='vegetarian',
+            url='https://www.marthastewart.com/318363/food2',
+            score=0,
+            image='b2.jpg',
+            detail='detail2'
+        )
+        food2.ingredients.add(ingredient1)
+
+        food3 = Food.objects.create(
+            name='food3',
+            mealType='dinner',
+            cuisine='Chinese',
+            diet='vegetarian',
+            url='https://cookieandkate.com/food3/',
+            score=0,
+            image='b2.jpg',
+            detail='detail3'
+        )
+        food3.ingredients.add(ingredient1)
+
+    def test(self):
+        client = Client()
+
+        response1 = client.post('/search/',
+                                {'dairy': ['ingredient1'],'site':['cookieandkate.com'] , 'diet': ['all'], 'cuisine': ['all'], 'mealType': ['all']})
+        self.assertEqual({food.name for food in response1.context["finalSortedFoodChoose"].keys()},
+                         {'food3'})
+
+
+        response2 = client.post('/search/',
+                                {'dairy': ['ingredient1'],'site':['marthastewart.com'] , 'diet': ['all'], 'cuisine': ['all'],
+                                 'mealType': ['all']})
+        self.assertEqual({food.name for food in response2.context["finalSortedFoodChoose"].keys()},
+                         {'food2', 'food1'})
+
 
 #
 # class MySeleniumTests(StaticLiveServerTestCase):

@@ -170,7 +170,7 @@ class FilterTypesForm(forms.Form):
     def __init__(self, *args, **kwargs):
         if FilterTypesForm.ever_filled == False:
             from .models import Food
-            FilterTypesForm.SITE = {food.url.split('/')[2] for food in Food.objects.all()}
+            FilterTypesForm.SITE = {food.url.split('/')[2].replace("www.", "") for food in Food.objects.all()}
             FilterTypesForm.SITE = (("all","all"),)+tuple((item, item) for item in FilterTypesForm.SITE)
             FilterTypesForm.ever_filled = True
         super(FilterTypesForm, self).__init__(*args, **kwargs)
