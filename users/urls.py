@@ -1,8 +1,8 @@
 from django.urls import path
+
+from users import utils
 from . import views
 from django.contrib.auth import views as auth_views
-from django.conf import settings
-from django.conf.urls.static import static
 
 urlpatterns = [
     path('register/', views.register, name='register'),
@@ -11,4 +11,5 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(template_name='users/logout.html'), name='logout'),
     path('changePassword/', views.ChangePassword.as_view(), name='changePassword'),
     path('changeEmail/', views.ChangeEmail.as_view(), name='changeEmail'),
+    path('removeFromProfile/', views.remove_from_profile, name='remove_from_profile-page'),
 ]

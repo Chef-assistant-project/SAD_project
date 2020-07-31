@@ -70,7 +70,8 @@ class Food(models.Model):
     ingredients = models.ManyToManyField(Ingredient)
     date_added = models.DateTimeField(auto_now_add=True,editable=False)
     url = models.URLField(max_length=200)
-    score = models.IntegerField(default=0)
+    score = models.FloatField(default=0)
+    number_of_score = models.IntegerField(default=0)
     detail = models.CharField(max_length=1000)
     image = models.ImageField()
 

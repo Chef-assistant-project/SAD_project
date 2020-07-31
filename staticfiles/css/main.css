@@ -2412,6 +2412,20 @@ body.mobile-nav-active #mobile-nav-toggle{
 	max-height: 500px;
 	overflow-y: scroll;
 }
-.deleteWhiteSpace {
-    white-space: "";
+.lnr-checkmark-circle:before {
+    color: green;
+  	content: "\e87f";
+  	font-size: 20px;
+}
+
+.lnr-plus-circle:before {
+    color: black;
+	content: "\e881";
+    font-size: 20px;
+}
+.lnr-cross-circle:before {
+    color: red;
+	content: "\e880";
+	font-size: 40px;
+
 }
