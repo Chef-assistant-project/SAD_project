@@ -35,29 +35,26 @@
     <div class="row justify-content-left">
         {% for food in favorites %}
         <div class="col-lg-3 col-md-6 single-blog">
+            <a  onclick="profileFunction(this,'{{food.id}}')"  class="lnr lnr-cross-circle"  id = "{{food.id}}_button"></a>
+
             <div class="thumb">
                 <a href={{food.url}}>
-                    <img class="img-fluid" src="/media/{{food.image}}" alt="">
+                    <img class="img-fluid" src="/media/{{food.image}}" alt="" id = "{{food.id }}_img">
                 </a>
             </div>
-            <p class="date">{{food.date_added|date}}</p>
-            <a href={{food.url}}><h4>{{food.name}}</h4></a>
-            <a href={{food.url}}>{{food.detail}}</a>
-            <div class="meta-bottom d-flex justify-content-between">
-                {% if food in favorites %}
-                <div class="meta-bottom d-flex justify-content-between">
-                    <a  onclick="myFunction(this,'{{food}}')"  class="lnr lnr-heart-pulse" style="color: red;" id = "{{food|cut:' ' }}1">
-                        <span class='txt'>{{food.score}} Likes</span>
-                    </a>
-                </div>
-                {% else %}
-                <div class="meta-bottom d-flex justify-content-between">
-                    <a  onclick="myFunction(this,'{{food}}')"  class="lnr lnr-heart" style="color: red;" id = "{{food|cut:' ' }}2">
-                        <span class='txt'>{{food.score}} Likes</span>
-                    </a>
-                </div>
-                {% endif %}
+            <p class="date" id = "{{food.id }}_date">{{food.date_added|date}}</p>
+            <div class="row col-md-12">
 
+            <a  href={{food.url}} id = "{{food.id }}_name" ><h4>{{food.name}}</h4></a>
+
+            </div>
+            <a href={{food.url}} id = "{{food.id}}_detail">{{food.detail}}</a>
+            <div class="meta-bottom d-flex justify-content-between">
+                <div class="meta-bottom d-flex justify-content-between">
+                    <a  style="color: red;" id = >
+                        <span class='txt' id = "{{food.id}}_score">{{food.score}} Likes</span>
+                    </a>
+                </div>
             </div>
         </div>
         {% endfor %}
@@ -68,35 +65,34 @@
 
 {% block scripts %}
 <script>
-function myFunction(x , y) {
+function profileFunction(x , y) {
     var id = x['id'];
-    var idtext1 ='#' + id
-    if ( x.classList.contains( "lnr-heart-pulse") ) {
-        x.classList.remove( "lnr-heart-pulse" );
-        x.classList.add( "lnr-heart" );
-        $.ajax({
-            url: '/search/',
-                data: {'foods':  y, 'action' : 'minus' , 'isLike' : 'True' , 'isProfile' : 'True' },
-                success: function (data) {
-                    var addtext = '  '+data["likes"] + '   Likes'
-                    $(idtext1).text(addtext);
+    var idtext2 ='#' + id.split("_")[0]
 
-                },
-        });
-    }
-    else {
-        x.classList.remove( "lnr-heart" );
-        x.classList.add( "lnr-heart-pulse" );
-        $.ajax({
-            url: '/search/',
-            data: {'foods':  y, 'action' : 'add' , 'isLike' : 'True', 'isProfile' : 'True' },
-            success: function (data) {
-                var addtext = '  '+data["likes"] + '   Likes'
-                $( idtext1).text(addtext);
-            },
-        });
-    }
+    var id_img = idtext2 + "_img"
+    var id_date = idtext2 + "_date"
+    var id_name = idtext2 + "_name"
+    var id_button = idtext2 + "_button"
+    var id_detail = idtext2 + "_detail"
+    var id_score = idtext2 + "_score"
+
+    $( id_img).hide();
+    $( id_date).hide();
+    $( id_button).hide();
+    $( id_detail).hide();
+    $( id_score).hide();
+    $( id_name).hide();
+    $.ajax({
+            url: '/removeFromProfile/',
+            data: {'foods':  y},
+    });
 }
+</script>
+
+<script>
+$(document).ajaxError(function(){
+  alert("Invalid Data!");
+});
 </script>
 
 {% endblock %}
