@@ -7,7 +7,6 @@ from users.models import Profile
 from blog import views
 
 
-
 class CheckDirectSearch(TestCase):
 
     def setUp(self):
@@ -241,17 +240,17 @@ class CheckSiteFilter(TestCase):
         client = Client()
 
         response1 = client.post('/search/',
-                                {'dairy': ['ingredient1'],'site':['cookieandkate.com'] , 'diet': ['all'], 'cuisine': ['all'], 'mealType': ['all']})
+                                {'dairy': ['ingredient1'], 'site': ['cookieandkate.com'], 'diet': ['all'],
+                                 'cuisine': ['all'], 'mealType': ['all']})
         self.assertEqual({food.name for food in response1.context["finalSortedFoodChoose"].keys()},
                          {'food3'})
 
-
         response2 = client.post('/search/',
-                                {'dairy': ['ingredient1'],'site':['marthastewart.com'] , 'diet': ['all'], 'cuisine': ['all'],
+                                {'dairy': ['ingredient1'], 'site': ['marthastewart.com'], 'diet': ['all'],
+                                 'cuisine': ['all'],
                                  'mealType': ['all']})
         self.assertEqual({food.name for food in response2.context["finalSortedFoodChoose"].keys()},
                          {'food2', 'food1'})
-
 
 
 class bestFoods(TestCase):
@@ -305,7 +304,6 @@ class bestFoods(TestCase):
         self.assertEqual(list(response1.context['best_food_score'])[1].name, 'F3')
         self.assertEqual(list(response1.context['best_food_score'])[2].name, 'F2')
 
-
 #
 # class checkScoreFood(TestCase):
 #     def setUp(self):
@@ -336,8 +334,8 @@ class bestFoods(TestCase):
 #     def test(self):
 #         client = Client()
 #         response1 = client.get('/like/', {'name': 'F1', 'index_selected': 3})
-        # print(">>>>>>>>>>>>>>>>>>.", response1.)
-        # self.assertEqual(response1.json()['like'], 0)
+# print(">>>>>>>>>>>>>>>>>>.", response1.)
+# self.assertEqual(response1.json()['like'], 0)
 
 
 #

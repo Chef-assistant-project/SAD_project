@@ -24,13 +24,13 @@ def search(request):
     if request.method == "POST":
         match = utils.direct_search(str(request.POST.get('title') or "").strip())
 
-    filterTypes_form = FilterTypesForm(request.POST or None)
+    filter_types_form = FilterTypesForm(request.POST or None)
     ingredients_form = ChooseIngredientsForm(request.POST or None)
     cuisine = "all"
     diet = "all"
-    mealType = "all"
+    meal_type = "all"
     site = "all"
-    if request.method == "POST" and filterTypes_form.is_valid():
+    if request.method == "POST" and filter_types_form.is_valid():
         if "diet" in request.POST:
             diet = request.POST.get("diet")
 
@@ -38,15 +38,15 @@ def search(request):
             cuisine = request.POST.get("cuisine")
 
         if "mealType" in request.POST:
-            mealType = request.POST.get("mealType")
+            meal_type = request.POST.get("mealType")
 
         if "site" in request.POST:
             site = request.POST.get("site")
 
     # ingredient search :
     food_selected_with_selected_ingredient = []
-
-    chosenIngredient = []
+    suggested_ingredients = []
+    chosen_ingredient = []
     previous_ingredients = []
 
     if request.method == "POST" and ingredients_form.is_valid():
@@ -58,13 +58,12 @@ def search(request):
                     food_with_selected_ingredient = Food.objects.filter(
                         ingredients__name=selected_ingredient)
 
-
                     if diet != "all":
                         food_with_selected_ingredient = food_with_selected_ingredient.filter(diet=diet)
                     if cuisine != "all":
                         food_with_selected_ingredient = food_with_selected_ingredient.filter(cuisine=cuisine)
-                    if mealType != "all":
-                        food_with_selected_ingredient = food_with_selected_ingredient.filter(mealType=mealType)
+                    if meal_type != "all":
+                        food_with_selected_ingredient = food_with_selected_ingredient.filter(mealType=meal_type)
                     if site != "all":
                         food_with_selected_ingredient = food_with_selected_ingredient.filter(url__icontains=site)
                     food_selected_with_selected_ingredient.append(food_with_selected_ingredient)
@@ -82,10 +81,6 @@ def search(request):
                 if ingredient == selected_food.name:
                     for unavailableIngredients in chosen_food[x]["list of unavailable ingredients"]:
                         if ingredient == unavailableIngredients.name:
-
-        'previousIngredients': previous_ingredients,
-        'previousFilter': {"cuisine": cuisine, "mealType": mealType, "diet": diet},
-
                             temp_list_of_unavailable_ingredients.remove(unavailableIngredients)
                     chosen_food[x] = {"Ingredients": chosen_food.get(x).get("Ingredients"),
                                       "list of unavailable ingredients": list(temp_list_of_unavailable_ingredients)}
@@ -100,25 +95,23 @@ def search(request):
             unavailable_ingredients_str = "YOU MISS : "
             for name_food in sorted_chosen_food[x]["list of unavailable ingredients"]:
                 unavailable_ingredients_str += ' ' + name_food.name
+                if name_food.name not in suggested_ingredients:
+                    suggested_ingredients.append(name_food.name)
             final_sorted_food_choose[x] = unavailable_ingredients_str
 
     all_foods = [food.name for food in list(Food.objects.all())]
-
+    if len(suggested_ingredients) > 10:
+        suggested_ingredients = suggested_ingredients[:10]
     context = {
-        'previousFilter': {"cuisine": cuisine, "mealType": mealType, "diet": diet ,"site" :site },
         'previousIngredients': previous_ingredients,
-
-        'filterTypes_form': filterTypes_form,
+        'previousFilter': {"cuisine": cuisine, "mealType": meal_type, "diet": diet, "site": site},
+        'filterTypes_form': filter_types_form,
         'ingredients_form': ingredients_form,
-
-        'foodNames': allFoods,
-        'finalSortedFoodChoose': finalSortedFoodChoose,
+        'finalSortedFoodChoose': final_sorted_food_choose,
         'suggested_ingredients': suggested_ingredients,
         # 'favorites': list(selectProfile[0].favorites.all()),
-
         'foodNames': all_foods,
         'match_foods': match,
-
     }
     user = request.user
     filtered_users = Profile.objects.filter(user__username=user)
@@ -180,7 +173,7 @@ def update_profile(request):
         response = JsonResponse({"error": "there was an error"})
         response.status_code = 403
         return response
-    food_selected=food_selected[0]
+    food_selected = food_selected[0]
     id_current_user = request.user.id
     select_profile = Profile.objects.get(user__id=id_current_user)
     user_favorite = list(select_profile.favorites.all())
@@ -190,4 +183,3 @@ def update_profile(request):
         select_profile.favorites.remove(food_selected)
     select_profile.save()
     return JsonResponse({})
-

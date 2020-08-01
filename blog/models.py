@@ -29,34 +29,8 @@ class Ingredient(models.Model):
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
         super(Ingredient, self).save(force_insert, force_update, using, update_fields)
-        ChooseIngredientsForm.DAIRY = tuple(
-            ((item.name, item.name) for item in Ingredient.objects.filter(category="dairy")))
-        ChooseIngredientsForm.BACKING_AND_GRAINS = tuple(
-            ((item.name, item.name) for item in Ingredient.objects.filter(category="backing_and_grains")))
-        ChooseIngredientsForm.SWEETENERS = tuple(
-            ((item.name, item.name) for item in Ingredient.objects.filter(category="sweeteners")))
-        ChooseIngredientsForm.VEGETABLES = tuple(
-            ((item.name, item.name) for item in Ingredient.objects.filter(category="vegetables")))
-        ChooseIngredientsForm.FRUITS = tuple(
-            ((item.name, item.name) for item in Ingredient.objects.filter(category="fruits")))
-        ChooseIngredientsForm.SPICES = tuple(
-            ((item.name, item.name) for item in Ingredient.objects.filter(category="spices")))
-        ChooseIngredientsForm.MEATS = tuple(
-            ((item.name, item.name) for item in Ingredient.objects.filter(category="meats")))
-        ChooseIngredientsForm.FISH_AND_SEAFOOD = tuple(
-            ((item.name, item.name) for item in Ingredient.objects.filter(category="fish_and_seafood")))
-        ChooseIngredientsForm.CONDIMENTS = tuple(
-            ((item.name, item.name) for item in Ingredient.objects.filter(category="condiments")))
-        ChooseIngredientsForm.BEVERAGES = tuple(
-            ((item.name, item.name) for item in Ingredient.objects.filter(category="beverages")))
-        ChooseIngredientsForm.NUTS = tuple(
-            ((item.name, item.name) for item in Ingredient.objects.filter(category="nuts")))
-        ChooseIngredientsForm.OIL = tuple(
-            ((item.name, item.name) for item in Ingredient.objects.filter(category="oil")))
-        ChooseIngredientsForm.LEGUMES = tuple(
-            ((item.name, item.name) for item in Ingredient.objects.filter(category="legumes")))
-        ChooseIngredientsForm.SAUCES = tuple(
-            (item.name, item.name) for item in Ingredient.objects.filter(category="sauces"))
+        from .utils import update_ingredients_form
+        update_ingredients_form()
 
 
 class Food(models.Model):
@@ -81,8 +55,6 @@ class Food(models.Model):
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
         super(Food, self).save(force_insert, force_update, using, update_fields)
-        ChooseIngredientsForm.DAIRY = tuple(
-            ((item.name, item.name) for item in Ingredient.objects.filter(category="dairy")))
         FilterTypesForm.SITE = {food.url.split('/')[2].replace("www.", "") for food in Food.objects.all()}
         FilterTypesForm.SITE = (("all","all"),)+tuple((item, item) for item in FilterTypesForm.SITE)
 
