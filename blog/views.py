@@ -29,6 +29,7 @@ def search(request):
     cuisine = "all"
     diet = "all"
     mealType = "all"
+    site = "all"
     if request.method == "POST" and filterTypes_form.is_valid():
         if "diet" in request.POST:
             diet = request.POST.get("diet")
@@ -38,6 +39,9 @@ def search(request):
 
         if "mealType" in request.POST:
             mealType = request.POST.get("mealType")
+
+        if "site" in request.POST:
+            site = request.POST.get("site")
 
     # ingredient search :
     food_selected_with_selected_ingredient = []
@@ -53,6 +57,8 @@ def search(request):
                         food_with_selected_ingredient = food_with_selected_ingredient.filter(cuisine=cuisine)
                     if mealType != "all":
                         food_with_selected_ingredient = food_with_selected_ingredient.filter(mealType=mealType)
+                    if site != "all":
+                        food_with_selected_ingredient = food_with_selected_ingredient.filter(url__icontains=site)
                     food_selected_with_selected_ingredient.append(food_with_selected_ingredient)
                     chosen_ingredient.append(selected_ingredient)
 
@@ -87,7 +93,7 @@ def search(request):
     all_foods = [food.name for food in list(Food.objects.all())]
 
     context = {
-        'previousFilter': {"cuisine": cuisine, "mealType": mealType, "diet": diet},
+        'previousFilter': {"cuisine": cuisine, "mealType": mealType, "diet": diet ,"site" :site },
         'filterTypes_form': filterTypes_form,
         'ingredients_form': ingredients_form,
         'finalSortedFoodChoose': final_sorted_food_choose,
