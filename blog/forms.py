@@ -1,57 +1,39 @@
 from django import forms
 
 DIET = (
-    ("all", "none"),
-    ("vegetarian", "vegetarian"),
-    ("gluten_free", "gluten free"),
-    ("lactose_free", "lactose_free"),
-    ("pescatarian", "pescatarian")
+    ("all", "None"),
+    ("vegetarian", "Vegetarian"),
+    ("gluten_free", "Gluten free"),
+    ("lactose_free", "Lactose_free"),
+    ("pescatarian", "Pescatarian")
 )
 CUISINE = (
-    ("all", "none"),
+    ("all", "None"),
     ("Asian", "Asian"),
     ("Italian", "Italian"),
     ("Chinese", "Chinese"),
     ("French", "French"),
     ("German", "German"),
-    ("mexican", "mexican"),
-    ("chinese", "chinese")
+    ("mexican", "Mexican"),
+    ("chinese", "Chinese")
 )
 MEAL_TYPE = (
-    ("all", "none"),
-    ("breakfast", "breakfast"),
-    ("desserts", "desserts"),
-    ("dinner", "dinner"),
-    ("salads", "salads"),
-    ("cakes", "cakes"),
-    ("breads", "breads"),
-    ("soups", "soups"),
-    ("sandwiches", "sandwiches"),
-    ("drinks", "drinks"),
-    ("seafood", "seafood")
+    ("all", "None"),
+    ("breakfast", "Breakfast"),
+    ("desserts", "Desserts"),
+    ("dinner", "Dinner"),
+    ("salads", "Salads"),
+    ("cakes", "Cakes"),
+    ("breads", "Breads"),
+    ("soups", "Soups"),
+    ("sandwiches", "Sandwiches"),
+    ("drinks", "Drinks"),
+    ("seafood", "Seafood")
 )
 
 
 class ChooseIngredientsForm(forms.Form):
-
-    def __init__(self, *args, **kwargs):
-        super(ChooseIngredientsForm, self).__init__(*args, **kwargs)
-
-        self.fields['dairy'].choices = self.DAIRY
-        self.fields['vegetables'].choices = self.VEGETABLES
-        self.fields['fruits'].choices = self.FRUITS
-        self.fields['backing_and_grains'].choices = self.BACKING_AND_GRAINS
-        self.fields['sweeteners'].choices = self.SWEETENERS
-        self.fields['spices'].choices = self.SPICES
-        self.fields['meats'].choices = self.MEATS
-        self.fields['fish_and_seafood'].choices = self.FISH_AND_SEAFOOD
-        self.fields['condiments'].choices = self.CONDIMENTS
-        self.fields['beverages'].choices = self.BEVERAGES
-        self.fields['legumes'].choices = self.LEGUMES
-        self.fields['nuts'].choices = self.NUTS
-        self.fields['oil'].choices = self.OIL
-        self.fields['sauces'].choices = self.SAUCES
-
+    ever_filled = False
     DAIRY = ()
     VEGETABLES = ()
     FRUITS = ()
@@ -165,18 +147,30 @@ class ChooseIngredientsForm(forms.Form):
 
     )
 
+    def __init__(self, *args, **kwargs):
+        if not ChooseIngredientsForm.ever_filled:
+            from .utils import update_ingredients_form
+            update_ingredients_form()
+            ChooseIngredientsForm.ever_filled = True
+
+        super(ChooseIngredientsForm, self).__init__(*args, **kwargs)
+        self.fields['dairy'].choices = self.DAIRY
+        self.fields['vegetables'].choices = self.VEGETABLES
+        self.fields['fruits'].choices = self.FRUITS
+        self.fields['backing_and_grains'].choices = self.BACKING_AND_GRAINS
+        self.fields['sweeteners'].choices = self.SWEETENERS
+        self.fields['spices'].choices = self.SPICES
+        self.fields['meats'].choices = self.MEATS
+        self.fields['fish_and_seafood'].choices = self.FISH_AND_SEAFOOD
+        self.fields['condiments'].choices = self.CONDIMENTS
+        self.fields['beverages'].choices = self.BEVERAGES
+        self.fields['legumes'].choices = self.LEGUMES
+        self.fields['nuts'].choices = self.NUTS
+        self.fields['oil'].choices = self.OIL
+        self.fields['sauces'].choices = self.SAUCES
+
 
 class FilterTypesForm(forms.Form):
-    def __init__(self, *args, **kwargs):
-        if FilterTypesForm.ever_filled == False:
-            from .models import Food
-            FilterTypesForm.SITE = {food.url.split('/')[2].replace("www.", "") for food in Food.objects.all()}
-            FilterTypesForm.SITE = (("all","all"),)+tuple((item, item) for item in FilterTypesForm.SITE)
-            FilterTypesForm.ever_filled = True
-        super(FilterTypesForm, self).__init__(*args, **kwargs)
-        self.fields['site'].choices = self.SITE
-
-
     SITE = ()
     ever_filled = False
     site = forms.ChoiceField(choices=SITE, label="Site", required=False)
@@ -184,3 +178,11 @@ class FilterTypesForm(forms.Form):
     cuisine = forms.ChoiceField(choices=CUISINE, label="Cuisine", required=False)
     mealType = forms.ChoiceField(choices=MEAL_TYPE, label="Meal Type", required=False)
 
+    def __init__(self, *args, **kwargs):
+        if not FilterTypesForm.ever_filled:
+            from .models import Food
+            FilterTypesForm.SITE = {food.url.split('/')[2].replace("www.", "") for food in Food.objects.all()}
+            FilterTypesForm.SITE = (("all", "all"),) + tuple((item, item) for item in FilterTypesForm.SITE)
+            FilterTypesForm.ever_filled = True
+        super(FilterTypesForm, self).__init__(*args, **kwargs)
+        self.fields['site'].choices = self.SITE

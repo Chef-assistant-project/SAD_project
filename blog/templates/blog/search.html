@@ -20,145 +20,192 @@
 <!-- End banner Area -->
 
 <section class="about-generic-area section-gap">
+
     <div class="container">
         <h3 class="mb-30">Choose ingredients</h3>
         <div class="row">
             <div class="col-md-4">
-                <form action="" method="post">
-                    <div class="single-defination">
-                        <div class="ScrollStyle">
-                            {% for item in ingredients_form %}
-                            <button class="accordion" type="button">
-                                <img src="/static/img/icons/{{item.label}}.png" width="50" height="50">
-                                {{ item.label }}
-                            </button>
-                            <div class="panel">
-                                <div class="container">
-                                    {% for item2 in item %}
-                                    <div class="form-check-inline">
-                                        {% csrf_token %}
-                                        {{ item2 }}
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#categories">Categories</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#type">Type</a>
+                    </li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div id="categories" class="container tab-pane active"><br>
+                        <form method="post" id="post-form">
+                            <div class="single-defination">
+                                <div class="ScrollStyle">
+                                    {% for item in ingredients_form %}
+                                    <button class="accordion" type="button">
+                                        <img src="/static/img/icons/{{item.label}}.png" width="50" height="50">
+                                        {{ item.label }}
+                                    </button>
+                                    <div class="panel">
+                                        <div class="container">
+                                            {% for temp,item2 in item.field.choices %}
+                                            <div class="form-check-inline">
+                                                {% csrf_token %}
+                                                {% if item2 in previousIngredients %}
+                                                <input type="checkbox" id="Ing_{{item2}}"
+                                                       name="{{item.name}}"
+                                                       value="{{item2}}"
+                                                       checked
+                                                       onclick="clickAction('{{item2}}')">
+                                                {% else %}
+                                                <input type="checkbox" id="Ing_{{item2 }}" name="{{item.name}}"
+                                                       value="{{item2}}" onclick="clickAction('{{item2}}');">
+                                                {% endif %} &nbsp{{ item2 }}
+                                            </div>
+                                            {% endfor %}
+                                        </div>
                                     </div>
                                     {% endfor %}
                                 </div>
+                                <br>
+                                <br>
+                            </div>
+                            <div class="row mt-4 mb-4">
+                                <div class="col-md-4">
+                                    <h4 class="mb-10">Select Site </h4>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="default-select" id="default-select   ">
+                                        {% csrf_token %}
+                                        <select class="form-control" style="display: none;" name="site">
+                                            {% for a,b in filterTypes_form.site.field.choices %}
+                                            {% if previousFilter.site == a %}
+                                            <option selected value="{{ a }}">{{ b }}</option>
+                                            {% else %}
+                                            <option value="{{ a }}">{{ b }}</option>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-4 mb-4">
+                                <div class="col-md-7">
+                                    <h4 class="mb-10">Select Diet </h4>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="default-select" id="default-select">
+                                        {% csrf_token %}
+                                        <select class="form-control" style="display: none;" name="diet">
+                                            {% for a,b in filterTypes_form.diet.field.choices %}
+                                            {% if previousFilter.diet == a %}
+                                            <option selected value="{{ a }}">{{ b }}</option>
+                                            {% else %}
+                                            <option value="{{ a }}">{{ b }}</option>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-4 mb-4">
+                                <div class="col-md-7">
+                                    <h4 class="mb-10 mt-10">Select Cuisine </h4>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="default-select" id="default-select ">
+                                        {% csrf_token %}
+                                        <select class="form-control" style="display: none;" name="cuisine">
+                                            {% for a,b in filterTypes_form.cuisine.field.choices %}
+                                            {% if previousFilter.cuisine == a %}
+                                            <option selected value="{{ a }}">{{ b }}</option>
+                                            {% else %}
+                                            <option value="{{ a }}">{{ b }}</option>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-4 mb-4">
+                                <div class="col-md-7">
+                                    <h4 class="mb-10 mt-10">Select MealType </h4>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="default-select" id="default-select  ">
+                                        {% csrf_token %}
+                                        <select class="form-control" style="display: none;" name="mealType">
+                                            {% for a,b in filterTypes_form.mealType.field.choices %}
+                                            {% if previousFilter.mealType == a %}
+                                            <option selected value="{{ a }}">{{ b }}</option>
+                                            {% else %}
+                                            <option value="{{ a }}">{{ b }}</option>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row ml-1">
+                                <br>
+                                <br>
+                                <input type="submit" class="genric-btn primary circle" value="Search" id="search">
+                                <!--                        <button class="btn btn-primary">Submit</button>-->
+                            </div>
+                        </form>
+                    </div>
+
+                    <div id="type" class="container tab-pane fade"><br>
+                        <input type="text" class="form-control" id="typeIngredientTextBox"
+                               placeholder="Add an ingredient">
+
+
+                        <div class="row mt-3" id="chosen-ingredients">
+                            {% for ingredient in previousIngredients%}
+                            <div class="col-md-6 " id="{{ingredient}}name">
+                                {{ ingredient }}
+                            </div>
+                            <div class="col-md-6" onclick="uncheck('{{ingredient}}')" id="{{ingredient}}bin">
+                                <button class="btn btn-default btn-sm" align="right">
+                                    <span class="lnr lnr-trash" align="right"></span>
+                                </button>
                             </div>
                             {% endfor %}
                         </div>
-                        <br>
-                        <br>
-                    </div>
-                    <!--<form action="" method="POST">-->
-                    <!--{% for item in filterTypes_form %}-->
-                    <!--<div class="row">-->
-                    <!--<h4 class="mb-10">Select {{ item.label }}</h4>-->
-                    <!--<div class="default-select" id="default-select">-->
-                    <!--{% csrf_token %}-->
-                    <!--<select class="form-control" id="inputState" style="display: none;" name="{{item.name}}">-->
-                    <!--{% for a,b in item.field.choices %}-->
-                    <!--{% with item.label as d %}-->
-                    <!--{% if d == 'pescatarian' %}-->
-                    <!--<option selected value="{{ a }}">{{ b }}&#45;&#45;&#45;&#45;</option>-->
-                    <!--{%debug%}-->
-                    <!--{% else %}-->
-                    <!--<option value="{{ a }}">{{ b }}-</option>-->
-                    <!--{% endif %}-->
-                    <!--{% endwith %}-->
-                    <!--{% endfor %}-->
-                    <!--</select>-->
 
-                    <!--</div>-->
-                    <!--</div>-->
-                    <!--{% endfor %}-->
-                    <!--<input type="submit" class="genric-btn primary small" value="Filter">-->
-                    <!--</form>-->
-                    <div class="row mt-4 mb-4">
-                        <div class="col-md-4">
-                            <h4 class="mb-10">Select Site </h4>
-                        </div>
-                        <div class="col-md-8">
-                            <div class="default-select" id="default-select   ">
-                                {% csrf_token %}
-                                <select class="form-control" style="display: none;" name="site">
-                                    {% for a,b in filterTypes_form.site.field.choices %}
-                                    {% if previousFilter.site == a %}
-                                    <option selected value="{{ a }}">{{ b }}</option>
-                                    {% else %}
-                                    <option value="{{ a }}">{{ b }}</option>
-                                    {% endif %}
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
                     </div>
-                    <div class="row mt-4 mb-4">
-                        <div class="col-md-7">
-                            <h4 class="mb-10">Select Diet </h4>
-                        </div>
-                        <div class="col-md-5">
-                            <div class="default-select" id="default-select">
-                                {% csrf_token %}
-                                <select class="form-control" style="display: none;" name="diet">
-                                    {% for a,b in filterTypes_form.diet.field.choices %}
-                                    {% if previousFilter.diet == a %}
-                                    <option selected value="{{ a }}">{{ b }}</option>
-                                    {% else %}
-                                    <option value="{{ a }}">{{ b }}</option>
-                                    {% endif %}
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mt-4 mb-4">
-                        <div class="col-md-7">
-                            <h4 class="mb-10 mt-10">Select Cuisine </h4>
-                        </div>
-                        <div class="col-md-5">
-                            <div class="default-select" id="default-select ">
-                                {% csrf_token %}
-                                <select class="form-control" style="display: none;" name="cuisine">
-                                    {% for a,b in filterTypes_form.cuisine.field.choices %}
-                                    {% if previousFilter.cuisine == a %}
-                                    <option selected value="{{ a }}">{{ b }}</option>
-                                    {% else %}
-                                    <option value="{{ a }}">{{ b }}</option>
-                                    {% endif %}
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mt-4 mb-4">
-                        <div class="col-md-7">
-                            <h4 class="mb-10 mt-10">Select Meal Type </h4>
-                        </div>
-                        <div class="col-md-5">
-                            <div class="default-select" id="default-select  ">
+                </div>
 
-                                {% csrf_token %}
-                                <select class="form-control" style="display: none;" name="mealType">
-                                    {% for a,b in filterTypes_form.mealType.field.choices %}
-                                    {% if previousFilter.mealType == a %}
-                                    <option selected value="{{ a }}">{{ b }}</option>
-                                    {% else %}
-                                    <option value="{{ a }}">{{ b }}</option>
-                                    {% endif %}
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row ml-1">
-                        <br>
-                        <br>
-                        <input type="submit" class="genric-btn primary circle" value="Search">
-                    </div>
-                </form>
             </div>
             <div class="col-md-8">
                 <div class="row">
                     <div class="container">
-                        <div class="col-lg-12 text-center mt-4">
+                        <div class="row">
+                            <div class="col-md-1 ml-6">
+                            </div>
+                            <div class="col-md-2 ml-6">
+                                {% if suggested_ingredients|length > 0 %}
+                                <b> Do you have?</b>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 ml-6">
+                                {% for suggestion in suggested_ingredients %}
+                                <input type="checkbox" id="{{suggestion}}s"
+                                       onclick="suggestAdd('{{suggestion}}')">
+                                {{ suggestion }}
+                                {% endfor %}
+                            </div>
+                            <div class="col-md-1">
+                                {% if suggested_ingredients|length > 0 %}
+                                <input type="submit" onclick="clickSearch();" class="genric-btn primary-border small"
+                                       value="Add">
+                                {% endif %}
+                            </div>
+                        </div>
+                        <br>
+
+                        <div class="col-lg-12 text-center">
+
                             <h1>Already Have A Dish In Mind?</h1>
                         </div>
                         <div class="col-md-6 rounded offset-md-3 mt-5 border border-danger pt-3 ">
@@ -181,247 +228,274 @@
                         <br>
                         <br>
                         <br>
+
                         <div class="row justify-content-center ">
                             {% for food in match_foods %}
-                                {% if forloop.counter < 5 %}
-                                    <div class="col-lg-3 col-md-6 single-blog blogBox moreBox" >
-                                        <div class="thumb">
-                                            <a href={{food.url}}><img class="img-fluid" src="/media/{{food.image}}" alt=""></a>
-                                        </div>
-                                        <p class="date">{{food.date_added|date}}</p>
-                                        <a href={{food.url}}>
-                                            <h4>{{food.name}}
-                                                {% if user.is_authenticated %}
-                                                {% if food in favorites %}
-                                                <a  onclick="profileFunction(this,'{{food.id}}')"  style="padding-left:70px;" class="lnr lnr-checkmark-circle"  id = "{{food.id}}_checkmark"></a>
-                                                {% else %}
-                                                <a  onclick="profileFunction(this,'{{food.id}}')"  style="padding-left:70px;" class="lnr lnr-plus-circle"  id = "{{food.id}}_plus"></a>
-                                                {% endif %}
-                                                {% endif %}
-                                            </h4>
-                                        </a>
-                                        <a href={{food.url}}>{{food.detail}}</a>
-                                        <br>
-                                        <a style="color: GoldenRod;" class='txt' id = "{{food.id}}">scores: {{food.score}} </a>
+                            {% if forloop.counter < 5 %}
+                            <div class="col-lg-3 col-md-6 single-blog blogBox moreBox">
+                                <div class="thumb">
+                                    <a href={{food.url}}><img class="img-fluid" src="/media/{{food.image}}" alt=""></a>
+                                </div>
+                                <p class="date">{{food.date_added|date}}</p>
+                                <a href={{food.url}}>
+                                    <h4>{{food.name}}
                                         {% if user.is_authenticated %}
-                                        <div style="margin: 0; padding: 0; border: 0;"   >
-                                            {% if food.name in food_likes %}
-                                                {% for food2 , score in food_likes.items %}
-                                                    {% if food.name == food2 %}
-                                                        {% with ''|center:5 as range %}
-                                                        {% for _ in range %}
-                                                            {% if forloop.counter <= score %}
-                                                                <a  onclick="myFunction(this,'{{food.id}}')"  class="lnr lnr-star" style="color: GoldenRod;" id = "{{food.id }}_{{ forloop.counter }}"></a>
-                                                            {% else %}
-                                                                <a  onclick="myFunction(this,'{{food.id}}')"  class="lnr lnr-star-empty" style="color: GoldenRod;" id = "{{food.id}}_{{ forloop.counter }}"></a>
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                        {% endwith %}
-                                                    {% endif %}
-                                                {% endfor %}
-                                            {% else %}
-                                                {% with ''|center:5 as range %}
-                                                    {% for _ in range %}
-                                                                <a  onclick="myFunction(this,'{{food.id}}')"  class="lnr lnr-star-empty" style="color: GoldenRod;" id = "{{food.id}}_{{ forloop.counter }}">
-                                                                </a>
-                                                    {% endfor %}
-                                                {% endwith %}
-                                            {% endif %}
-                                        </div>
+                                        {% if food in favorites %}
+                                        <a onclick="profileFunction(this,'{{food.id}}')" style="padding-left:70px;"
+                                           class="lnr lnr-checkmark-circle" id="{{food.id}}_checkmark"></a>
+                                        {% else %}
+                                        <a onclick="profileFunction(this,'{{food.id}}')" style="padding-left:70px;"
+                                           class="lnr lnr-plus-circle" id="{{food.id}}_plus"></a>
                                         {% endif %}
-                                    </div>
-                                {% else %}
-                                    <div class="col-lg-3 col-md-6 single-blog blogBox moreBox" style="display: none;">
-                                        <div class="thumb">
-                                            <a href={{food.url}}><img class="img-fluid" src="/media/{{food.image}}" alt=""></a>
-                                        </div>
-                                        <p class="date">{{food.date_added|date}}</p>
-                                        <a href={{food.url}}>
-                                            <h4>{{food.name}}
-                                                {% if user.is_authenticated %}
-                                                {% if food in favorites %}
-                                                <a  onclick="profileFunction(this,'{{food.id}}')"  style="padding-left:70px;" class="lnr lnr-checkmark-circle"  id = "{{food.id}}_checkmark">
-                                                </a>
-                                                {% else %}
-                                                <a  onclick="profileFunction(this,'{{food.id}}')"  style="padding-left:70px;" class="lnr lnr-plus-circle"  id = "{{food.id}}_plus">
-                                                </a>
-                                                {% endif %}
-                                                {% endif %}
-                                            </h4>
-                                        </a>
-                                        <a href={{food.url}}>{{food.detail}}</a>
-                                        <br>
-                                        <a style="color: GoldenRod;" class='txt' id = "{{food.id}}">score: {{food.score}} </a>
-                                        {% if user.is_authenticated %}
-                                        <div style="margin: 0; padding: 0; border: 0;"   >
-                                            {% if food.name in food_likes %}
-                                                {% for food2 , score in food_likes.items %}
-                                                    {% if food.name == food2 %}
-                                                        {% with ''|center:5 as range %}
-                                                        {% for _ in range %}
-                                                            {% if forloop.counter <= score %}
-                                                                <a  onclick="myFunction(this,'{{food.id}}')"  class="lnr lnr-star" style="color: GoldenRod;" id = "{{food.id }}_{{ forloop.counter }}">
-                                                                </a>
-                                                            {% else %}
-                                                                <a  onclick="myFunction(this,'{{food.id}}')"  class="lnr lnr-star-empty" style="color: GoldenRod;" id = "{{food.id }}_{{ forloop.counter }}">
-                                                                </a>
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                        {% endwith %}
-                                                    {% endif %}
-                                                {% endfor %}
-                                            {% else %}
-                                                {% with ''|center:5 as range %}
-                                                    {% for _ in range %}
-                                                                <a  onclick="myFunction(this,'{{food.id}}')"  class="lnr lnr-star-empty" style="color: GoldenRod;" id = "{{food.id}}_{{ forloop.counter }}">
-                                                                </a>
-                                                    {% endfor %}
-                                                {% endwith %}
-                                            {% endif %}
-                                        </div>
                                         {% endif %}
-                                    </div>
+                                    </h4>
+                                </a>
+                                <a href={{food.url}}>{{food.detail}}</a>
+                                <br>
+                                <a style="color: GoldenRod;" class='txt' id="{{food.id}}">scores: {{food.score}} </a>
+                                {% if user.is_authenticated %}
+                                <div style="margin: 0; padding: 0; border: 0;">
+                                    {% if food.name in food_likes %}
+                                    {% for food2 , score in food_likes.items %}
+                                    {% if food.name == food2 %}
+                                    {% with ''|center:5 as range %}
+                                    {% for _ in range %}
+                                    {% if forloop.counter <= score %}
+                                    <a onclick="myFunction(this,'{{food.id}}')" class="lnr lnr-star"
+                                       style="color: GoldenRod;" id="{{food.id }}_{{ forloop.counter }}"></a>
+                                    {% else %}
+                                    <a onclick="myFunction(this,'{{food.id}}')" class="lnr lnr-star-empty"
+                                       style="color: GoldenRod;" id="{{food.id}}_{{ forloop.counter }}"></a>
+                                    {% endif %}
+                                    {% endfor %}
+                                    {% endwith %}
+                                    {% endif %}
+                                    {% endfor %}
+                                    {% else %}
+                                    {% with ''|center:5 as range %}
+                                    {% for _ in range %}
+                                    <a onclick="myFunction(this,'{{food.id}}')" class="lnr lnr-star-empty"
+                                       style="color: GoldenRod;" id="{{food.id}}_{{ forloop.counter }}">
+                                    </a>
+                                    {% endfor %}
+                                    {% endwith %}
+                                    {% endif %}
+                                </div>
                                 {% endif %}
+                            </div>
+                            {% else %}
+                            <div class="col-lg-3 col-md-6 single-blog blogBox moreBox" style="display: none;">
+                                <div class="thumb">
+                                    <a href={{food.url}}><img class="img-fluid" src="/media/{{food.image}}" alt=""></a>
+                                </div>
+                                <p class="date">{{food.date_added|date}}</p>
+                                <a href={{food.url}}>
+                                    <h4>{{food.name}}
+                                        {% if user.is_authenticated %}
+                                        {% if food in favorites %}
+                                        <a onclick="profileFunction(this,'{{food.id}}')" style="padding-left:70px;"
+                                           class="lnr lnr-checkmark-circle" id="{{food.id}}_checkmark">
+                                        </a>
+                                        {% else %}
+                                        <a onclick="profileFunction(this,'{{food.id}}')" style="padding-left:70px;"
+                                           class="lnr lnr-plus-circle" id="{{food.id}}_plus">
+                                        </a>
+                                        {% endif %}
+                                        {% endif %}
+                                    </h4>
+                                </a>
+                                <a href={{food.url}}>{{food.detail}}</a>
+                                <br>
+                                <a style="color: GoldenRod;" class='txt' id="{{food.id}}">score: {{food.score}} </a>
+                                {% if user.is_authenticated %}
+                                <div style="margin: 0; padding: 0; border: 0;">
+                                    {% if food.name in food_likes %}
+                                    {% for food2 , score in food_likes.items %}
+                                    {% if food.name == food2 %}
+                                    {% with ''|center:5 as range %}
+                                    {% for _ in range %}
+                                    {% if forloop.counter <= score %}
+                                    <a onclick="myFunction(this,'{{food.id}}')" class="lnr lnr-star"
+                                       style="color: GoldenRod;" id="{{food.id }}_{{ forloop.counter }}">
+                                    </a>
+                                    {% else %}
+                                    <a onclick="myFunction(this,'{{food.id}}')" class="lnr lnr-star-empty"
+                                       style="color: GoldenRod;" id="{{food.id }}_{{ forloop.counter }}">
+                                    </a>
+                                    {% endif %}
+                                    {% endfor %}
+                                    {% endwith %}
+                                    {% endif %}
+                                    {% endfor %}
+                                    {% else %}
+                                    {% with ''|center:5 as range %}
+                                    {% for _ in range %}
+                                    <a onclick="myFunction(this,'{{food.id}}')" class="lnr lnr-star-empty"
+                                       style="color: GoldenRod;" id="{{food.id}}_{{ forloop.counter }}">
+                                    </a>
+                                    {% endfor %}
+                                    {% endwith %}
+                                    {% endif %}
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            {% endif %}
                             {% endfor %}
                         </div>
 
 
                         <div class="row justify-content-center">
+
                             {% for food , UnavailableIngredientsStr in finalSortedFoodChoose.items %}
-                                {% if forloop.counter < 5 %}
-                                    <div class="col-lg-3 col-md-6 single-blog blogBox moreBox">
-                                        <div class="thumb">
-                                            <a href={{food.url}}>
-                                                <img class="img-fluid" src="/media/{{food.image}}" alt="">
-                                            </a>
-                                        </div>
-                                        <p class="date">{{food.date_added|date}}</p>
-                                        <a href={{food.url}}>
-                                            <h4>{{food.name}}
-                                                {% if user.is_authenticated %}
-                                                {% if food in favorites %}
-                                                <a  onclick="profileFunction(this,'{{food.id}}')"  style="padding-left:70px;" class="lnr lnr-checkmark-circle"  id = "{{food.id}}_checkmark">
-                                                </a>
-                                                {% else %}
-                                                <a  onclick="profileFunction(this,'{{food.id}}')"  style="padding-left:70px;" class="lnr lnr-plus-circle"  id = "{{food.id}}_plus">
-                                                </a>
-                                                {% endif %}
-                                                {% endif %}
-                                            </h4>
-                                        </a>
-                                        <a href={{food.url}}>{{food.detail}}</a>
-                                        <br>
-                                        {% if UnavailableIngredientsStr == 'You\'ve got all the ingredients!' %}
-                                        <b><a href={{food.url}}><span style="color: green;">{{UnavailableIngredientsStr}}</span></a></b>
-                                        {% else %}
-                                        <b><a href={{food.url}}><span style="color: red;">{{UnavailableIngredientsStr}}</span></a></b>
-                                        {% endif %}
-                                        <br>
-                                         <a style="color: GoldenRod;" class='txt' id = "{{food.id}}">score: {{food.score}}</a>
+                            {% if forloop.counter < 5 %}
+                            <div class="col-lg-3 col-md-6 single-blog blogBox moreBox">
+                                <div class="thumb">
+                                    <a href={{food.url}}>
+                                        <img class="img-fluid" src="/media/{{food.image}}" alt="">
+                                    </a>
+                                </div>
+                                <p class="date">{{food.date_added|date}}</p>
+                                <a href={{food.url}}>
+                                    <h4>{{food.name}}
                                         {% if user.is_authenticated %}
-                                        <div style="margin: 0; padding: 0; border: 0;"   >
-                                            {% if food.name in food_likes %}
-                                                {% for food2 , score in food_likes.items %}
-                                                    {% if food.name == food2 %}
-                                                        {% with ''|center:5 as range %}
-                                                        {% for _ in range %}
-                                                            {% if forloop.counter <= score %}
-                                                                <a  onclick="myFunction(this,'{{food.id}}')"  class="lnr lnr-star" style="color: GoldenRod;" id = "{{food.id}}_{{ forloop.counter }}">
-                                                                </a>
-                                                            {% else %}
-                                                                <a  onclick="myFunction(this,'{{food.id}}')"  class="lnr lnr-star-empty" style="color: GoldenRod;" id = "{{food.id}}_{{ forloop.counter }}">
-                                                                </a>
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                        {% endwith %}
-                                                    {% endif %}
-                                                {% endfor %}
-                                            {% else %}
-                                                {% with ''|center:5 as range %}
-                                                    {% for _ in range %}
-                                                        <a  onclick="myFunction(this,'{{food.id}}')"  class="lnr lnr-star-empty" style="color: GoldenRod;" id = "{{food.id}}_{{ forloop.counter }}"></a>
-                                                    {% endfor %}
-                                                {% endwith %}
-                                            {% endif %}
-                                        </div>
+                                        {% if food in favorites %}
+                                        <a onclick="profileFunction(this,'{{food.id}}')" style="padding-left:70px;"
+                                           class="lnr lnr-checkmark-circle" id="{{food.id}}_checkmark">
+                                        </a>
+                                        {% else %}
+                                        <a onclick="profileFunction(this,'{{food.id}}')" style="padding-left:70px;"
+                                           class="lnr lnr-plus-circle" id="{{food.id}}_plus">
+                                        </a>
                                         {% endif %}
-                                    </div>
+                                        {% endif %}
+                                    </h4>
+                                </a>
+                                <a href={{food.url}}>{{food.detail}}</a>
+                                <br>
+                                {% if UnavailableIngredientsStr == 'You\'ve got all the ingredients!' %}
+                                <b><a href={{food.url}}><span style="color: green;">{{UnavailableIngredientsStr}}</span></a></b>
                                 {% else %}
-                                    <div class="col-lg-3 col-md-6 single-blog blogBox moreBox" style="display: none;">
-                                        <div class="thumb">
-                                            <a href={{food.url}}>
-                                                <img class="img-fluid" src="/media/{{food.image}}" alt="">
-                                            </a>
-                                        </div>
-                                        <p class="date">{{food.date_added|date}}</p>
-                                        <a href={{food.url}}>
-                                            <h4>{{food.name}}
-                                                {% if user.is_authenticated %}
-                                                {% if food in favorites %}
-                                                <a  onclick="profileFunction(this,'{{food.id}}')"  style="padding-left:70px;" class="lnr lnr-checkmark-circle"  id = "{{food.id}}_checkmark">
-                                                </a>
-                                                {% else %}
-                                                <a  onclick="profileFunction(this,'{{food.id}}')"  style="padding-left:70px;" class="lnr lnr-plus-circle"  id = "{{food.id}}_plus">
-                                                </a>
-                                                {% endif %}
-                                                {% endif %}
-                                            </h4>
-                                        </a>
-                                        <a href={{food.url}}>{{food.detail}}</a>
-                                        <br>
-                                        {% if UnavailableIngredientsStr == 'You\'ve got all the ingredients!' %}
-                                        <b><a href={{food.url}}><span style="color: green;">{{UnavailableIngredientsStr}}</span></a></b>
-                                        {% else %}
-                                        <b><a href={{food.url}}><span style="color: red;">{{UnavailableIngredientsStr}}</span></a></b>
-                                        {% endif %}
-                                        <br>
-                                         <a style="color: GoldenRod;" class='txt' id = "{{food.id}}">score: {{food.score}} </a>
-                                        {% if user.is_authenticated %}
-                                        <div style="margin: 0; padding: 0; border: 0;"   >
-                                            {% if food.name in food_likes %}
-                                                {% for food2 , score in food_likes.items %}
-                                                    {% if food.name == food2 %}
-                                                        {% with ''|center:5 as range %}
-                                                        {% for _ in range %}
-                                                            {% if forloop.counter <= score %}
-                                                                <a  onclick="myFunction(this,'{{food.id}}')"  class="lnr lnr-star" style="color: GoldenRod;" id = "{{food.id}}_{{ forloop.counter }}">
-                                                                </a>
-                                                            {% else %}
-                                                                <a  onclick="myFunction(this,'{{food.id}}')"  class="lnr lnr-star-empty" style="color: GoldenRod;" id = "{{food.id}}_{{ forloop.counter }}">
-                                                                </a>
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                        {% endwith %}
-                                                    {% endif %}
-                                                {% endfor %}
-                                            {% else %}
-                                                {% with ''|center:5 as range %}
-                                                    {% for _ in range %}
-                                                        <a  onclick="myFunction(this,'{{food.id}}')"  class="lnr lnr-star-empty" style="color: GoldenRod;" id = "{{food.id}}_{{ forloop.counter }}"></a>
-                                                    {% endfor %}
-                                                {% endwith %}
-                                            {% endif %}
-                                        </div>
-                                        {% endif %}
-                                    </div>
+                                <b><a href={{food.url}}><span
+                                        style="color: red;">{{UnavailableIngredientsStr}}</span></a></b>
                                 {% endif %}
+                                <br>
+                                <a style="color: GoldenRod;" class='txt' id="{{food.id}}">score: {{food.score}}</a>
+                                {% if user.is_authenticated %}
+                                <div style="margin: 0; padding: 0; border: 0;">
+                                    {% if food.name in food_likes %}
+                                    {% for food2 , score in food_likes.items %}
+                                    {% if food.name == food2 %}
+                                    {% with ''|center:5 as range %}
+                                    {% for _ in range %}
+                                    {% if forloop.counter <= score %}
+                                    <a onclick="myFunction(this,'{{food.id}}')" class="lnr lnr-star"
+                                       style="color: GoldenRod;" id="{{food.id}}_{{ forloop.counter }}">
+                                    </a>
+                                    {% else %}
+                                    <a onclick="myFunction(this,'{{food.id}}')" class="lnr lnr-star-empty"
+                                       style="color: GoldenRod;" id="{{food.id}}_{{ forloop.counter }}">
+                                    </a>
+                                    {% endif %}
+                                    {% endfor %}
+                                    {% endwith %}
+                                    {% endif %}
+                                    {% endfor %}
+                                    {% else %}
+                                    {% with ''|center:5 as range %}
+                                    {% for _ in range %}
+                                    <a onclick="myFunction(this,'{{food.id}}')" class="lnr lnr-star-empty"
+                                       style="color: GoldenRod;" id="{{food.id}}_{{ forloop.counter }}"></a>
+                                    {% endfor %}
+                                    {% endwith %}
+                                    {% endif %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% else %}
+                            <div class="col-lg-3 col-md-6 single-blog blogBox moreBox" style="display: none;">
+                                <div class="thumb">
+                                    <a href={{food.url}}>
+                                        <img class="img-fluid" src="/media/{{food.image}}" alt="">
+                                    </a>
+                                </div>
+                                <p class="date">{{food.date_added|date}}</p>
+                                <a href={{food.url}}>
+                                    <h4>{{food.name}}
+                                        {% if user.is_authenticated %}
+                                        {% if food in favorites %}
+                                        <a onclick="profileFunction(this,'{{food.id}}')" style="padding-left:70px;"
+                                           class="lnr lnr-checkmark-circle" id="{{food.id}}_checkmark">
+                                        </a>
+                                        {% else %}
+                                        <a onclick="profileFunction(this,'{{food.id}}')" style="padding-left:70px;"
+                                           class="lnr lnr-plus-circle" id="{{food.id}}_plus">
+                                        </a>
+                                        {% endif %}
+                                        {% endif %}
+                                    </h4>
+                                </a>
+                                <a href={{food.url}}>{{food.detail}}</a>
+                                <br>
+                                {% if UnavailableIngredientsStr == 'You\'ve got all the ingredients!' %}
+                                <b><a href={{food.url}}><span style="color: green;">{{UnavailableIngredientsStr}}</span></a></b>
+                                {% else %}
+                                <b><a href={{food.url}}><span
+                                        style="color: red;">{{UnavailableIngredientsStr}}</span></a></b>
+                                {% endif %}
+                                <br>
+                                <a style="color: GoldenRod;" class='txt' id="{{food.id}}">score: {{food.score}} </a>
+                                {% if user.is_authenticated %}
+                                <div style="margin: 0; padding: 0; border: 0;">
+                                    {% if food.name in food_likes %}
+                                    {% for food2 , score in food_likes.items %}
+                                    {% if food.name == food2 %}
+                                    {% with ''|center:5 as range %}
+                                    {% for _ in range %}
+                                    {% if forloop.counter <= score %}
+                                    <a onclick="myFunction(this,'{{food.id}}')" class="lnr lnr-star"
+                                       style="color: GoldenRod;" id="{{food.id}}_{{ forloop.counter }}">
+                                    </a>
+                                    {% else %}
+                                    <a onclick="myFunction(this,'{{food.id}}')" class="lnr lnr-star-empty"
+                                       style="color: GoldenRod;" id="{{food.id}}_{{ forloop.counter }}">
+                                    </a>
+                                    {% endif %}
+                                    {% endfor %}
+                                    {% endwith %}
+                                    {% endif %}
+                                    {% endfor %}
+                                    {% else %}
+                                    {% with ''|center:5 as range %}
+                                    {% for _ in range %}
+                                    <a onclick="myFunction(this,'{{food.id}}')" class="lnr lnr-star-empty"
+                                       style="color: GoldenRod;" id="{{food.id}}_{{ forloop.counter }}"></a>
+                                    {% endfor %}
+                                    {% endwith %}
+                                    {% endif %}
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            {% endif %}
                             {% endfor %}
                         </div>
                         <script>
                             var counter = 1;
+
                         </script>
                         {% if match_foods %}
-                            <div id="loadMore" style="">
-<!--                                <script>-->
-<!--                                   counter += 1;-->
-<!--                                </script>-->
-                                <a href="#">Load More</a>
-                            </div>
+                        <div id="loadMore" style="">
+                            <!--                                <script>-->
+                            <!--                                   counter += 1;-->
+                            <!--                                </script>-->
+                            <a href="#">Load More</a>
+                        </div>
                         {% endif %}
                         {% if finalSortedFoodChoose %}
-                            <div id="loadMore" style="">
-                                <a href="#">Load More</a>
-                            </div>
+                        <div id="loadMore" style="">
+                            <a href="#">Load More</a>
+                        </div>
                         {% endif %}
 
                     </div>
@@ -430,6 +504,8 @@
         </div>
     </div>
 </section>
+
+
 {% endblock content %}
 
 {% block scripts %}
@@ -438,6 +514,16 @@ dataFood =  {{foodNames|safe}}
 $('#autocomplete').autocomplete({
 	lookup: dataFood
 });
+
+
+</script>
+<script>
+$(document).ready(function(){
+  $(".nav-tabs a").click(function(){
+    $(this).tab('show');
+  });
+});
+
 </script>
 <script>
 function myFunction(x , y) {
@@ -492,6 +578,105 @@ function myFunction(x , y) {
         });
     }
 }
+
+</script>
+
+<script>
+function uncheck(id) {
+    ingredient = id + '';
+<!--    alert(ingredient)-->
+    document.getElementById('Ing_'+ingredient).checked = false;
+    var elem = document.getElementById(id + 'name');
+    elem.parentNode.removeChild(elem);
+    n_id = '#' + id + 'bin'
+    $(n_id).remove();
+}
+
+function ingAdd(id){
+    newIngredient = id + '';
+<!--    alert(newIngredient);-->
+    var checkBox = document.getElementById('Ing_'+newIngredient);
+    if (checkBox.checked == true){
+        name_id = id +'name'
+        bin_id = id +'bin'
+        $("#chosen-ingredients").prepend(
+        '<div class="col-md-6 " id=' + name_id +'>'+
+        id+
+        '</div>'+
+        '<div class="col-md-6" onclick="uncheck(' + "'" + newIngredient + "'" + ')" id='+ bin_id + '>'+
+                              '<button class="btn btn-default btn-sm" align="right">'+
+                              '<span class="lnr lnr-trash" align="right"></span>'+
+                              '</button>'+
+                        '</div>'
+            )
+  } else {
+    uncheck(newIngredient);
+  }
+}
+
+function clickAction(id){
+    ingredient = id + '';
+    var checkBox = document.getElementById('Ing_'+ingredient);
+    if (checkBox.checked == true){
+        ingAdd(id);
+    }
+    else{
+        uncheck(id);
+    }
+}
+
+var typeIngredientTextBox = document.getElementById('typeIngredientTextBox');
+typeIngredientTextBox.addEventListener('keypress', function(e){
+    if(e.keyCode == 13){//keyCode for enter
+        newIngredient = document.getElementById('typeIngredientTextBox').value;
+<!--        alert(newIngredient);-->
+        document.getElementById('typeIngredientTextBox').value="";
+        if (document.getElementById('Ing_'+newIngredient) != null && document.getElementById('Ing_'+newIngredient).checked == false){
+            document.getElementById('Ing_'+newIngredient).checked = true;
+            name_id = newIngredient+'name';
+            bin_id = newIngredient+'bin';
+            $("#chosen-ingredients").prepend(
+               '<div class="col-md-6" id=' + name_id +'>'+
+                       newIngredient+
+                    '</div>'+
+                    '<div class="col-md-6" onclick="uncheck(' + "'" + newIngredient + "'" + ')" id='+ bin_id + '>'+
+                          '<button class="btn btn-default btn-sm" align="right">'+
+                          '<span class="lnr lnr-trash" align="right"></span>'+
+                          '</button>'+
+                    '</div>'
+            )
+        }
+    }
+});
+
+function suggestAdd(suggestion){
+    n_id = suggestion + 's'
+    var checkBox = document.getElementById(n_id);
+    if (checkBox.checked == true){
+        newIngredient = suggestion + '';
+        name_id = suggestion +'name';
+        bin_id = suggestion +'bin';
+        document.getElementById('Ing_'+newIngredient).checked = true;
+        $("#chosen-ingredients").prepend(
+        '<div class="col-md-6 " id=' + name_id +'>'+
+        suggestion +
+        '</div>'+
+        '<div class="col-md-6" onclick="uncheck(' + "'" + newIngredient + "'" + ')" id='+ bin_id + '>'+
+                              '<button class="btn btn-default btn-sm" align="right">'+
+                              '<span class="lnr lnr-trash" align="right"></span>'+
+                              '</button>'+
+                        '</div>'
+            )
+
+  } else {
+    document.getElementById(suggestion).checked = false;
+    uncheck(newIngredient);
+  }
+}
+function clickSearch(){
+    document.getElementById('search').click();
+}
+
 </script>
 
 <script>
@@ -517,6 +702,7 @@ function profileFunction(x , y) {
        });
     }
 }
+
 </script>
 
 <script>
@@ -535,10 +721,13 @@ function profileFunction(x , y) {
         }
     });
   });
+
 </script>
 <script>
 $(document).ajaxError(function(){
   alert("Invalid Data!");
 });
+
+
 </script>
 {% endblock %}
