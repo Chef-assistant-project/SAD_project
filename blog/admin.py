@@ -11,6 +11,7 @@ admin.site.register(Ingredient, IngredientAdmin)
 
 
 class FoodAdmin(admin.ModelAdmin):
+    readonly_fields = ("date_added",)
     list_display = ('image_tag', 'name', 'get_ingredients', 'score')
 
     def image_tag(self, obj):
