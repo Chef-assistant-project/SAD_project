@@ -304,7 +304,7 @@ class bestFoods(TestCase):
         self.assertEqual(list(response1.context['best_food_score'])[1].name, 'F3')
         self.assertEqual(list(response1.context['best_food_score'])[2].name, 'F2')
 
-#
+
 # class checkScoreFood(TestCase):
 #     def setUp(self):
 #         Food.objects.create(
@@ -334,8 +334,8 @@ class bestFoods(TestCase):
 #     def test(self):
 #         client = Client()
 #         response1 = client.get('/like/', {'name': 'F1', 'index_selected': 3})
-# print(">>>>>>>>>>>>>>>>>>.", response1.)
-# self.assertEqual(response1.json()['like'], 0)
+#         print(">>>>>>>>>>>>>>>>>>.",response1.)
+#         self.assertEqual(response1.status_code, 302)
 
 
 #

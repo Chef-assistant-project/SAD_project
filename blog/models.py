@@ -52,6 +52,11 @@ class Food(models.Model):
     def __str__(self):
         return self.name
 
+    def get_score(self):
+        if self.score == int(self.score):
+            self.score = int(self.score)
+        return self.score
+
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
         super(Food, self).save(force_insert, force_update, using, update_fields)

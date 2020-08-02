@@ -94,31 +94,31 @@ def like(request):
         response.status_code = 403
         return response
     food_selected = food_selected[0]
+    food_name = food_selected.name
     last_score = 0
     id_current_user = request.user.id
     select_profile = list(Profile.objects.filter(user__id=id_current_user))[0]
     food_like_user = select_profile.food_likes.filter(food__id=food_id)
-    print(food_id, food_like_user)
-    sum_score_food = food_selected.number_of_score * food_selected.score
-    if index_selected <= 5:
-        if len(list(food_like_user)) == 0:
-            food_selected.number_of_score += 1
-            food_selected.save()
-            food_like = FoodLike(food=food_selected, score=index_selected)
-            food_like.save()
-            select_profile.food_likes.add(food_like)
-        else:
-            last_score = list(food_like_user)[0].score
-            food_like_user.update(score=index_selected)
-        if index_selected == 1 and last_score > index_selected:
-            new_score = -last_score
-            food_like_user.update(score=0)
-        else:
-            new_score = index_selected - last_score
+    if len(list(food_like_user)) == 0:
+        food_like = FoodLike(food=food_selected, score=index_selected)
+        food_like.save()
+        select_profile.food_likes.add(food_like)
+    else:
+        last_score = list(food_like_user)[0].score
+        food_like_user.update(score=index_selected)
+    if index_selected == 1 and last_score > index_selected:
+        food_like_user.update(score=0)
+        food_like_user.delete()
 
-        # food_selected.score = round(FoodLike.objects.filter(food__name=food_like_user[0].food.name).aggregate(Avg('score'))['score__avg'] , 1)
-        food_selected.score = (sum_score_food + new_score) / food_selected.number_of_score
-        food_selected.save()
+    food_like_user = FoodLike.objects.filter(food__id=food_id)
+    if len(list(food_like_user)) != 0:
+        food_selected.score = round(FoodLike.objects.filter(food__name=food_name).aggregate(Avg('score'))['score__avg'],
+                                    1)
+    else:
+        food_selected.score = 0
+    food_selected.number_of_score = FoodLike.objects.filter(food__name=food_name).count()
+    food_selected.save()
+
     return JsonResponse({'score': food_selected.score, 'number_of_score': food_selected.number_of_score})
 
 

@@ -252,7 +252,7 @@
                                 </a>
                                 <a href={{food.url}}>{{food.detail}}</a>
                                 <br>
-                                <a style="color: GoldenRod;" class='txt' id="{{food.id}}_score">scores: {{food.score}} </a>
+                                <a style="color: GoldenRod;" class='txt' id="{{food.id}}_score">scores: {{food.get_score}} </a>
                                 {% if user.is_authenticated %}
                                 <div style="margin: 0; padding: 0; border: 0;">
                                     {% if food.name in food_likes %}
@@ -282,7 +282,7 @@
                                     {% endif %}
                                 </div>
                                 {% endif %}
-                                <a style="color: GoldenRod;" class='txt' id="{{food.id}}_rate">rate: {{food.number_of_score}} </a>
+                                <a style="color: Green;" class='txt' id="{{food.id}}_rate">{{food.number_of_score}} Ratings </a>
                             </div>
                             {% else %}
                             <div class="col-lg-3 col-md-6 single-blog blogBox moreBox" style="display: none;">
@@ -307,7 +307,7 @@
                                 </a>
                                 <a href={{food.url}}>{{food.detail}}</a>
                                 <br>
-                                <a style="color: GoldenRod;" class='txt' id="{{food.id}}_score">score: {{food.score}} </a>
+                                <a style="color: GoldenRod;" class='txt' id="{{food.id}}_score">score: {{food.get_score}} </a>
                                 {% if user.is_authenticated %}
                                 <div style="margin: 0; padding: 0; border: 0;">
                                     {% if food.name in food_likes %}
@@ -339,7 +339,7 @@
                                     {% endif %}
                                 </div>
                                 {% endif %}
-                                <a style="color: GoldenRod;" class='txt' id="{{food.id}}_rate">rate: {{food.number_of_score}} </a>
+                                <a style="color: Green;" class='txt' id="{{food.id}}_rate">{{food.number_of_score}} Ratings </a>
                             </div>
                             {% endif %}
                             {% endfor %}
@@ -381,7 +381,7 @@
                                         style="color: red;">{{UnavailableIngredientsStr}}</span></a></b>
                                 {% endif %}
                                 <br>
-                                <a style="color: GoldenRod;" class='txt' id="{{food.id}}_score">score: {{food.score}}</a>
+                                <a style="color: GoldenRod;" class='txt' id="{{food.id}}_score">score: {{food.get_score}}</a>
                                 {% if user.is_authenticated %}
                                 <div style="margin: 0; padding: 0; border: 0;">
                                     {% if food.name in food_likes %}
@@ -412,7 +412,7 @@
                                     {% endif %}
                                 </div>
                                 {% endif %}
-                                <a style="color: GoldenRod;" class='txt' id="{{food.id}}_rate">rate: {{food.number_of_score}} </a>
+                                <a style="color: Green;" class='txt' id="{{food.id}}_rate">{{food.number_of_score}} Ratings </a>
                             </div>
                             {% else %}
                             <div class="col-lg-3 col-md-6 single-blog blogBox moreBox" style="display: none;">
@@ -446,7 +446,7 @@
                                         style="color: red;">{{UnavailableIngredientsStr}}</span></a></b>
                                 {% endif %}
                                 <br>
-                                <a style="color: GoldenRod;" class='txt' id="{{food.id}}_score">score: {{food.score}} </a>
+                                <a style="color: GoldenRod;" class='txt' id="{{food.id}}_score">score: {{food.get_score}} </a>
                                 {% if user.is_authenticated %}
                                 <div style="margin: 0; padding: 0; border: 0;">
                                     {% if food.name in food_likes %}
@@ -477,7 +477,7 @@
                                     {% endif %}
                                 </div>
                                 {% endif %}
-                                <a style="color: GoldenRod;" class='txt' id="{{food.id}}_rate">rate: {{food.number_of_score}} </a>
+                                <a style="color: Green;" class='txt' id="{{food.id}}_rate">{{food.number_of_score}} Ratings </a>
                             </div>
                             {% endif %}
                             {% endfor %}
@@ -552,7 +552,7 @@ function myFunction(x , y) {
             success: function (data) {
                 var addtext = 'score: '+data["score"] + '   '
                 $( idtext2).text(addtext);
-                var addtext1 = 'rate: '+data["number_of_score"] + '   '
+                var addtext1 = ''+data["number_of_score"] + ' Ratings   '
                 $( idtext3).text(addtext1);
             }
         });
@@ -575,7 +575,7 @@ function myFunction(x , y) {
             success: function (data) {
                 var addtext = '  score: ' + data["score"] + '   '
                 $( idtext2).text(addtext);
-                var addtext1 = 'rate: '+data["number_of_score"] + '   '
+                var addtext1 = ''+data["number_of_score"] + ' Ratings   '
                 $( idtext3).text(addtext1);
             }
         });
