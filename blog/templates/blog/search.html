@@ -128,7 +128,7 @@
                             </div>
                             <div class="row mt-4 mb-4">
                                 <div class="col-md-7">
-                                    <h4 class="mb-10 mt-10">Select MealType </h4>
+                                    <h4 class="mb-10 mt-10">Select Meal Type </h4>
                                 </div>
                                 <div class="col-md-5">
                                     <div class="default-select" id="default-select  ">
@@ -258,36 +258,37 @@
                                 </a>
                                 <a href={{food.url}}>{{food.detail}}</a>
                                 <br>
-                                <a style="color: GoldenRod;" class='txt' id="{{food.id}}">scores: {{food.score}} </a>
+                                <a style="color: GoldenRod;" class='txt' id="{{food.id}}_score">scores: {{food.get_score}} </a>
                                 {% if user.is_authenticated %}
                                 <div style="margin: 0; padding: 0; border: 0;">
                                     {% if food.name in food_likes %}
                                     {% for food2 , score in food_likes.items %}
-                                    {% if food.name == food2 %}
-                                    {% with ''|center:5 as range %}
-                                    {% for _ in range %}
-                                    {% if forloop.counter <= score %}
-                                    <a onclick="myFunction(this,'{{food.id}}')" class="lnr lnr-star"
-                                       style="color: GoldenRod;" id="{{food.id }}_{{ forloop.counter }}"></a>
+                                        {% if food.name == food2 %}
+                                            {% with ''|center:5 as range %}
+                                                {% for _ in range %}
+                                                    {% if forloop.counter <= score %}
+                                                    <a onclick="myFunction(this,'{{food.id}}')" class="lnr lnr-star"
+                                                       style="color: GoldenRod;" id="{{food.id }}_{{ forloop.counter }}"></a>
+                                                    {% else %}
+                                                    <a onclick="myFunction(this,'{{food.id}}')" class="lnr lnr-star-empty"
+                                                       style="color: GoldenRod;" id="{{food.id}}_{{ forloop.counter }}"></a>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endwith %}
+                                        {% endif %}
+                                    {% endfor %}
                                     {% else %}
-                                    <a onclick="myFunction(this,'{{food.id}}')" class="lnr lnr-star-empty"
-                                       style="color: GoldenRod;" id="{{food.id}}_{{ forloop.counter }}"></a>
-                                    {% endif %}
-                                    {% endfor %}
-                                    {% endwith %}
-                                    {% endif %}
-                                    {% endfor %}
-                                    {% else %}
-                                    {% with ''|center:5 as range %}
-                                    {% for _ in range %}
-                                    <a onclick="myFunction(this,'{{food.id}}')" class="lnr lnr-star-empty"
-                                       style="color: GoldenRod;" id="{{food.id}}_{{ forloop.counter }}">
-                                    </a>
-                                    {% endfor %}
-                                    {% endwith %}
+                                        {% with ''|center:5 as range %}
+                                            {% for _ in range %}
+                                            <a onclick="myFunction(this,'{{food.id}}')" class="lnr lnr-star-empty"
+                                               style="color: GoldenRod;" id="{{food.id}}_{{ forloop.counter }}">
+                                            </a>
+                                            {% endfor %}
+                                        {% endwith %}
                                     {% endif %}
                                 </div>
                                 {% endif %}
+                                <a style="color: Green;" class='txt' id="{{food.id}}_rate">{{food.number_of_score}} Ratings </a>
                             </div>
                             {% else %}
                             <div class="col-lg-3 col-md-6 single-blog blogBox moreBox" style="display: none;">
@@ -312,40 +313,40 @@
                                 </a>
                                 <a href={{food.url}}>{{food.detail}}</a>
                                 <br>
-                                <a style="color: GoldenRod;" class='txt' id="{{food.id}}">score: {{food.score}} </a>
+                                <a style="color: GoldenRod;" class='txt' id="{{food.id}}_score">score: {{food.get_score}} </a>
                                 {% if user.is_authenticated %}
                                 <div style="margin: 0; padding: 0; border: 0;">
                                     {% if food.name in food_likes %}
                                     {% for food2 , score in food_likes.items %}
-                                    {% if food.name == food2 %}
-                                    {% with ''|center:5 as range %}
-                                    {% for _ in range %}
-                                    {% if forloop.counter <= score %}
-                                    <a onclick="myFunction(this,'{{food.id}}')" class="lnr lnr-star"
-                                       style="color: GoldenRod;" id="{{food.id }}_{{ forloop.counter }}">
-                                    </a>
+                                        {% if food.name == food2 %}
+                                            {% with ''|center:5 as range %}
+                                                {% for _ in range %}
+                                                    {% if forloop.counter <= score %}
+                                                    <a onclick="myFunction(this,'{{food.id}}')" class="lnr lnr-star"
+                                                       style="color: GoldenRod;" id="{{food.id }}_{{ forloop.counter }}">
+                                                    </a>
+                                                    {% else %}
+                                                    <a onclick="myFunction(this,'{{food.id}}')" class="lnr lnr-star-empty"
+                                                       style="color: GoldenRod;" id="{{food.id }}_{{ forloop.counter }}">
+                                                    </a>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endwith %}
+                                        {% endif %}
+                                    {% endfor %}
                                     {% else %}
-                                    <a onclick="myFunction(this,'{{food.id}}')" class="lnr lnr-star-empty"
-                                       style="color: GoldenRod;" id="{{food.id }}_{{ forloop.counter }}">
-                                    </a>
-                                    {% endif %}
-                                    {% endfor %}
-                                    {% endwith %}
-                                    {% endif %}
-                                    {% endfor %}
-                                    {% else %}
-                                    {% with ''|center:5 as range %}
-                                    {% for _ in range %}
-                                    <a onclick="myFunction(this,'{{food.id}}')" class="lnr lnr-star-empty"
-                                       style="color: GoldenRod;" id="{{food.id}}_{{ forloop.counter }}">
-                                    </a>
-                                    {% endfor %}
-                                    {% endwith %}
+                                        {% with ''|center:5 as range %}
+                                            {% for _ in range %}
+                                            <a onclick="myFunction(this,'{{food.id}}')" class="lnr lnr-star-empty"
+                                               style="color: GoldenRod;" id="{{food.id}}_{{ forloop.counter }}">
+                                            </a>
+                                            {% endfor %}
+                                        {% endwith %}
                                     {% endif %}
                                 </div>
                                 {% endif %}
+                                <a style="color: Green;" class='txt' id="{{food.id}}_rate">{{food.number_of_score}} Ratings </a>
                             </div>
-
                             {% endif %}
                             {% endfor %}
                         </div>
@@ -386,7 +387,7 @@
                                         style="color: red;">{{UnavailableIngredientsStr}}</span></a></b>
                                 {% endif %}
                                 <br>
-                                <a style="color: GoldenRod;" class='txt' id="{{food.id}}">score: {{food.score}}</a>
+                                <a style="color: GoldenRod;" class='txt' id="{{food.id}}_score">score: {{food.get_score}}</a>
                                 {% if user.is_authenticated %}
                                 <div style="margin: 0; padding: 0; border: 0;">
                                     {% if food.name in food_likes %}
@@ -417,6 +418,7 @@
                                     {% endif %}
                                 </div>
                                 {% endif %}
+                                <a style="color: Green;" class='txt' id="{{food.id}}_rate">{{food.number_of_score}} Ratings </a>
                             </div>
                             {% else %}
                             <div class="col-lg-3 col-md-6 single-blog blogBox moreBox" style="display: none;">
@@ -450,7 +452,7 @@
                                         style="color: red;">{{UnavailableIngredientsStr}}</span></a></b>
                                 {% endif %}
                                 <br>
-                                <a style="color: GoldenRod;" class='txt' id="{{food.id}}">score: {{food.score}} </a>
+                                <a style="color: GoldenRod;" class='txt' id="{{food.id}}_score">score: {{food.get_score}} </a>
                                 {% if user.is_authenticated %}
                                 <div style="margin: 0; padding: 0; border: 0;">
                                     {% if food.name in food_likes %}
@@ -481,26 +483,15 @@
                                     {% endif %}
                                 </div>
                                 {% endif %}
+                                <a style="color: Green;" class='txt' id="{{food.id}}_rate">{{food.number_of_score}} Ratings </a>
                             </div>
-
                             {% endif %}
                             {% endfor %}
                         </div>
-                        <script>
-                            var counter = 1;
 
 
-
-
-
-
-
-                        </script>
                         {% if match_foods %}
                         <div id="loadMore" style="">
-                            <!--                                <script>-->
-                            <!--                                   counter += 1;-->
-                            <!--                                </script>-->
                             <a href="#">Load More</a>
                         </div>
                         {% endif %}
@@ -554,9 +545,12 @@ function myFunction(x , y) {
     var id = x['id'];
     var selected = id.split("_")[1]
     var name = id.split("_")[0]
-    console.log("id= " +  selected +"    " + id);
+    var sogand = id.split("_")[1]
+    console.log("sogand = " +  sogand +"    " + id);
     var idtext1 ='#' + id
-    var idtext2 ='#' + id.split("_")[0]
+    var idtext2 ='#' + id.split("_")[0] + "_" + "score"
+    var idtext3 ='#' + id.split("_")[0] + "_" + "rate"
+    console.log("sogand = >>> "  + idtext2);
 
     if ( x.classList.contains( "lnr-star") ) {
         var temp_x
@@ -575,8 +569,10 @@ function myFunction(x , y) {
             url: '/like/',
             data: {'foods':  y ,'index_selected' : selected  },
             success: function (data) {
-                var addtext = 'score: '+data["likes"] + '   '
+                var addtext = 'score: '+data["score"] + '   '
                 $( idtext2).text(addtext);
+                var addtext1 = ''+data["number_of_score"] + ' Ratings   '
+                $( idtext3).text(addtext1);
             }
         });
 
@@ -596,8 +592,10 @@ function myFunction(x , y) {
             url: '/like/',
             data: {'foods':  y, 'index_selected' : selected },
             success: function (data) {
-                var addtext = '  score: ' + data["likes"] + '   '
+                var addtext = '  score: ' + data["score"] + '   '
                 $( idtext2).text(addtext);
+                var addtext1 = ''+data["number_of_score"] + ' Ratings   '
+                $( idtext3).text(addtext1);
             }
         });
     }
@@ -777,7 +775,6 @@ function profileFunction(x , y) {
             $("#loadMore").show();
         }
     $("#loadMore").on('click', function (e) {
-        counter += 1;
       e.preventDefault();
       $(".moreBox:hidden").slice(0, 4).slideDown();
         if ($(".moreBox:hidden").length == 0) {
@@ -795,13 +792,6 @@ function profileFunction(x , y) {
 $(document).ajaxError(function(){
   alert("Invalid Data!");
 });
-
-
-
-
-
-
-
 
 </script>
 {% endblock %}

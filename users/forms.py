@@ -30,6 +30,7 @@ class UpdatePasswordForm(forms.Form):
         help_text='Same password as above.',
         widget=forms.PasswordInput,
     )
+
     def __init__(self, *args, **kwargs):
         self.instance = kwargs.pop('instance', None)
         assert self.instance is not None
