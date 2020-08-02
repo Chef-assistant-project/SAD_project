@@ -160,18 +160,24 @@
                                placeholder="Add an ingredient">
 
 
-                        <div class="row mt-3" id="chosen-ingredients">
+                        <div id="chosen-ingredients">
                             {% for ingredient in previousIngredients%}
-                            <div class="col-md-6 " id="{{ingredient}}name">
-                                {{ ingredient }}
-                            </div>
-                            <div class="col-md-6" onclick="uncheck('{{ingredient}}')" id="{{ingredient}}bin">
-                                <button class="btn btn-default btn-sm" align="right">
-                                    <span class="lnr lnr-trash" align="right"></span>
-                                </button>
+                            <div class="row ml-1 mt-1">
+                                <div onclick="uncheck('{{ingredient}}')" id="{{ingredient}}bin">
+                                    <button class="btn btn-default btn-sm" align="right">
+                                        <span class="lnr lnr-trash" align="right"></span>
+                                    </button>
+                                </div>
+                                <div id="{{ingredient}}name">
+                                    {{ ingredient }}
+                                </div>
                             </div>
                             {% endfor %}
                         </div>
+                        <br>
+                        <br>
+                        <input type="submit" onclick="clickSearch();" class="genric-btn primary circle"
+                               value="Search">
 
                     </div>
                 </div>
@@ -190,15 +196,15 @@
                             </div>
                             <div class="col-md-6 ml-6">
                                 {% for suggestion in suggested_ingredients %}
-                                <input type="checkbox" id="{{suggestion}}s"
-                                       onclick="suggestAdd('{{suggestion}}')">
+                                <input class="ml-3" type="checkbox" id="{{suggestion}}s"
+                                       onclick="suggestAction('{{suggestion}}')">
                                 {{ suggestion }}
                                 {% endfor %}
                             </div>
                             <div class="col-md-1">
                                 {% if suggested_ingredients|length > 0 %}
                                 <input type="submit" onclick="clickSearch();" class="genric-btn primary-border small"
-                                       value="Add">
+                                       value="Search">
                                 {% endif %}
                             </div>
                         </div>
@@ -483,6 +489,12 @@
                         <script>
                             var counter = 1;
 
+
+
+
+
+
+
                         </script>
                         {% if match_foods %}
                         <div id="loadMore" style="">
@@ -516,6 +528,12 @@ $('#autocomplete').autocomplete({
 });
 
 
+
+
+
+
+
+
 </script>
 <script>
 $(document).ready(function(){
@@ -523,6 +541,12 @@ $(document).ready(function(){
     $(this).tab('show');
   });
 });
+
+
+
+
+
+
 
 </script>
 <script>
@@ -579,6 +603,12 @@ function myFunction(x , y) {
     }
 }
 
+
+
+
+
+
+
 </script>
 
 <script>
@@ -592,6 +622,8 @@ function uncheck(id) {
     $(n_id).remove();
 }
 
+
+
 function ingAdd(id){
     newIngredient = id + '';
 <!--    alert(newIngredient);-->
@@ -600,19 +632,23 @@ function ingAdd(id){
         name_id = id +'name'
         bin_id = id +'bin'
         $("#chosen-ingredients").prepend(
-        '<div class="col-md-6 " id=' + name_id +'>'+
-        id+
-        '</div>'+
-        '<div class="col-md-6" onclick="uncheck(' + "'" + newIngredient + "'" + ')" id='+ bin_id + '>'+
+        '<div class = "row ml-1 mt-1">'+
+        '<div onclick="uncheck(' + "'" + newIngredient + "'" + ')" id='+ bin_id + '>'+
                               '<button class="btn btn-default btn-sm" align="right">'+
                               '<span class="lnr lnr-trash" align="right"></span>'+
                               '</button>'+
-                        '</div>'
+                        '</div>'+
+                        '<div id=' + name_id +'>'+
+                                id+
+                         '</div>'+
+                       '</div>'
+
             )
   } else {
     uncheck(newIngredient);
   }
 }
+
 
 function clickAction(id){
     ingredient = id + '';
@@ -624,6 +660,17 @@ function clickAction(id){
         uncheck(id);
     }
 }
+function suggestAction(id){
+    ingredient = id + '';
+    var checkBox = document.getElementById(ingredient+'s');
+    if (checkBox.checked == true){
+        suggestAdd(id);
+    }
+    else{
+        uncheck(id);
+    }
+}
+
 
 var typeIngredientTextBox = document.getElementById('typeIngredientTextBox');
 typeIngredientTextBox.addEventListener('keypress', function(e){
@@ -636,18 +683,21 @@ typeIngredientTextBox.addEventListener('keypress', function(e){
             name_id = newIngredient+'name';
             bin_id = newIngredient+'bin';
             $("#chosen-ingredients").prepend(
-               '<div class="col-md-6" id=' + name_id +'>'+
-                       newIngredient+
-                    '</div>'+
-                    '<div class="col-md-6" onclick="uncheck(' + "'" + newIngredient + "'" + ')" id='+ bin_id + '>'+
-                          '<button class="btn btn-default btn-sm" align="right">'+
-                          '<span class="lnr lnr-trash" align="right"></span>'+
-                          '</button>'+
-                    '</div>'
+            '<div class = "row ml-1 mt-1">'+
+        '<div onclick="uncheck(' + "'" + newIngredient + "'" + ')" id='+ bin_id + '>'+
+                              '<button class="btn btn-default btn-sm" align="right">'+
+                              '<span class="lnr lnr-trash" align="right"></span>'+
+                              '</button>'+
+                        '</div>'+
+                        '<div id=' + name_id +'>'+
+                                newIngredient+
+                         '</div>'+
+                       '</div>'
             )
         }
     }
 });
+
 
 function suggestAdd(suggestion){
     n_id = suggestion + 's'
@@ -658,14 +708,16 @@ function suggestAdd(suggestion){
         bin_id = suggestion +'bin';
         document.getElementById('Ing_'+newIngredient).checked = true;
         $("#chosen-ingredients").prepend(
-        '<div class="col-md-6 " id=' + name_id +'>'+
-        suggestion +
-        '</div>'+
-        '<div class="col-md-6" onclick="uncheck(' + "'" + newIngredient + "'" + ')" id='+ bin_id + '>'+
+          '<div class = "row ml-1 mt-1">'+
+        '<div onclick="uncheck(' + "'" + newIngredient + "'" + ')" id='+ bin_id + '>'+
                               '<button class="btn btn-default btn-sm" align="right">'+
                               '<span class="lnr lnr-trash" align="right"></span>'+
                               '</button>'+
-                        '</div>'
+                        '</div>'+
+                        '<div id=' + name_id +'>'+
+                                suggestion+
+                         '</div>'+
+                       '</div>'
             )
 
   } else {
@@ -676,6 +728,12 @@ function suggestAdd(suggestion){
 function clickSearch(){
     document.getElementById('search').click();
 }
+
+
+
+
+
+
 
 </script>
 
@@ -703,6 +761,12 @@ function profileFunction(x , y) {
     }
 }
 
+
+
+
+
+
+
 </script>
 
 <script>
@@ -722,11 +786,21 @@ function profileFunction(x , y) {
     });
   });
 
+
+
+
+
 </script>
 <script>
 $(document).ajaxError(function(){
   alert("Invalid Data!");
 });
+
+
+
+
+
+
 
 
 </script>
