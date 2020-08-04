@@ -39,6 +39,7 @@ class CheckDirectSearch(TestCase):
         self.assertEqual(str(response1.context["match_foods"]),
                          "<QuerySet [<Food: Soft-Boiled Eggs>, <Food: fried egg>]>")
         self.assertEqual(len(response1.context["match_foods"]), 2)
+        self.assertEqual(False, True)
 
         # test 2 search
         response1 = client.post('/search/', {'title': 'chicken'})
